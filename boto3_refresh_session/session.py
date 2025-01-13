@@ -80,6 +80,17 @@ class AutoRefreshableSession:
         default={}, validator=optional(instance_of(dict))
     )
 
+    def __attrs_post_init__(self):
+        __credentials = RefreshableCredentials.create_from_metadata(
+            metadata=self._get_credentials(),
+            refresh_using=self._get_credentials,
+            method="sts-assume-role",
+        )
+        __session = get_session()
+        # https://github.com/boto/botocore/blob/f8a1dd0820b548a5e8dc05420b28b6f1c6e21154/botocore/session.py#L143
+        __session._credentials = __credentials
+        self.session = Session(botocore_session=__session)
+
     def _get_credentials(self) -> dict:
         """Returns temporary credentials via AWS STS.
 
@@ -89,42 +100,18 @@ class AutoRefreshableSession:
             AWS temporary credentials.
         """
 
-        _session = Session(region_name=self.region, **self.session_kwargs)
-        _client = _session.client(
+        __session = Session(region_name=self.region, **self.session_kwargs)
+        __client = __session.client(
             service_name="sts", region_name=self.region, **self.client_kwargs
         )
-        _response = _client.assume_role(
+        __response = __client.assume_role(
             RoleArn=self.role_arn,
             RoleSessionName=self.session_name,
             DurationSeconds=self.ttl,
         )
         return {
-            "access_key": _response.get("AccessKeyId"),
-            "secret_key": _response.get("SecretAccessKey"),
-            "token": _response.get("SessionToken"),
-            "expiry_time": _response.get("Expiration").isoformat(),
+            "access_key": __response.get("AccessKeyId"),
+            "secret_key": __response.get("SecretAccessKey"),
+            "token": __response.get("SessionToken"),
+            "expiry_time": __response.get("Expiration").isoformat(),
         }
-
-    @property
-    def session(self) -> "Session":
-        """Returns a boto3 `Session` object with credentials which refresh
-        automatically.
-
-        Returns
-        -------
-        Session
-            boto3 `Session` object.
-        """
-
-        if not hasattr(self, "_session"):
-            credentials = RefreshableCredentials.create_from_metadata(
-                metadata=self._get_credentials(),
-                refresh_using=self._get_credentials,
-                method="sts-assume-role",
-            )
-            session = get_session()
-            # https://github.com/boto/botocore/blob/f8a1dd0820b548a5e8dc05420b28b6f1c6e21154/botocore/session.py#L143
-            session._credentials = credentials
-            self._session = Session(botocore_session=session)
-
-        return self._session
