@@ -12,6 +12,12 @@ Install poetry. Follow the instructions to do that [here](https://python-poetry.
 $ poetry install
 ```
 
+Install the pre-commit scripts like so.
+
+```bash
+$ pre-commit install`
+```
+
 Make your changes.
 
 ## Testing
