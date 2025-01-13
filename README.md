@@ -41,4 +41,4 @@ s3_client = session.session.client(service_name="s3")
 
 ## Contributing
 
-Refer to [this document](https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/docs/contributing.md) for step by step instructions.
+Refer to [this document](https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/docs/contributing.md) for instructions.
