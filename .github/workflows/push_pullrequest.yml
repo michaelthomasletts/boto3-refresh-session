@@ -1,4 +1,4 @@
-name: Run unit tests, lint, etc.
+name: Lint, autoformat, etc.
 
 on: [push, pull_request]
 
