@@ -1,0 +1,21 @@
+default_language_version:
+  python: python3
+
+repos:
+- repo: https://github.com/psf/black
+  rev: 24.10.0
+  hooks:
+  - id: black
+    alias: black
+    args: ['--config=pyproject.toml']
+- repo: https://github.com/PyCQA/flake8
+  rev: 7.1.1
+  hooks:
+  - id: flake8
+    alias: flake8
+    args: ['--config=.flake8']
+- repo: https://github.com/PyCQA/isort
+  rev: 5.13.2
+  hooks:
+  - id: isort
+    alias: isort

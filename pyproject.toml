@@ -1,0 +1,40 @@
+[project]
+name = "boto3-refresh-session"
+version = "0.0.1"
+description = "A simple Python package for refreshing boto3 sessions automatically."
+authors = [
+    {name = "Mike Letts",email = "michaelthomasletts@gmail.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["boto3", "botocore", "attrs (>=24.3.0,<25.0.0)"]
+keywords = ["boto3", "botocore", "aws"]
+maintainers = [
+  {name="Michael Letts", email="lettsmt@gmail.com"},
+]
+
+[project.urls]
+repository = "https://github.com/michaelthomasletts/gspread-helpers"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.10.0"
+isort = "^5.13.2"
+flake8 = "^7.1.1"
+pre-commit = "^4.0.1"
+
+[tool.black]
+line-length = 79
+target-version = ["py310"]
+verbose = true
+
+[tool.isort]
+line_length = 79
+ensure_newline_before_comments = true
+use_parentheses = true
+include_trailing_comma = true
+multi_line_output = 3
