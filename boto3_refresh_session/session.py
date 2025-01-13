@@ -2,6 +2,8 @@ from __future__ import annotations
 
 __all__ = ["AutoRefreshableSession"]
 
+from typing import Type
+
 from attrs import define, field
 from attrs.validators import instance_of, le, optional
 from boto3 import Session
@@ -37,12 +39,7 @@ class AutoRefreshableSession:
 
     Other Attributes
     ----------------
-    **kwargs : dict
-        Optional keyword arguments for initializing the boto3 `Session` object.
-
-    Methods
-    -------
-    get_session
+    session
         Returns a boto3 Session object with credentials which refresh
         automatically.
 
@@ -79,6 +76,7 @@ class AutoRefreshableSession:
     client_kwargs: dict = field(
         default={}, validator=optional(instance_of(dict))
     )
+    session: Type[Session] = field(init=False)
 
     def __attrs_post_init__(self):
         __credentials = RefreshableCredentials.create_from_metadata(
