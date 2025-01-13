@@ -19,3 +19,13 @@ repos:
   hooks:
   - id: isort
     alias: isort
+- repo: local
+  hooks:
+  - id: pytest
+    name: pytest
+    alias: pytest
+    types: [python]
+    entry: python -m pytest -v tests/
+    language: system
+    always_run: true
+    pass_filenames: false    

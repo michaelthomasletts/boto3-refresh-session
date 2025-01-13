@@ -1,6 +1,6 @@
 [project]
 name = "boto3-refresh-session"
-version = "0.0.6"
+version = "0.0.7"
 description = "A simple Python package for refreshing boto3 sessions automatically."
 authors = [
     {name = "Mike Letts",email = "michaelthomasletts@gmail.com"}
@@ -22,6 +22,7 @@ requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
 black = "^24.10.0"
 isort = "^5.13.2"
 flake8 = "^7.1.1"

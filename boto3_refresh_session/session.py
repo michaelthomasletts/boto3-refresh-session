@@ -102,14 +102,16 @@ class AutoRefreshableSession:
         __client = __session.client(
             service_name="sts", region_name=self.region, **self.client_kwargs
         )
-        __response = __client.assume_role(
+        __temporary_credentials = __client.assume_role(
             RoleArn=self.role_arn,
             RoleSessionName=self.session_name,
             DurationSeconds=self.ttl,
-        )
+        )["Credentials"]
         return {
-            "access_key": __response.get("AccessKeyId"),
-            "secret_key": __response.get("SecretAccessKey"),
-            "token": __response.get("SessionToken"),
-            "expiry_time": __response.get("Expiration").isoformat(),
+            "access_key": __temporary_credentials.get("AccessKeyId"),
+            "secret_key": __temporary_credentials.get("SecretAccessKey"),
+            "token": __temporary_credentials.get("SessionToken"),
+            "expiry_time": __temporary_credentials.get(
+                "Expiration"
+            ).isoformat(),
         }
