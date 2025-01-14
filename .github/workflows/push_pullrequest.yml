@@ -5,6 +5,10 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      ROLE_ARN: ${{ secrets.ROLE_ARN }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
       # check-out repo and set-up python
       - name: Check out repository
@@ -46,3 +50,8 @@ jobs:
         uses: reviewdog/action-flake8@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+      # run unit tests
+      - name: Run tests
+        run: |
+          source .venv/bin/activate
+          pytest tests/ -v          
