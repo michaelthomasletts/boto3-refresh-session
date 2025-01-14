@@ -22,7 +22,7 @@ class AutoRefreshableSession:
     To use this class, you must have `~/.aws/config` or `~/.aws/credentials`
     on your machine.
 
-    Attributes
+    Parameters
     ----------
     region : str
         AWS region name.
@@ -37,8 +37,8 @@ class AutoRefreshableSession:
     client_kwargs : dict, optional
         Optional keyword arguments for `boto3.Session.client`.
 
-    Other Attributes
-    ----------------
+    Attributes
+    ----------
     session
         Returns a boto3 Session object with credentials which refresh
         automatically.
