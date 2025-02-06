@@ -1,3 +1,15 @@
+"""
+Helper method for generating an automatically refreshing `boto3.Session`
+object.
+
+.. currentmodule:: boto3_refresh_session.session
+
+.. autosummary::
+    :toctree: session/
+
+    AutoRefreshableSession
+"""
+
 from __future__ import annotations
 
 __all__ = ["AutoRefreshableSession"]
@@ -55,7 +67,6 @@ class AutoRefreshableSession:
     --------
     Here's how to initialize the `boto3.Client.S3` object:
 
-    >>> from boto3_refresh_session import AutoRefreshableSession
     >>> session = AutoRefreshableSession(
     >>>   region="us-east-1",
     >>>   role_arn="<your-arn>",

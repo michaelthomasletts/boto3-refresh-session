@@ -7,6 +7,10 @@
 
 A simple Python package for refreshing boto3 sessions automatically.
 
+## Links
+
+[Official Documentation](https://michaelthomasletts.github.io/boto3-refresh-session/index.html)
+
 ## Features
 - `boto3_refresh_session.AutoRefreshableSession` method for generating an automatically refreshing `boto3.Session` object.
 
@@ -43,7 +47,3 @@ session = AutoRefreshableSession(
 )
 s3_client = session.session.client(service_name="s3")
 ```
-
-## Contributing
-
-Refer to [this document](https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/docs/contributing.md) for step by step instructions.
