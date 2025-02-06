@@ -16,6 +16,7 @@ maintainers = [
 
 [project.urls]
 repository = "https://github.com/michaelthomasletts/boto3-refresh-session"
+documentation = "https://michaelthomasletts.github.io/boto3-refresh-session/index.html"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
