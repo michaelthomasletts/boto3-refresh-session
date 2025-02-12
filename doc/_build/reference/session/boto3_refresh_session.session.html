@@ -2,19 +2,19 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../../" >
+<html lang="en" data-content_root="../../" data-theme="dark">
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>boto3_refresh_session.session.AutoRefreshableSession &#8212; boto3-refresh-session</title>
+    <title>boto3_refresh_session.session &#8212; boto3-refresh-session</title>
   
   
   
   <script data-cfasync="false">
-    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
   </script>
   <!--
     this give us a css class that will be invisible only if js is disabled
@@ -30,7 +30,7 @@
   <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -38,21 +38,21 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=0c446633"></script>
+    <script src="../../_static/documentation_options.js?v=3bbcec59"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/session/boto3_refresh_session.session.AutoRefreshableSession';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/session/boto3_refresh_session.session';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="../../installation.html" />
-    <link rel="prev" title="Submodule" href="../index.html" />
+    <link rel="next" title="Installation" href="../../installation.html" />
+    <link rel="prev" title="API Reference" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
   </head>
   
   
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
 
   
   
@@ -158,11 +158,33 @@
       
         <div class="navbar-item">
 
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button></div>
+      
+        <div class="navbar-item">
+
 <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
   <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
   <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/michaelthomasletts/boto3-refresh-session" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
       
     </div>
     
@@ -195,7 +217,7 @@
       
       
       <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
         
 
   
@@ -235,27 +257,37 @@
         
           <div class="navbar-item">
 
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button></div>
+        
+          <div class="navbar-item">
+
 <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
   <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
   <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
         
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/michaelthomasletts/boto3-refresh-session" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
       </div>
     
   </div>
-  
-    <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item">
-<nav class="bd-docs-nav bd-links"
-     aria-label="Section Navigation">
-  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">boto3_refresh_session.session.AutoRefreshableSession</a></li>
-</ul>
-</div>
-</nav></div>
-    </div>
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
@@ -293,9 +325,9 @@
       </a>
     </li>
     
-    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Submodule</a></li>
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">API Reference</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">boto3_refresh_session.session.AutoRefreshableSession</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">boto3_refresh_session.session</span></li>
   </ul>
 </nav>
 </div>
@@ -312,17 +344,28 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="boto3-refresh-session-session-autorefreshablesession">
-<h1>boto3_refresh_session.session.AutoRefreshableSession<a class="headerlink" href="#boto3-refresh-session-session-autorefreshablesession" title="Link to this heading">#</a></h1>
+  <section id="module-boto3_refresh_session.session">
+<span id="boto3-refresh-session-session"></span><h1>boto3_refresh_session.session<a class="headerlink" href="#module-boto3_refresh_session.session" title="Link to this heading">#</a></h1>
+<p>Helper method for generating an automatically refreshing <code class="docutils literal notranslate"><span class="pre">boto3.Session</span></code>
+object.</p>
+<p class="rubric">Classes</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#boto3_refresh_session.session.AutoRefreshableSession" title="boto3_refresh_session.session.AutoRefreshableSession"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AutoRefreshableSession</span></code></a>(region, role_arn, ...)</p></td>
+<td><p>Returns a <code class="docutils literal notranslate"><span class="pre">boto3.Session</span></code> object which refreshes automatically, no extra steps required.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <dl class="py class">
 <dt class="sig sig-object py" id="boto3_refresh_session.session.AutoRefreshableSession">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boto3_refresh_session.session.</span></span><span class="sig-name descname"><span class="pre">AutoRefreshableSession</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">role_arn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">900</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#boto3_refresh_session.session.AutoRefreshableSession" title="Link to this definition">#</a></dt>
-<dd><p>Returns a boto3 Session object which refreshes automatically, no extra
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boto3_refresh_session.session.</span></span><span class="sig-name descname"><span class="pre">AutoRefreshableSession</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">role_arn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">900</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/session.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.session.AutoRefreshableSession" title="Link to this definition">#</a></dt>
+<dd><p>Returns a <code class="docutils literal notranslate"><span class="pre">boto3.Session</span></code> object which refreshes automatically, no extra
 steps required.</p>
 <p>This object is useful for long-running processes where temporary credentials
 may expire between iterations.</p>
-<p>To use this class, you must have <cite>~/.aws/config</cite> or <cite>~/.aws/credentials</cite>
-on your machine.</p>
+<p>To use this class, you must have <code class="docutils literal notranslate"><span class="pre">~/.aws/config</span></code> or <code class="docutils literal notranslate"><span class="pre">~/.aws/credentials</span></code>
+configured on your machine.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -334,75 +377,35 @@ on your machine.</p>
 </dd>
 <dt><strong>ttl</strong><span class="classifier">int, optional</span></dt><dd><p>Number of seconds until temporary credentials expire, default 900.</p>
 </dd>
-<dt><strong>session_kwargs</strong><span class="classifier">dict, optional</span></dt><dd><p>Optional keyword arguments for <cite>boto3.Session</cite>.</p>
+<dt><strong>session_kwargs</strong><span class="classifier">dict, optional</span></dt><dd><p>Optional keyword arguments for <code class="docutils literal notranslate"><span class="pre">boto3.Session</span></code>.</p>
 </dd>
-<dt><strong>client_kwargs</strong><span class="classifier">dict, optional</span></dt><dd><p>Optional keyword arguments for <cite>boto3.Session.client</cite>.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Attributes<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>session</strong></dt><dd><p>Returns a boto3 Session object with credentials which refresh
-automatically.</p>
+<dt><strong>client_kwargs</strong><span class="classifier">dict, optional</span></dt><dd><p>Optional keyword arguments for <code class="docutils literal notranslate"><span class="pre">boto3.Session.client</span></code>.</p>
 </dd>
 </dl>
 </dd>
 </dl>
+<p class="rubric">Attributes</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p><strong>session</strong></p></td>
+<td><p>Returns a <code class="docutils literal notranslate"><span class="pre">boto3.Session</span></code> object with credentials which refresh automatically.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <p class="rubric">Notes</p>
 <p>boto3 employs a variety of methods (in order) to identify credentials:</p>
 <p><a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html">https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html</a></p>
-<p>This class assumes that <cite>~/.aws</cite> exists with <cite>/config</cite> or <cite>/credentials</cite>!</p>
+<p>This class assumes that <code class="docutils literal notranslate"><span class="pre">~/.aws</span></code> exists with <code class="docutils literal notranslate"><span class="pre">/config</span></code> or <code class="docutils literal notranslate"><span class="pre">/credentials</span></code>!</p>
 <p class="rubric">Examples</p>
-<p>Here’s how to initialize the <cite>boto3.Client.S3</cite> object:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">session</span> <span class="o">=</span> <span class="n">AutoRefreshableSession</span><span class="p">(</span>
+<p>Here’s how to initialize the <code class="docutils literal notranslate"><span class="pre">boto3.Client.S3</span></code> object:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sess</span> <span class="o">=</span> <span class="n">AutoRefreshableSession</span><span class="p">(</span>
 <span class="gp">&gt;&gt;&gt; </span>  <span class="n">region</span><span class="o">=</span><span class="s2">&quot;us-east-1&quot;</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>  <span class="n">role_arn</span><span class="o">=</span><span class="s2">&quot;&lt;your-arn&gt;&quot;</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>  <span class="n">session_name</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s3_client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="n">service_name</span><span class="o">=</span><span class="s2">&quot;s3&quot;</span><span class="p">)</span>
 </pre></div>
-</div>
-<dl class="py method">
-<dt class="sig sig-object py" id="boto3_refresh_session.session.AutoRefreshableSession.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">role_arn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">900</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#boto3_refresh_session.session.AutoRefreshableSession.__init__" title="Link to this definition">#</a></dt>
-<dd><p>Method generated by attrs for class AutoRefreshableSession.</p>
-</dd></dl>
-
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#boto3_refresh_session.session.AutoRefreshableSession.__init__" title="boto3_refresh_session.session.AutoRefreshableSession.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(region, role_arn, session_name[, ...])</p></td>
-<td><p>Method generated by attrs for class AutoRefreshableSession.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p class="rubric">Attributes</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">region</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">role_arn</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">session_name</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ttl</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">session_kwargs</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">client_kwargs</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">session</span></code></p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
 </div>
 </dd></dl>
 
@@ -424,7 +427,7 @@ automatically.</p>
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Submodule</p>
+        <p class="prev-next-title">API Reference</p>
       </div>
     </a>
     <a class="right-next"
@@ -432,7 +435,7 @@ automatically.</p>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">&lt;no title&gt;</p>
+        <p class="prev-next-title">Installation</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -455,10 +458,7 @@ automatically.</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.session.AutoRefreshableSession"><code class="docutils literal notranslate"><span class="pre">AutoRefreshableSession</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.session.AutoRefreshableSession.__init__"><code class="docutils literal notranslate"><span class="pre">AutoRefreshableSession.__init__()</span></code></a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.session.AutoRefreshableSession"><code class="docutils literal notranslate"><span class="pre">AutoRefreshableSession</span></code></a></li>
 </ul>
   </nav></div>
 
@@ -466,7 +466,7 @@ automatically.</p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../../_sources/reference/session/boto3_refresh_session.session.AutoRefreshableSession.rst.txt"
+      <li><a href="../../_sources/reference/session/boto3_refresh_session.session.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div></div>

@@ -1,17 +1,9 @@
-"""
-Helper method for generating an automatically refreshing `boto3.Session`
-object.
-
-.. currentmodule:: boto3_refresh_session.session
-
-.. autosummary::
-    :toctree: session/
-
-    AutoRefreshableSession
-"""
-
 from __future__ import annotations
 
+__doc__ = """
+Helper method for generating an automatically refreshing ``boto3.Session``
+object.
+"""
 __all__ = ["AutoRefreshableSession"]
 
 from typing import Type
@@ -25,14 +17,14 @@ from botocore.session import get_session
 
 @define
 class AutoRefreshableSession:
-    """Returns a boto3 Session object which refreshes automatically, no extra
+    """Returns a ``boto3.Session`` object which refreshes automatically, no extra
     steps required.
 
     This object is useful for long-running processes where temporary credentials
     may expire between iterations.
 
-    To use this class, you must have `~/.aws/config` or `~/.aws/credentials`
-    on your machine.
+    To use this class, you must have ``~/.aws/config`` or ``~/.aws/credentials``
+    configured on your machine.
 
     Parameters
     ----------
@@ -45,14 +37,14 @@ class AutoRefreshableSession:
     ttl : int, optional
         Number of seconds until temporary credentials expire, default 900.
     session_kwargs : dict, optional
-        Optional keyword arguments for `boto3.Session`.
+        Optional keyword arguments for ``boto3.Session``.
     client_kwargs : dict, optional
-        Optional keyword arguments for `boto3.Session.client`.
+        Optional keyword arguments for ``boto3.Session.client``.
 
     Attributes
     ----------
     session
-        Returns a boto3 Session object with credentials which refresh
+        Returns a ``boto3.Session`` object with credentials which refresh
         automatically.
 
     Notes
@@ -61,13 +53,13 @@ class AutoRefreshableSession:
 
     https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
 
-    This class assumes that `~/.aws` exists with `/config` or `/credentials`!
+    This class assumes that ``~/.aws`` exists with ``/config`` or ``/credentials``!
 
     Examples
     --------
-    Here's how to initialize the `boto3.Client.S3` object:
+    Here's how to initialize the ``boto3.Client.S3`` object:
 
-    >>> session = AutoRefreshableSession(
+    >>> sess = AutoRefreshableSession(
     >>>   region="us-east-1",
     >>>   role_arn="<your-arn>",
     >>>   session_name="test",
