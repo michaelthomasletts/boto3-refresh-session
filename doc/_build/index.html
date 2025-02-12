@@ -329,23 +329,28 @@
   <section id="boto3-refresh-session">
 <h1>boto3-refresh-session<a class="headerlink" href="#boto3-refresh-session" title="Link to this heading">#</a></h1>
 <p>A simple Python package for refreshing boto3 sessions automatically.</p>
-<p>Although this project is obviously small, I believe it nevertheless serves a
-helpful function for engineers working with boto3. That helpful function being
-this: it is not uncommon for pipelines and workflows that interact with the AWS
-API via boto3 to run for a long time and, accordingly, for temporary credentials
-to expire. Usually, engineers resolve that problem one of two ways: with try
-except blocks that catch ClientError exceptions or a similar approach as that used
-in this project – that is, using methods available within botocore for refreshing
-temporary credentials automatically. Speaking personally, variations of the code
-found herein exists in code bases at nearly every company where I have worked.
-Sometimes, I turned that code into a module; other times, I wrote it from scratch.
-Noticing a pattern, I decided to finally turn that code into a proper Python package
-with unit testing, documentation, and quality checks; the idea being that, henceforth,
-depending on my employer’s open source policy, I may simply import this package instead
-of reproducing the code herein for the Nth time. It seems probable in my estimation
-that this project will be similarly helpful for others as well!</p>
+<section id="why-should-i-use-this">
+<h2>Why should I use this?<a class="headerlink" href="#why-should-i-use-this" title="Link to this heading">#</a></h2>
+<p>It is common for data pipelines and workflows that interact with the AWS API via
+<code class="docutils literal notranslate"><span class="pre">boto3</span></code> to run for a long time and, accordingly, for temporary credentials to
+expire.</p>
+<p>Usually, engineers deal with that problem one of two ways:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">try</span> <span class="pre">except</span></code> blocks that catch <code class="docutils literal notranslate"><span class="pre">ClientError</span></code> exceptions</p></li>
+<li><p>A similar approach as that used in this project – that is, using methods available
+within <code class="docutils literal notranslate"><span class="pre">botocore</span></code> for refreshing temporary credentials automatically.</p></li>
+</ul>
+<p>Speaking personally, variations of the code found herein exists in code bases at
+nearly every company where I have worked. Sometimes, I turned that code into a module;
+other times, I wrote it from scratch. Clearly, that is inefficient.</p>
+<p>I decided to finally turn that code into a proper Python package with unit testing,
+automatic documentation, and quality checks; the idea being that, henceforth, depending
+on my employer’s open source policy, I may simply import this package instead of
+reproducing the code herein for the Nth time.</p>
+<p>If any of this sounds relatable, then <code class="docutils literal notranslate"><span class="pre">boto3-refresh-session</span></code> should help you!</p>
 <div class="toctree-wrapper compound">
 </div>
+</section>
 <section id="information">
 <h2>Information<a class="headerlink" href="#information" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -419,6 +424,7 @@ machine, check <a class="reference external" href="https://boto3.amazonaws.com/v
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-should-i-use-this">Why should I use this?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#information">Information</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">Authors</a></li>
