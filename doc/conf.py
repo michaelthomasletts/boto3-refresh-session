@@ -53,7 +53,7 @@ html_theme_options = {
             "url": "https://pypi.org/project/boto3-refresh-session/",
             "icon": "https://img.icons8.com/androidL/512/FFFFFF/pypi.png",
             "type": "url",
-        }
+        },
     ],
 }
 autodoc_default_options = {
