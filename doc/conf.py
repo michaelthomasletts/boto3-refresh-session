@@ -53,7 +53,7 @@ html_theme_options = {
             "url": "https://pypi.org/project/boto3-refresh-session/",
             "icon": "fab fa-python",
             "type": "fontawesome",
-        },        
+        },
     ],
 }
 autodoc_default_options = {
