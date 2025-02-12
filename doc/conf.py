@@ -51,9 +51,9 @@ html_theme_options = {
         {
             "name": "PyPI",
             "url": "https://pypi.org/project/boto3-refresh-session/",
-            "icon": "https://img.icons8.com/androidL/512/FFFFFF/pypi.png",
-            "type": "url",
-        },
+            "icon": "fab fa-python",
+            "type": "fontawesome",
+        },        
     ],
 }
 autodoc_default_options = {
