@@ -39,7 +39,6 @@ html_theme_options = {
     "collapse_navigation": True,
     "navbar_end": [
         "search-button",
-        "theme-switcher",
         "navbar-icon-links.html",
     ],
     "icon_links": [
@@ -49,6 +48,12 @@ html_theme_options = {
             "icon": "fab fa-github-square",
             "type": "fontawesome",
         },
+        {
+            "name": "PyPI",
+            "url": "https://pypi.org/project/boto3-refresh-session/",
+            "icon": "https://img.icons8.com/androidL/512/FFFFFF/pypi.png",
+            "type": "url",
+        }
     ],
 }
 autodoc_default_options = {
