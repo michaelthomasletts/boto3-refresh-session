@@ -75,7 +75,7 @@ class AutoRefreshableSession:
     >>>   role_arn="<your-arn>",
     >>>   session_name="test",
     >>> )
-    >>> s3_client = session.session.client(service_name="s3")
+    >>> s3_client = sess.session.client(service_name="s3")
     """
 
     region: str = field(validator=instance_of(str))
