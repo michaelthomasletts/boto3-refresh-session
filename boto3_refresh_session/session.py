@@ -3,6 +3,17 @@ from __future__ import annotations
 __doc__ = """
 Helper method for generating an automatically refreshing ``boto3.Session``
 object.
+
+.. warning::
+    ``AutoRefreshableSession`` was not tested for manually passing hard-coded
+    account credentials to the ``boto3.Session`` or ``boto3.Session.client`` 
+    objects! There are optional ``session_kwargs`` and ``client_kwargs``
+    parameters available for passing hard-coded account credentials, which
+    should work; however, that cannot be guaranteed! In any case, the ``boto3``
+    documentation strongly urges against passing hard-coded account credentials
+    as parameters; it is for that reason the documentation below, and everywhere
+    else, only mentions ``~/.aws/config`` and ``~/.aws/credentials`` for 
+    authorization.
 """
 __all__ = ["AutoRefreshableSession"]
 

@@ -356,6 +356,18 @@
 <span id="boto3-refresh-session-session"></span><h1>boto3_refresh_session.session<a class="headerlink" href="#module-boto3_refresh_session.session" title="Link to this heading">#</a></h1>
 <p>Helper method for generating an automatically refreshing <code class="docutils literal notranslate"><span class="pre">boto3.Session</span></code>
 object.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code class="docutils literal notranslate"><span class="pre">AutoRefreshableSession</span></code> was not tested for manually passing hard-coded
+account credentials to the <code class="docutils literal notranslate"><span class="pre">boto3.Session</span></code> or <code class="docutils literal notranslate"><span class="pre">boto3.Session.client</span></code>
+objects! There are optional <code class="docutils literal notranslate"><span class="pre">session_kwargs</span></code> and <code class="docutils literal notranslate"><span class="pre">client_kwargs</span></code>
+parameters available for passing hard-coded account credentials, which
+should work; however, that cannot be guaranteed! In any case, the <code class="docutils literal notranslate"><span class="pre">boto3</span></code>
+documentation strongly urges against passing hard-coded account credentials
+as parameters; it is for that reason the documentation below, and everywhere
+else, only mentions <code class="docutils literal notranslate"><span class="pre">~/.aws/config</span></code> and <code class="docutils literal notranslate"><span class="pre">~/.aws/credentials</span></code> for
+authorization.</p>
+</div>
 <p class="rubric">Classes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
