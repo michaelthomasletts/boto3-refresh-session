@@ -13,5 +13,6 @@ Submodules
 
 .. autosummary::
     :toctree: session/
+    :nosignatures:
 
     session

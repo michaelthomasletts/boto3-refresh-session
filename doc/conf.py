@@ -62,6 +62,8 @@ autodoc_default_options = {
     "exclude-members": "__init__",
 }
 autodoc_typehints = "none"
+autodoc_preserve_defaults = False
+autodoc_class_signature = "separated"
 numpydoc_show_class_members = False
 numpydoc_show_inherited_class_members = False
 numpydoc_attributes_as_param_list = False
