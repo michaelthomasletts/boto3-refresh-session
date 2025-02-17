@@ -55,7 +55,7 @@ The following example uses ``s3`` merely for illustrative purposes.
 
 To use this package, your machine must be configured with AWS
 credentials. To learn more about how ``boto3`` searches for credentials on a
-machine, check `this documentation <https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html>`_.
+machine, check the :ref:`authorization documentation <authorization>`.
 
 .. code-block:: python
    
