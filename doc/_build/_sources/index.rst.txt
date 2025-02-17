@@ -33,11 +33,13 @@ If any of that sounds relatable, then ``boto3-refresh-session`` should help you.
 
    API Reference <reference/index>
    Installation <installation>
+   Authorization <authorization>
 
 Information
 -----------
 - :doc:`API Reference <./reference/index>`
 - :doc:`Installation <./installation>`
+- :doc:`Authorization <./authorization>`
 
 Usage
 -----
@@ -45,16 +47,19 @@ Usage
 This package is extremely easy to use. Simply pass the basic parameters and
 initialize the ``AutoRefreshableSession`` class; that's it! You're good to go!
 
-``AutoRefreshableSession`` will refresh
-temporary credentials for you in the background. In the following example,
-continue using the ``s3_client`` object without worry of using `try` and 
-`except` blocks!
+``AutoRefreshableSession`` will refresh temporary credentials for you in the 
+background. In the following example, continue using the ``s3_client`` object 
+without worry of using ``try`` and ``except`` blocks! For context, you can pass
+any ``service_name`` parameter you want, so long as it's included in ``boto3``. 
+The following example uses ``s3`` merely for illustrative purposes.
 
 To use this package, your machine must be configured with AWS
 credentials. To learn more about how ``boto3`` searches for credentials on a
 machine, check `this documentation <https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html>`_.
 
 .. code-block:: python
+   
+   from boto3_refresh_session import AutoRefreshableSession
 
    sess = AutoRefreshableSession(
       region="<your-region>",

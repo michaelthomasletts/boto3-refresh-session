@@ -10,10 +10,11 @@ object.
     objects! There are optional ``session_kwargs`` and ``client_kwargs``
     parameters available for passing hard-coded account credentials, which
     should work; however, that cannot be guaranteed! In any case, the ``boto3``
-    documentation strongly urges against passing hard-coded account credentials
+    documentation generally recommends against passing hard-coded account credentials
     as parameters; it is for that reason the documentation below, and everywhere
     else, only mentions ``~/.aws/config`` and ``~/.aws/credentials`` for 
-    authorization.
+    authorization. Since the ``session_kwargs`` and ``client_kwargs`` parameters 
+    were not tested, you will need to use those parameters at your own discretion.
 """
 __all__ = ["AutoRefreshableSession"]
 

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Installation &#8212; boto3-refresh-session</title>
+    <title>Authorization &#8212; boto3-refresh-session</title>
   
   
   
@@ -41,12 +41,11 @@
     <script src="_static/documentation_options.js?v=3bbcec59"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'installation';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'authorization';</script>
     <link rel="icon" href="_static/brs.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Authorization" href="authorization.html" />
-    <link rel="prev" title="boto3_refresh_session.session" href="reference/session/boto3_refresh_session.session.html" />
+    <link rel="prev" title="Installation" href="installation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -136,15 +135,15 @@
 </li>
 
 
-<li class="nav-item current active">
-  <a class="nav-link nav-internal" href="#">
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="installation.html">
     Installation
   </a>
 </li>
 
 
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="authorization.html">
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
     Authorization
   </a>
 </li>
@@ -255,15 +254,15 @@
 </li>
 
 
-<li class="nav-item current active">
-  <a class="nav-link nav-internal" href="#">
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="installation.html">
     Installation
   </a>
 </li>
 
 
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="authorization.html">
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
     Authorization
   </a>
 </li>
@@ -351,7 +350,7 @@
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Installation</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Authorization</span></li>
   </ul>
 </nav>
 </div>
@@ -368,12 +367,31 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="installation">
-<span id="id1"></span><h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h1>
-<p>To install <a class="reference external" href="https://pypi.org/project/boto3-refresh-session/">boto3-refresh-session</a> using <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>boto3-refresh-session
-</pre></div>
+  <section id="authorization">
+<span id="id1"></span><h1>Authorization<a class="headerlink" href="#authorization" title="Link to this heading">#</a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code class="docutils literal notranslate"><span class="pre">AutoRefreshableSession</span></code> was not tested for manually passing hard-coded
+account credentials to the <code class="docutils literal notranslate"><span class="pre">boto3.Session</span></code> or <code class="docutils literal notranslate"><span class="pre">boto3.Session.client</span></code>
+objects! There are optional <code class="docutils literal notranslate"><span class="pre">session_kwargs</span></code> and <code class="docutils literal notranslate"><span class="pre">client_kwargs</span></code>
+parameters available for passing hard-coded account credentials, which
+<em>should</em> work; however, that cannot be guaranteed! In any case, the <code class="docutils literal notranslate"><span class="pre">boto3</span></code>
+documentation generally recommends against passing hard-coded account credentials
+as parameters; it is for that reason the documentation below, and everywhere
+else, only mentions <code class="docutils literal notranslate"><span class="pre">~/.aws/config</span></code> and <code class="docutils literal notranslate"><span class="pre">~/.aws/credentials</span></code> for
+authorization. Since the <code class="docutils literal notranslate"><span class="pre">session_kwargs</span></code> and <code class="docutils literal notranslate"><span class="pre">client_kwargs</span></code> parameters
+were not tested, you will need to use those parameters at your own discretion.</p>
 </div>
+<p>In order to use this package, it is <strong>recommended</strong> that you follow one of the
+below methods for authorizing access to your AWS instance:</p>
+<ul class="simple">
+<li><p>Create local environment variables containing your credentials,
+e.g. <code class="docutils literal notranslate"><span class="pre">ACCESS_KEY</span></code>, <code class="docutils literal notranslate"><span class="pre">SECRET_KEY</span></code>, and <code class="docutils literal notranslate"><span class="pre">SESSION_TOKEN</span></code>.</p></li>
+<li><p>Create a shared credentials file, i.e. <code class="docutils literal notranslate"><span class="pre">~/.aws/credentials</span></code>.</p></li>
+<li><p>Create an AWS config file, i.e. <code class="docutils literal notranslate"><span class="pre">~/.aws/config</span></code>.</p></li>
+</ul>
+<p>For additional details concerning how to authorize access, check the
+<a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html">boto3 documentation</a>.</p>
 </section>
 
 
@@ -387,22 +405,13 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="reference/session/boto3_refresh_session.session.html"
+       href="installation.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">boto3_refresh_session.session</p>
+        <p class="prev-next-title">Installation</p>
       </div>
-    </a>
-    <a class="right-next"
-       href="authorization.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Authorization</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -419,7 +428,7 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/installation.rst.txt"
+      <li><a href="_sources/authorization.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div></div>

@@ -142,6 +142,13 @@
   </a>
 </li>
 
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../authorization.html">
+    Authorization
+  </a>
+</li>
+
   </ul>
 </nav></div>
       
@@ -251,6 +258,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../installation.html">
     Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../authorization.html">
+    Authorization
   </a>
 </li>
 
@@ -368,10 +382,11 @@ account credentials to the <code class="docutils literal notranslate"><span clas
 objects! There are optional <code class="docutils literal notranslate"><span class="pre">session_kwargs</span></code> and <code class="docutils literal notranslate"><span class="pre">client_kwargs</span></code>
 parameters available for passing hard-coded account credentials, which
 should work; however, that cannot be guaranteed! In any case, the <code class="docutils literal notranslate"><span class="pre">boto3</span></code>
-documentation strongly urges against passing hard-coded account credentials
+documentation generally recommends against passing hard-coded account credentials
 as parameters; it is for that reason the documentation below, and everywhere
 else, only mentions <code class="docutils literal notranslate"><span class="pre">~/.aws/config</span></code> and <code class="docutils literal notranslate"><span class="pre">~/.aws/credentials</span></code> for
-authorization.</p>
+authorization. Since the <code class="docutils literal notranslate"><span class="pre">session_kwargs</span></code> and <code class="docutils literal notranslate"><span class="pre">client_kwargs</span></code> parameters
+were not tested, you will need to use those parameters at your own discretion.</p>
 </div>
 <p class="rubric">Classes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">

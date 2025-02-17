@@ -141,6 +141,13 @@
   </a>
 </li>
 
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="authorization.html">
+    Authorization
+  </a>
+</li>
+
   </ul>
 </nav></div>
       
@@ -255,6 +262,13 @@
   </a>
 </li>
 
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="authorization.html">
+    Authorization
+  </a>
+</li>
+
   </ul>
 </nav></div>
           
@@ -361,20 +375,24 @@ reproducing the code herein for the Nth time.</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="reference/index.html"><span class="doc">API Reference</span></a></p></li>
 <li><p><a class="reference internal" href="installation.html"><span class="doc">Installation</span></a></p></li>
+<li><p><a class="reference internal" href="authorization.html"><span class="doc">Authorization</span></a></p></li>
 </ul>
 </section>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <p>This package is extremely easy to use. Simply pass the basic parameters and
 initialize the <code class="docutils literal notranslate"><span class="pre">AutoRefreshableSession</span></code> class; that’s it! You’re good to go!</p>
-<p><code class="docutils literal notranslate"><span class="pre">AutoRefreshableSession</span></code> will refresh
-temporary credentials for you in the background. In the following example,
-continue using the <code class="docutils literal notranslate"><span class="pre">s3_client</span></code> object without worry of using <cite>try</cite> and
-<cite>except</cite> blocks!</p>
+<p><code class="docutils literal notranslate"><span class="pre">AutoRefreshableSession</span></code> will refresh temporary credentials for you in the
+background. In the following example, continue using the <code class="docutils literal notranslate"><span class="pre">s3_client</span></code> object
+without worry of using <code class="docutils literal notranslate"><span class="pre">try</span></code> and <code class="docutils literal notranslate"><span class="pre">except</span></code> blocks! For context, you can pass
+any <code class="docutils literal notranslate"><span class="pre">service_name</span></code> parameter you want, so long as it’s included in <code class="docutils literal notranslate"><span class="pre">boto3</span></code>.
+The following example uses <code class="docutils literal notranslate"><span class="pre">s3</span></code> merely for illustrative purposes.</p>
 <p>To use this package, your machine must be configured with AWS
 credentials. To learn more about how <code class="docutils literal notranslate"><span class="pre">boto3</span></code> searches for credentials on a
 machine, check <a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html">this documentation</a>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sess</span> <span class="o">=</span> <span class="n">AutoRefreshableSession</span><span class="p">(</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">boto3_refresh_session</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoRefreshableSession</span>
+
+<span class="n">sess</span> <span class="o">=</span> <span class="n">AutoRefreshableSession</span><span class="p">(</span>
    <span class="n">region</span><span class="o">=</span><span class="s2">&quot;&lt;your-region&gt;&quot;</span><span class="p">,</span>
    <span class="n">role_arn</span><span class="o">=</span><span class="s2">&quot;&lt;your-role-arn&gt;&quot;</span><span class="p">,</span>
    <span class="n">session_name</span><span class="o">=</span><span class="s2">&quot;&lt;your-session-name&gt;&quot;</span><span class="p">,</span>
