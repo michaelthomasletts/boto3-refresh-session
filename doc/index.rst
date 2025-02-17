@@ -25,7 +25,7 @@ automatic documentation, and quality checks; the idea being that, henceforth, de
 on my employer's open source policy, I may simply import this package instead of 
 reproducing the code herein for the Nth time.
 
-If any of this sounds relatable, then ``boto3-refresh-session`` should help you!
+If any of that sounds relatable, then ``boto3-refresh-session`` should help you.
 
 .. toctree::
    :maxdepth: 1
