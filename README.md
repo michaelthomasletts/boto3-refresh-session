@@ -3,7 +3,7 @@
 [![Workflow](https://img.shields.io/github/actions/workflow/status/michaelthomasletts/boto3-refresh-session/push_pullrequest.yml?logo=github)](https://github.com/michaelthomasletts/boto3-refresh-session/actions/workflows/push_pullrequest.yml)
 ![Python Version](https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi)
 
-![BRS Image](doc/brs.png)
+![BRS Image](https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/doc/brs.png)
 
 A simple Python package for refreshing boto3 sessions automatically.
 
