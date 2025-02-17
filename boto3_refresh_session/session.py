@@ -33,10 +33,7 @@ class AutoRefreshableSession:
     steps required.
 
     This object is useful for long-running processes where temporary credentials
-    may expire between iterations.
-
-    To use this class, you must have ``~/.aws/config`` or ``~/.aws/credentials``
-    configured on your machine.
+    may expire.
 
     Parameters
     ----------
@@ -61,11 +58,8 @@ class AutoRefreshableSession:
 
     Notes
     -----
-    boto3 employs a variety of methods (in order) to identify credentials:
-
-    https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
-
-    This class assumes that ``~/.aws`` exists with ``/config`` or ``/credentials``!
+    Check the :ref:`authorization documentation <authorization>` for additional
+    information concerning how to authorize access to AWS.
 
     Examples
     --------

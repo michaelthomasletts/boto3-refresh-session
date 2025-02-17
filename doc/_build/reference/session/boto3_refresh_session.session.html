@@ -403,9 +403,7 @@ were not tested, you will need to use those parameters at your own discretion.</
 <dd><p>Returns a <code class="docutils literal notranslate"><span class="pre">boto3.Session</span></code> object which refreshes automatically, no extra
 steps required.</p>
 <p>This object is useful for long-running processes where temporary credentials
-may expire between iterations.</p>
-<p>To use this class, you must have <code class="docutils literal notranslate"><span class="pre">~/.aws/config</span></code> or <code class="docutils literal notranslate"><span class="pre">~/.aws/credentials</span></code>
-configured on your machine.</p>
+may expire.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -434,9 +432,8 @@ configured on your machine.</p>
 </table>
 </div>
 <p class="rubric">Notes</p>
-<p>boto3 employs a variety of methods (in order) to identify credentials:</p>
-<p><a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html">https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html</a></p>
-<p>This class assumes that <code class="docutils literal notranslate"><span class="pre">~/.aws</span></code> exists with <code class="docutils literal notranslate"><span class="pre">/config</span></code> or <code class="docutils literal notranslate"><span class="pre">/credentials</span></code>!</p>
+<p>Check the <a class="reference internal" href="../../authorization.html#authorization"><span class="std std-ref">authorization documentation</span></a> for additional
+information concerning how to authorize access to AWS.</p>
 <p class="rubric">Examples</p>
 <p>Here’s how to initialize the <code class="docutils literal notranslate"><span class="pre">boto3.Client.S3</span></code> object:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sess</span> <span class="o">=</span> <span class="n">AutoRefreshableSession</span><span class="p">(</span>
