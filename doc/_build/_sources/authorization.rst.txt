@@ -25,3 +25,6 @@ below methods for authorizing access to your AWS instance:
   
 For additional details concerning how to authorize access, check the 
 `boto3 documentation <https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html>`_.
+
+For additional details concerning how to configure an AWS credentials file
+on your machine, check the `AWS CLI documentation <https://aws.amazon.com/cli/>`_.
