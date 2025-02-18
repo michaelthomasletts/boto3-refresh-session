@@ -65,7 +65,7 @@ class AutoRefreshableSession:
     --------
     Here's how to initialize this object:
 
-    >>> sess = AutoRefreshableSession(
+    >>> sess = brs.AutoRefreshableSession(
     >>>   region="us-east-1",
     >>>   role_arn="<your-arn>",
     >>>   session_name="test",

@@ -49,10 +49,10 @@ credentials. To learn more about how `boto3` searches for credentials on a
 machine, check [this documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html).
 
 ```python
-from boto3_refresh_session import AutoRefreshableSession
+import boto3_refresh_session as brs
 
 
-sess = AutoRefreshableSession(
+sess = brs.AutoRefreshableSession(
     region="<your-region>",
     role_arn="<your-role-arn>",
     session_name="<your-session-name>",
