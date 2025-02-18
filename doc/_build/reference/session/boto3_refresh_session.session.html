@@ -31,6 +31,7 @@
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=d49fb8c2" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -146,6 +147,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../authorization.html">
     Authorization
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../authors.html">
+    Authors
   </a>
 </li>
 
@@ -268,6 +276,13 @@
   </a>
 </li>
 
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../authors.html">
+    Authors
+  </a>
+</li>
+
   </ul>
 </nav></div>
           
@@ -373,12 +388,12 @@
                   
   <section id="module-boto3_refresh_session.session">
 <span id="boto3-refresh-session-session"></span><h1>boto3_refresh_session.session<a class="headerlink" href="#module-boto3_refresh_session.session" title="Link to this heading">#</a></h1>
-<p>Helper method for generating an automatically refreshing <code class="docutils literal notranslate"><span class="pre">boto3.Session</span></code>
+<p>Helper method for generating an automatically refreshing <a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html#boto3.session.Session" title="(in Boto3 v1.36.21)"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3.session.Session</span></code></a>
 object.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p><code class="docutils literal notranslate"><span class="pre">AutoRefreshableSession</span></code> was not tested for manually passing hard-coded
-account credentials to the <code class="docutils literal notranslate"><span class="pre">boto3.Session</span></code> or <code class="docutils literal notranslate"><span class="pre">boto3.Session.client</span></code>
+account credentials to the <a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html#boto3.session.Session" title="(in Boto3 v1.36.21)"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3.session.Session</span></code></a> or <code class="docutils literal notranslate"><span class="pre">boto3.client</span></code>
 objects! There are optional <code class="docutils literal notranslate"><span class="pre">session_kwargs</span></code> and <code class="docutils literal notranslate"><span class="pre">client_kwargs</span></code>
 parameters available for passing hard-coded account credentials, which
 should work; however, that cannot be guaranteed! In any case, the <code class="docutils literal notranslate"><span class="pre">boto3</span></code>
@@ -392,7 +407,7 @@ were not tested, you will need to use those parameters at your own discretion.</
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#boto3_refresh_session.session.AutoRefreshableSession" title="boto3_refresh_session.session.AutoRefreshableSession"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AutoRefreshableSession</span></code></a></p></td>
-<td><p>Returns a <code class="docutils literal notranslate"><span class="pre">boto3.Session</span></code> object which refreshes automatically, no extra steps required.</p></td>
+<td><p>Returns a <a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html#boto3.session.Session" title="(in Boto3 v1.36.21)"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3.session.Session</span></code></a> object which refreshes automatically, no extra steps required.</p></td>
 </tr>
 </tbody>
 </table>
@@ -400,7 +415,7 @@ were not tested, you will need to use those parameters at your own discretion.</
 <dl class="py class">
 <dt class="sig sig-object py" id="boto3_refresh_session.session.AutoRefreshableSession">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boto3_refresh_session.session.</span></span><span class="sig-name descname"><span class="pre">AutoRefreshableSession</span></span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/session.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.session.AutoRefreshableSession" title="Link to this definition">#</a></dt>
-<dd><p>Returns a <code class="docutils literal notranslate"><span class="pre">boto3.Session</span></code> object which refreshes automatically, no extra
+<dd><p>Returns a <a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html#boto3.session.Session" title="(in Boto3 v1.36.21)"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3.session.Session</span></code></a> object which refreshes automatically, no extra
 steps required.</p>
 <p>This object is useful for long-running processes where temporary credentials
 may expire.</p>
@@ -415,9 +430,9 @@ may expire.</p>
 </dd>
 <dt><strong>ttl</strong><span class="classifier">int, optional</span></dt><dd><p>Number of seconds until temporary credentials expire, default 900.</p>
 </dd>
-<dt><strong>session_kwargs</strong><span class="classifier">dict, optional</span></dt><dd><p>Optional keyword arguments for <code class="docutils literal notranslate"><span class="pre">boto3.Session</span></code>.</p>
+<dt><strong>session_kwargs</strong><span class="classifier">dict, optional</span></dt><dd><p>Optional keyword arguments for <a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html#boto3.session.Session" title="(in Boto3 v1.36.21)"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3.session.Session</span></code></a>.</p>
 </dd>
-<dt><strong>client_kwargs</strong><span class="classifier">dict, optional</span></dt><dd><p>Optional keyword arguments for <code class="docutils literal notranslate"><span class="pre">boto3.Session.client</span></code>.</p>
+<dt><strong>client_kwargs</strong><span class="classifier">dict, optional</span></dt><dd><p>Optional keyword arguments for <code class="docutils literal notranslate"><span class="pre">boto3.client</span></code>.</p>
 </dd>
 </dl>
 </dd>
@@ -426,7 +441,7 @@ may expire.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <tbody>
 <tr class="row-odd"><td><p><strong>session</strong></p></td>
-<td><p>Returns a <code class="docutils literal notranslate"><span class="pre">boto3.Session</span></code> object with credentials which refresh automatically.</p></td>
+<td><p>Returns a <a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html#boto3.session.Session" title="(in Boto3 v1.36.21)"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3.session.Session</span></code></a> object with credentials which refresh automatically.</p></td>
 </tr>
 </tbody>
 </table>
@@ -435,7 +450,7 @@ may expire.</p>
 <p>Check the <a class="reference internal" href="../../authorization.html#authorization"><span class="std std-ref">authorization documentation</span></a> for additional
 information concerning how to authorize access to AWS.</p>
 <p class="rubric">Examples</p>
-<p>Here’s how to initialize the <code class="docutils literal notranslate"><span class="pre">boto3.Client.S3</span></code> object:</p>
+<p>Here’s how to initialize this object:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sess</span> <span class="o">=</span> <span class="n">AutoRefreshableSession</span><span class="p">(</span>
 <span class="gp">&gt;&gt;&gt; </span>  <span class="n">region</span><span class="o">=</span><span class="s2">&quot;us-east-1&quot;</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>  <span class="n">role_arn</span><span class="o">=</span><span class="s2">&quot;&lt;your-arn&gt;&quot;</span><span class="p">,</span>

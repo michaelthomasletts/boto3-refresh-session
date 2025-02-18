@@ -12,6 +12,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.autosummary",
     "sphinx.ext.linkcode",
+    "sphinx.ext.extlinks"
 ]
 language = "en"
 project = "boto3-refresh-session"
@@ -37,6 +38,9 @@ html_context = {
     "default_mode": "dark",
 }
 htmlhelp_basename = project
+html_css_files = [
+    "custom.css"
+]
 html_theme_options = {
     "collapse_navigation": True,
     "navbar_end": [
@@ -81,6 +85,14 @@ napoleon_include_init_with_doc = False
 
 # autosummary
 generate_autosummary = True
+
+# intersphinx
+intersphinx_mapping = {
+    "boto3": ("https://boto3.amazonaws.com/v1/documentation/api/latest/", None),
+}
+extlinks = {
+    "botocore": ('https://botocore.amazonaws.com/v1/documentation/api/latest/%s', ''),
+}
 
 
 def linkcode_resolve(domain, info):

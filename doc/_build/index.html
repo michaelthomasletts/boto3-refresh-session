@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>boto3-refresh-session &#8212; boto3-refresh-session</title>
+    <title>What is this? &#8212; boto3-refresh-session</title>
   
   
   
@@ -31,6 +31,7 @@
 <link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=d49fb8c2" />
   
   <!-- So that users can add custom icons -->
   <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -145,6 +146,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="authorization.html">
     Authorization
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="authors.html">
+    Authors
   </a>
 </li>
 
@@ -269,6 +277,13 @@
   </a>
 </li>
 
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="authors.html">
+    Authors
+  </a>
+</li>
+
   </ul>
 </nav></div>
           
@@ -345,11 +360,22 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="boto3-refresh-session">
-<h1>boto3-refresh-session<a class="headerlink" href="#boto3-refresh-session" title="Link to this heading">#</a></h1>
-<p>A simple Python package for refreshing boto3 sessions automatically.</p>
+  <img alt="_images/brs.png" class="align-center" src="_images/brs.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<section id="what-is-this">
+<h1>What is this?<a class="headerlink" href="#what-is-this" title="Link to this heading">#</a></h1>
+<p>A simple Python package for refreshing temporary AWS credentials for boto3 automatically.</p>
+</section>
+<section id="who-is-this-for">
+<h1>Who is this for?<a class="headerlink" href="#who-is-this-for" title="Link to this heading">#</a></h1>
+<p>Software Engineers, Data Engineers, Machine Learning Engineers, DevOps Engineers – anyone who uses AWS with boto3.</p>
+</section>
 <section id="why-should-i-use-this">
-<h2>Why should I use this?<a class="headerlink" href="#why-should-i-use-this" title="Link to this heading">#</a></h2>
+<h1>Why should I use this?<a class="headerlink" href="#why-should-i-use-this" title="Link to this heading">#</a></h1>
 <p>It is common for data pipelines and workflows that interact with the AWS API via
 <code class="docutils literal notranslate"><span class="pre">boto3</span></code> to run for a long time and, accordingly, for temporary credentials to
 expire.</p>
@@ -367,19 +393,9 @@ automatic documentation, and quality checks; the idea being that, henceforth, de
 on my employer’s open source policy, I may simply import this package instead of
 reproducing the code herein for the Nth time.</p>
 <p>If any of that sounds relatable, then <code class="docutils literal notranslate"><span class="pre">boto3-refresh-session</span></code> should help you.</p>
-<div class="toctree-wrapper compound">
-</div>
 </section>
-<section id="information">
-<h2>Information<a class="headerlink" href="#information" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p><a class="reference internal" href="reference/index.html"><span class="doc">API Reference</span></a></p></li>
-<li><p><a class="reference internal" href="installation.html"><span class="doc">Installation</span></a></p></li>
-<li><p><a class="reference internal" href="authorization.html"><span class="doc">Authorization</span></a></p></li>
-</ul>
-</section>
-<section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<section id="how-do-i-use-this">
+<h1>How do I use this?<a class="headerlink" href="#how-do-i-use-this" title="Link to this heading">#</a></h1>
 <p>This package is extremely easy to use. Simply pass the basic parameters and
 initialize the <code class="docutils literal notranslate"><span class="pre">AutoRefreshableSession</span></code> class; that’s it! You’re good to go!</p>
 <p><code class="docutils literal notranslate"><span class="pre">AutoRefreshableSession</span></code> will refresh temporary credentials for you in the
@@ -400,13 +416,6 @@ machine, check the <a class="reference internal" href="authorization.html#author
 <span class="n">s3_client</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="n">service_name</span><span class="o">=</span><span class="s2">&quot;s3&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="authors">
-<h2>Authors<a class="headerlink" href="#authors" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p><a class="reference external" href="https://michaelthomasletts.github.io/">Michael Letts</a></p></li>
-</ul>
-</section>
 </section>
 
 
@@ -447,11 +456,12 @@ machine, check the <a class="reference internal" href="authorization.html#author
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-should-i-use-this">Why should I use this?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#information">Information</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">Authors</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">What is this?</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#who-is-this-for">Who is this for?</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#why-should-i-use-this">Why should I use this?</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#how-do-i-use-this">How do I use this?</a></li>
 </ul>
+
   </nav></div>
 
   <div class="sidebar-secondary-item">

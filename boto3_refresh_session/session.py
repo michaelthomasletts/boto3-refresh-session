@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 __doc__ = """
-Helper method for generating an automatically refreshing ``boto3.Session``
+Helper method for generating an automatically refreshing :class:`boto3.session.Session`
 object.
 
 .. warning::
     ``AutoRefreshableSession`` was not tested for manually passing hard-coded
-    account credentials to the ``boto3.Session`` or ``boto3.Session.client`` 
+    account credentials to the :class:`boto3.session.Session` or ``boto3.client`` 
     objects! There are optional ``session_kwargs`` and ``client_kwargs``
     parameters available for passing hard-coded account credentials, which
     should work; however, that cannot be guaranteed! In any case, the ``boto3``
@@ -29,7 +29,7 @@ from botocore.session import get_session
 
 @define
 class AutoRefreshableSession:
-    """Returns a ``boto3.Session`` object which refreshes automatically, no extra
+    """Returns a :class:`boto3.session.Session` object which refreshes automatically, no extra
     steps required.
 
     This object is useful for long-running processes where temporary credentials
@@ -46,14 +46,14 @@ class AutoRefreshableSession:
     ttl : int, optional
         Number of seconds until temporary credentials expire, default 900.
     session_kwargs : dict, optional
-        Optional keyword arguments for ``boto3.Session``.
+        Optional keyword arguments for :class:`boto3.session.Session`.
     client_kwargs : dict, optional
-        Optional keyword arguments for ``boto3.Session.client``.
+        Optional keyword arguments for ``boto3.client``.
 
     Attributes
     ----------
     session
-        Returns a ``boto3.Session`` object with credentials which refresh
+        Returns a :class:`boto3.session.Session` object with credentials which refresh
         automatically.
 
     Notes
@@ -63,7 +63,7 @@ class AutoRefreshableSession:
 
     Examples
     --------
-    Here's how to initialize the ``boto3.Client.S3`` object:
+    Here's how to initialize this object:
 
     >>> sess = AutoRefreshableSession(
     >>>   region="us-east-1",

@@ -6,7 +6,7 @@ API Reference
 =============
 
 The following submodule contains a class for generating an automatically 
-refreshing ``boto3.Session`` object.
+refreshing :class:`boto3.session.Session` object.
 
 Submodules
 ----------

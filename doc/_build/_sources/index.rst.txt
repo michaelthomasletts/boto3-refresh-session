@@ -1,7 +1,26 @@
-boto3-refresh-session
-=====================
+.. image:: brs.png
+   :align: center
 
-A simple Python package for refreshing boto3 sessions automatically.
+|
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+   API Reference <reference/index>
+   Installation <installation>
+   Authorization <authorization>
+   Authors <authors>
+
+What is this?
+-------------
+
+A simple Python package for refreshing temporary AWS credentials for boto3 automatically.
+
+Who is this for?
+----------------
+
+Software Engineers, Data Engineers, Machine Learning Engineers, DevOps Engineers -- anyone who uses AWS with boto3.
 
 Why should I use this?
 ----------------------
@@ -27,22 +46,8 @@ reproducing the code herein for the Nth time.
 
 If any of that sounds relatable, then ``boto3-refresh-session`` should help you.
 
-.. toctree::
-   :maxdepth: 1
-   :hidden:
-
-   API Reference <reference/index>
-   Installation <installation>
-   Authorization <authorization>
-
-Information
------------
-- :doc:`API Reference <./reference/index>`
-- :doc:`Installation <./installation>`
-- :doc:`Authorization <./authorization>`
-
-Usage
------
+How do I use this?
+------------------
 
 This package is extremely easy to use. Simply pass the basic parameters and
 initialize the ``AutoRefreshableSession`` class; that's it! You're good to go!
@@ -67,7 +72,3 @@ machine, check the :ref:`authorization documentation <authorization>`.
       session_name="<your-session-name>",
    )
    s3_client = sess.session.client(service_name="s3")
-
-Authors
--------
-- `Michael Letts <https://michaelthomasletts.github.io/>`_
