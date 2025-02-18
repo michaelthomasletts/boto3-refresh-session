@@ -5,7 +5,7 @@ Authorization
 
 .. warning::
     ``AutoRefreshableSession`` was not tested for manually passing hard-coded
-    account credentials to the :class:`boto3.session.Session`` or ``boto3.client`` 
+    account credentials to the :class:`boto3.session.Session` or ``boto3.client`` 
     objects! There are optional ``session_kwargs`` and ``client_kwargs``
     parameters available for passing hard-coded account credentials, which
     *should* work; however, that cannot be guaranteed! In any case, the ``boto3``

@@ -15,12 +15,12 @@
 What is this?
 -------------
 
-A simple Python package for refreshing temporary AWS credentials for boto3 automatically.
+A simple Python package for refreshing temporary AWS credentials for ``boto3`` automatically.
 
 Who is this for?
 ----------------
 
-Software Engineers, Data Engineers, Machine Learning Engineers, DevOps Engineers -- anyone who uses AWS with boto3.
+Software Engineers, Data Engineers, Machine Learning Engineers, DevOps Engineers -- anyone who uses AWS with ``boto3``.
 
 Why should I use this?
 ----------------------
