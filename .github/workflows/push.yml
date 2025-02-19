@@ -1,87 +1,59 @@
-name: Version bump and deploy docs
+name: Bump Version and Push
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - '*'
 
 jobs:
-  bump_version:
-    name: Bump Version (Main Branch Only)
+  bump-version:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
-      - name: Check out repository
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GH_PAT }}  # Use the PAT for push permissions
+          fetch-depth: 0  # Ensure full history is fetched
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: "3.x"
 
       - name: Install dependencies
-        run: pip install tomlkit
+        run: pip install bump2version
+
+      - name: Determine Version Type
+        run: |
+          # Default to patch
+          VERSION_TYPE="patch"
+
+          # Get the latest commit message or PR title
+          if [ "${{ github.event_name }}" == "push" ]; then
+            MESSAGE=$(git log -1 --pretty=%B)
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
+            MESSAGE="${{ github.event.pull_request.title }}"
+          fi
+
+          # Check for version bump keywords
+          if echo "$MESSAGE" | grep -qi '\[major\]'; then
+            VERSION_TYPE="major"
+          elif echo "$MESSAGE" | grep -qi '\[minor\]'; then
+            VERSION_TYPE="minor"
+          fi
+
+          echo "Determined VERSION_TYPE=$VERSION_TYPE"
+          echo "VERSION_TYPE=$VERSION_TYPE" >> $GITHUB_ENV
 
       - name: Bump Version
-        run: python bump_version.py patch  # Change to "major" or "minor" as needed
+        run: python bump_version $VERSION_TYPE
 
-      - name: Commit Version Bump
+      - name: Push Changes
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add pyproject.toml
-          git commit -m "chore: bump version (patch) [skip ci]"  # <--- Prevents infinite loop
-          git push origin main  # Push only the version bump commit
-
-  deploy:
-    name: Deploy Documentation
-    runs-on: ubuntu-latest
-    needs: bump_version
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        id: setup-python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          virtualenvs-path: .venv
-          installer-parallel: true
-
-      - name: Cache Poetry dependencies
-        id: cached-poetry-dependencies
-        uses: actions/cache@v4
-        with:
-          path: .venv
-          key: poetry-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
-
-      - name: Install dependencies
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-root --all-groups
-
-      - name: Install project
-        run: poetry install --no-interaction --all-groups
-
-      - name: Build Documentation
-        run: |
-          source .venv/bin/activate
-          cd doc/ && make clean && cd ..
-          sphinx-build doc _build
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          publish_branch: gh-pages
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: _build/
-          force_orphan: true
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add .
+          git commit -m "Bump $VERSION_TYPE version"
+          git push
