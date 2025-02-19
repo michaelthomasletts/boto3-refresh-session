@@ -1,6 +1,7 @@
 import sys
+from pathlib import Path
 
-import toml
+import tomlkit
 
 
 def bump_version(version: str, part: str):
@@ -22,15 +23,17 @@ def bump_version(version: str, part: str):
 
 
 def main(part: str):
-    with open("pyproject.toml", "r") as f:
-        pyproject = toml.load(f)
+    path = Path("pyproject.toml")
+
+    with path.open("r", encoding="utf-8") as f:
+        pyproject = tomlkit.parse(f.read())
 
     current_version = pyproject["project"]["version"]
     new_version = bump_version(current_version, part)
     pyproject["project"]["version"] = new_version
 
-    with open("pyproject.toml", "w") as f:
-        toml.dump(pyproject, f)
+    with path.open("w", encoding="utf-8") as f:
+        f.write(tomlkit.dumps(pyproject))
 
     print(f"Version bumped from {current_version} to {new_version}")
 

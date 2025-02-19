@@ -1,4 +1,4 @@
-name: Lint, autoformat, etc.
+name: Lint, test, version bump, deploy
 
 on:
   push:
@@ -10,21 +10,22 @@ on:
 
 jobs:
   test:
+    name: Run tests, linting, and formatting
     runs-on: ubuntu-latest
     env:
       ROLE_ARN: ${{ secrets.ROLE_ARN }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
-      # check-out repo and set-up python
       - name: Check out repository
         uses: actions/checkout@v4
-      - name: Set up python
+
+      - name: Set up Python
         id: setup-python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      # install & configure poetry
+
       - name: Install Poetry
         uses: snok/install-poetry@v1
         with:
@@ -32,47 +33,96 @@ jobs:
           virtualenvs-in-project: true
           virtualenvs-path: .venv
           installer-parallel: true
-      # load cached venv if cache exists
-      - name: Load cached venv
+
+      - name: Cache Poetry dependencies
         id: cached-poetry-dependencies
         uses: actions/cache@v4
         with:
           path: .venv
-          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
-      # install dependencies if cache does not exist
+          key: poetry-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
+
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root --all-groups
-      # install your root project, if required
+
       - name: Install project
         run: poetry install --no-interaction --all-groups
-      # bumping version
-      - name: Bump version
-        run: poetry run python bump_version.py patch      
-      # autoformat with black
-      - name: Autoformat with black
-        uses: rickstaa/action-black@v1
+
+      - name: Check formatting with Black
+        uses: psf/black@stable
         with:
-          black_args: ". --check"
-      # lint with flake8
-      - name: Lint with flake8
+          options: ". --check"
+
+      - name: Lint with Flake8
         uses: reviewdog/action-flake8@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-      # run unit tests
-      - name: Run tests
+
+      - name: Run unit tests
         run: |
           source .venv/bin/activate
           pytest tests/ -v
-      # updating docs
-      - name: Sphinx build
+
+  bump_version:
+    name: Bump Version (Main Branch Only)
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install tomlkit  # Ensure dependency for modifying pyproject.toml
+
+      - name: Bump Version
+        run: |
+          python bump_version.py patch  # Change to "major" or "minor" as needed
+
+      - name: Commit Version Bump
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add pyproject.toml
+          git commit -m "chore: bump version (patch)"
+          git push
+
+      - name: Create Tag for New Version
+        run: |
+          VERSION=$(grep 'version' pyproject.toml | awk -F'"' '{print $2}')
+          git tag "v$VERSION"
+          git push origin "v$VERSION"
+
+  deploy:
+    name: Deploy Documentation
+    runs-on: ubuntu-latest
+    needs: bump_version
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: poetry install --no-interaction --no-root --all-groups
+
+      - name: Build Documentation
         run: |
           source .venv/bin/activate
           cd doc/ && make clean && cd ..
           sphinx-build doc _build
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
