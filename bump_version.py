@@ -28,7 +28,7 @@ def main(part: str):
     with path.open("r", encoding="utf-8") as f:
         pyproject = tomlkit.parse(f.read())
 
-    current_version = pyproject["project"]["version"]
+    current_version = str(pyproject["project"]["version"])
     new_version = bump_version(current_version, part)
     pyproject["project"]["version"] = new_version
 

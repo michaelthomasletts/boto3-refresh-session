@@ -1,11 +1,15 @@
 import os
 import sys
 from datetime import date
+from pathlib import Path
 
-import toml
+import tomlkit
 
 # fetching pyproject.toml
-pyproject = toml.load("pyproject.toml")
+path = Path("../pyproject.toml")
+
+with path.open("r", encoding="utf-8") as f:
+    pyproject = tomlkit.parse(f.read())
 
 # sphinx config
 sys.path.insert(0, os.path.abspath("."))
@@ -20,10 +24,10 @@ extensions = [
     "sphinx.ext.extlinks",
 ]
 language = "en"
-project = pyproject["tool"]["poetry"]["name"]
+project = str(pyproject["project"]["name"])
 author = "Michael Letts"
 copyright = f"{date.today().year}, {author}"
-release = pyproject["tool"]["poetry"]["version"]
+release = str(pyproject["project"]["version"])
 source_encoding = "utf-8"
 source_suffix = ".rst"
 pygments_style = "sphinx"
