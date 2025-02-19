@@ -11,6 +11,13 @@ exclude =
     .DS_Store
     tests/*
     dist/*
+    Makefile
+    *.rst
+    *.md
+    *.html
+    *.css
+    *.bat
+    *.png
 extend-ignore =
     E501
     F404
