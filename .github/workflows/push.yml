@@ -1,4 +1,4 @@
-name: Bump version, deploy docs, and publish to PyPI
+name: Bump version, deploy docs, and tag
 
 on:
   push:
@@ -101,9 +101,29 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: _build/
           force_orphan: true
+  
+  tag:
+    name: Create Tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-      - name: Create Tag
+      - name: Set up Python
+        id: setup-python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          virtualenvs-path: .venv
+          installer-parallel: true
+      - name: Create Tag in Git
         run: |
-          TAG_NAME="v$(poetry version -s)"
+          TAG_NAME="$(poetry version -s)"
           git tag $TAG_NAME
           git push origin $TAG_NAME
