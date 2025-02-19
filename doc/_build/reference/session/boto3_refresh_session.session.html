@@ -432,7 +432,8 @@ may expire.</p>
 they are explicitly needed. If <code class="docutils literal notranslate"><span class="pre">False</span></code> then temporary credentials refresh
 immediately upon expiration. Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 </dd>
-<dt><strong>ttl</strong><span class="classifier">int, optional</span></dt><dd><p>Number of seconds until temporary credentials expire, default 900.</p>
+<dt><strong>ttl</strong><span class="classifier">int, optional</span></dt><dd><p>Number of seconds until temporary credentials expire. Must be greater than or
+equal to 900 seconds. Default is 900.</p>
 </dd>
 <dt><strong>session_kwargs</strong><span class="classifier">dict, optional</span></dt><dd><p>Optional keyword arguments for <a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html#boto3.session.Session" title="(in Boto3 v1.36.22)"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3.session.Session</span></code></a>.</p>
 </dd>

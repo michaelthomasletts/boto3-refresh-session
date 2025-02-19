@@ -21,7 +21,7 @@ __all__ = ["AutoRefreshableSession"]
 from typing import Type
 
 from attrs import define, field
-from attrs.validators import instance_of, le, optional
+from attrs.validators import ge, instance_of, optional
 from boto3 import Session
 from botocore.credentials import (
     DeferredRefreshableCredentials,
@@ -51,7 +51,8 @@ class AutoRefreshableSession:
         they are explicitly needed. If ``False`` then temporary credentials refresh
         immediately upon expiration. Default is ``True``.
     ttl : int, optional
-        Number of seconds until temporary credentials expire, default 900.
+        Number of seconds until temporary credentials expire. Must be greater than or
+        equal to 900 seconds. Default is 900.
     session_kwargs : dict, optional
         Optional keyword arguments for :class:`boto3.session.Session`.
     client_kwargs : dict, optional
@@ -89,7 +90,7 @@ class AutoRefreshableSession:
     session_name: str = field(validator=instance_of(str))
     defer_refresh: bool = field(default=True, validator=instance_of(bool))
     ttl: int = field(
-        default=900, validator=optional([instance_of(int), le(900)])
+        default=900, validator=optional([instance_of(int), ge(900)])
     )
     session_kwargs: dict = field(
         default={}, validator=optional(instance_of(dict))
