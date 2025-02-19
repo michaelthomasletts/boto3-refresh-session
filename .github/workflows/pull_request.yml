@@ -1,9 +1,6 @@
 name: Lint, format, and test
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - '*'
