@@ -12,10 +12,10 @@
    Authorization <authorization>
    Authors <authors>
 
-What is this?
--------------
+boto3-refresh-session
+---------------------
 
-boto3-refresh-session: a simple Python package for refreshing temporary AWS credentials for ``boto3`` automatically.
+A simple Python package for refreshing temporary AWS credentials for ``boto3`` automatically.
 
 Who is this for?
 ----------------
