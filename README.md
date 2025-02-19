@@ -6,6 +6,7 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/michaelthomasletts/boto3-refresh-session?logo=github)
 ![GitHub Repo stars](https://img.shields.io/github/stars/michaelthomasletts/boto3-refresh-session?logo=github)
 ![GitHub forks](https://img.shields.io/github/forks/michaelthomasletts/boto3-refresh-session?logo=github)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/boto3-refresh-session?logo=pypi)
 
 ![BRS Image](https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/doc/brs.png)
 
