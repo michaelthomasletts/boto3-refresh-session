@@ -1,4 +1,4 @@
-name: Bump version, deploy docs, and tag
+name: Bump version, publish to PyPI, and deploy docs
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   bump_version:
-    name: Bump Version
+    name: Bump Version and Publish to PyPI
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
@@ -56,12 +56,22 @@ jobs:
           git fetch origin main
           git reset --hard origin/main
       
-      - name: Create Tag in Git
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          virtualenvs-path: .venv
+          installer-parallel: true
+  
+      - name: Build package and publish to PyPI
+        env:
+            POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}      
         run: |
-          TAG_NAME="$(grep '^version' pyproject.toml | awk -F '"' '{print $2}')"
-          echo TAG_NAME
-          git tag $TAG_NAME
-          git push origin $TAG_NAME          
+          source .venv/bin/activate
+          poetry install --no-interaction --all-groups
+          poetry build
+          poetry publish --no-interaction      
 
   deploy:
     name: Deploy Documentation
