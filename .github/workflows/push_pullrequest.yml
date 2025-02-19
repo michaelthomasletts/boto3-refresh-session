@@ -94,12 +94,6 @@ jobs:
           git commit -m "chore: bump version (patch) [skip ci]"  # <--- Prevents infinite loop
           git push origin main  # Push only the version bump commit
 
-      - name: Create Tag for New Version
-        run: |
-          VERSION=$(grep 'version' pyproject.toml | awk -F'"' '{print $2}')
-          git tag "$VERSION"
-          git push origin "$VERSION"
-
   deploy:
     name: Deploy Documentation
     runs-on: ubuntu-latest
