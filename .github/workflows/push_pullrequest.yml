@@ -1,4 +1,4 @@
-name: Lint, test, version bump, deploy
+name: Lint, format, and test
 
 on:
   push:
