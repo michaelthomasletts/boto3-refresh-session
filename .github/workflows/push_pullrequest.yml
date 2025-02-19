@@ -1,6 +1,12 @@
 name: Lint, autoformat, etc.
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test:
@@ -43,7 +49,7 @@ jobs:
       # bumping version
       - name: Bump version
         run: |
-          python bump_version.py patch      
+          poetry run python bump_version.py patch      
       # autoformat with black
       - name: Autoformat with black
         uses: rickstaa/action-black@v1
