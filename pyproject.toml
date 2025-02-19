@@ -1,9 +1,9 @@
 [project]
 name = "boto3-refresh-session"
-version = "0.0.27"
+version = "0.0.28"
 description = "A simple Python package for refreshing boto3 sessions automatically."
 authors = [
-    {name = "Mike Letts",email = "michaelthomasletts@gmail.com"}
+    {name = "Mike Letts",email = "lettsmt@gmail.com"}
 ]
 license = {text = "MIT"}
 readme = "README.md"
