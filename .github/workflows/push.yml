@@ -22,7 +22,9 @@ jobs:
           python-version: '3.10'
 
       - name: Install dependencies
-        run: pip install tomlkit
+        run: |
+          pip install tomlkit
+          pipx install poetry
 
       - name: Determine Version Type
         run: |
@@ -54,28 +56,12 @@ jobs:
       - name: Fetch latest commit after push
         run: |
           git fetch origin main
-          git reset --hard origin/main
-      
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          virtualenvs-path: .venv
-          installer-parallel: true
-
-      - name: Cache Poetry dependencies
-        id: cached-poetry-dependencies
-        uses: actions/cache@v4
-        with:
-          path: .venv
-          key: poetry-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}          
+          git reset --hard origin/main    
   
       - name: Build package and publish to PyPI
         env:
             POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}      
         run: |
-          source .venv/bin/activate
           poetry install --no-interaction --all-groups
           poetry build
           poetry publish --no-interaction      
