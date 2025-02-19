@@ -5,6 +5,8 @@ import tomlkit
 
 
 def bump_version(version: str, part: str):
+    """Bumps version according to part parameter."""
+    
     major, minor, patch = map(int, version.split("."))
 
     if part == "major":
@@ -22,7 +24,9 @@ def bump_version(version: str, part: str):
     return f"{major}.{minor}.{patch}"
 
 
-def main(part: str):
+def run(part: str):
+    """Runs the bump_version method using the part parameter."""
+    
     path = Path("pyproject.toml")
 
     with path.open("r", encoding="utf-8") as f:
@@ -43,4 +47,4 @@ if __name__ == "__main__":
         print("Usage: python bump_version.py [major|minor|patch]")
         sys.exit(1)
 
-    main(sys.argv[1])
+    run(sys.argv[1])
