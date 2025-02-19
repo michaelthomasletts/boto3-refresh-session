@@ -72,7 +72,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GH_PAT }}  # Use the PAT instead of default token
+          token: ${{ secrets.GH_PAT }}  # Use the PAT for push permissions
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -91,14 +91,14 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add pyproject.toml
-          git commit -m "chore: bump version (patch)"
-          git push origin main  # Ensure push is using the new token
+          git commit -m "chore: bump version (patch) [skip ci]"  # <--- Prevents infinite loop
+          git push origin main  # Push only the version bump commit
 
       - name: Create Tag for New Version
         run: |
           VERSION=$(grep 'version' pyproject.toml | awk -F'"' '{print $2}')
-          git tag "v$VERSION"
-          git push origin "v$VERSION"
+          git tag "$VERSION"
+          git push origin "$VERSION"
 
   deploy:
     name: Deploy Documentation
