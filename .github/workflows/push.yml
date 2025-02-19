@@ -68,7 +68,7 @@ jobs:
 
       - name: Create tag
         run: |
-          VERSION=$(grep 'version' pyproject.toml | awk -F'"' '{print $2}')
+          VERSION=$(grep '^version' pyproject.toml | awk -F'"' '{print $2}')
           git tag "$VERSION"
           git push origin "$VERSION"
 
