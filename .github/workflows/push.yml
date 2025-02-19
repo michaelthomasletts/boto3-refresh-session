@@ -1,4 +1,4 @@
-name: Bump version and deploy docs
+name: Bump version, deploy docs, and publish to PyPI
 
 on:
   push:
@@ -101,3 +101,11 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: _build/
           force_orphan: true
+
+      - name: Poetry build wheel
+        run: poetry build
+
+      - name: Poetry publish wheel
+        env:
+          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
+        run: poetry publish --no-interaction        
