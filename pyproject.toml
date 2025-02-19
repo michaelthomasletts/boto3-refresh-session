@@ -43,3 +43,9 @@ ensure_newline_before_comments = true
 use_parentheses = true
 include_trailing_comma = true
 multi_line_output = 3
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "INFO"
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+log_cli_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

@@ -23,7 +23,10 @@ from typing import Type
 from attrs import define, field
 from attrs.validators import instance_of, le, optional
 from boto3 import Session
-from botocore.credentials import RefreshableCredentials
+from botocore.credentials import (
+    DeferredRefreshableCredentials,
+    RefreshableCredentials,
+)
 from botocore.session import get_session
 
 
@@ -43,6 +46,10 @@ class AutoRefreshableSession:
         AWS role ARN.
     session_name : str
         Name for session.
+    defer_refresh : bool, optional
+        If ``True`` then temporary credentials are not automatically refreshed until
+        they are explicitly needed. If ``False`` then temporary credentials refresh
+        immediately upon expiration. Default is ``True``.
     ttl : int, optional
         Number of seconds until temporary credentials expire, default 900.
     session_kwargs : dict, optional
@@ -61,6 +68,10 @@ class AutoRefreshableSession:
     Check the :ref:`authorization documentation <authorization>` for additional
     information concerning how to authorize access to AWS.
 
+    The default ``defer_refresh`` parameter value results in temporary credentials not
+    being refreshed until they are explicitly requested; that is more efficient than
+    refreshing expired temporary credentials automatically after they expire.
+
     Examples
     --------
     Here's how to initialize this object:
@@ -76,6 +87,7 @@ class AutoRefreshableSession:
     region: str = field(validator=instance_of(str))
     role_arn: str = field(validator=instance_of(str))
     session_name: str = field(validator=instance_of(str))
+    defer_refresh: bool = field(default=True, validator=instance_of(bool))
     ttl: int = field(
         default=900, validator=optional([instance_of(int), le(900)])
     )
@@ -88,13 +100,19 @@ class AutoRefreshableSession:
     session: Type[Session] = field(init=False)
 
     def __attrs_post_init__(self):
-        __credentials = RefreshableCredentials.create_from_metadata(
-            metadata=self._get_credentials(),
-            refresh_using=self._get_credentials,
-            method="sts-assume-role",
-        )
         __session = get_session()
-        # https://github.com/boto/botocore/blob/f8a1dd0820b548a5e8dc05420b28b6f1c6e21154/botocore/session.py#L143
+
+        if not self.defer_refresh:
+            __credentials = RefreshableCredentials.create_from_metadata(
+                metadata=self._get_credentials(),
+                refresh_using=self._get_credentials,
+                method="sts-assume-role",
+            )
+        else:
+            __credentials = DeferredRefreshableCredentials(
+                refresh_using=self._get_credentials, method="sts-assume-role"
+            )
+
         __session._credentials = __credentials
         self.session = Session(botocore_session=__session)
 
