@@ -102,10 +102,8 @@ jobs:
           publish_dir: _build/
           force_orphan: true
 
-      - name: Poetry build wheel
-        run: poetry build
-
-      - name: Poetry publish wheel
-        env:
-          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
-        run: poetry publish --no-interaction        
+      - name: Create Tag
+        run: |
+          TAG_NAME="v$(poetry version -s)"
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
