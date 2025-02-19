@@ -1,4 +1,4 @@
-name: Bump version, publish to PyPI, and deploy docs
+name: Bump version, publish to PyPI, tag, and deploy docs
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   bump_version:
-    name: Bump Version and Publish to PyPI
+    name: Bump Version, Publish to PyPI, and tag
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
@@ -26,7 +26,7 @@ jobs:
           pip install tomlkit
           pipx install poetry
 
-      - name: Determine Version Type
+      - name: Determine version part to update
         run: |
           # Default to patch
           VERSION_TYPE="patch"
@@ -42,10 +42,10 @@ jobs:
           echo "Determined VERSION_TYPE=$VERSION_TYPE"
           echo "VERSION_TYPE=$VERSION_TYPE" >> $GITHUB_ENV        
 
-      - name: Bump Version
+      - name: Bump version
         run: python bump_version.py $VERSION_TYPE
 
-      - name: Commit Version Bump
+      - name: Commit version bump
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -58,13 +58,19 @@ jobs:
           git fetch origin main
           git reset --hard origin/main    
   
-      - name: Build package and publish to PyPI
+      - name: Build wheel and publish to PyPI
         env:
             POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}      
         run: |
           poetry install --no-interaction --all-groups
           poetry build
-          poetry publish --no-interaction      
+          poetry publish --no-interaction
+
+      - name: Create tag
+        run: |
+          VERSION=$(grep 'version' pyproject.toml | awk -F'"' '{print $2}')
+          git tag "$VERSION"
+          git push origin "$VERSION"
 
   deploy:
     name: Deploy Documentation
