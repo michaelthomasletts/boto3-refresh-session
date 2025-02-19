@@ -48,8 +48,7 @@ jobs:
         run: poetry install --no-interaction --all-groups
       # bumping version
       - name: Bump version
-        run: |
-          poetry run python bump_version.py patch      
+        run: poetry run python bump_version.py patch      
       # autoformat with black
       - name: Autoformat with black
         uses: rickstaa/action-black@v1

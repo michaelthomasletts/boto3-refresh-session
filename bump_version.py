@@ -25,9 +25,9 @@ def main(part: str):
     with open("pyproject.toml", "r") as f:
         pyproject = toml.load(f)
 
-    current_version = pyproject["tool"]["poetry"]["version"]
+    current_version = pyproject["poetry"]["version"]
     new_version = bump_version(current_version, part)
-    pyproject["tool"]["poetry"]["version"] = new_version
+    pyproject["poetry"]["version"] = new_version
 
     with open("pyproject.toml", "w") as f:
         toml.dump(pyproject, f)
