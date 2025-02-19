@@ -1,4 +1,4 @@
-name: Version bump and deploy docs
+name: Bump version and deploy docs
 
 on:
   push:
