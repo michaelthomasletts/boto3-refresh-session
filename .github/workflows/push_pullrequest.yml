@@ -39,7 +39,7 @@ jobs:
         run: poetry install --no-interaction --no-root --all-groups
       # install your root project, if required
       - name: Install project
-        run: poetry install --no-interaction
+        run: poetry install --no-interaction --all-groups
       # bumping version
       - name: Bump version
         run: |
