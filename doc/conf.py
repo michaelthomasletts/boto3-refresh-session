@@ -2,6 +2,11 @@ import os
 import sys
 from datetime import date
 
+import toml
+
+# fetching pyproject.toml
+pyproject = toml.load("pyproject.toml")
+
 # sphinx config
 sys.path.insert(0, os.path.abspath("."))
 sys.path.insert(0, os.path.abspath(".."))
@@ -15,10 +20,10 @@ extensions = [
     "sphinx.ext.extlinks",
 ]
 language = "en"
-project = "boto3-refresh-session"
+project = pyproject["tool"]["poetry"]["name"]
 author = "Michael Letts"
 copyright = f"{date.today().year}, {author}"
-release = "0.0.12"
+release = pyproject["tool"]["poetry"]["version"]
 source_encoding = "utf-8"
 source_suffix = ".rst"
 pygments_style = "sphinx"
