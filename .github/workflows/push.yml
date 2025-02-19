@@ -12,6 +12,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          token: ${{ secrets.GH_PAT }}  # Use the PAT for push permissions
           fetch-depth: 0  # Ensure full history is fetched
 
       - name: Set up Python
