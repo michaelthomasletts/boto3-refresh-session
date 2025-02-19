@@ -24,15 +24,31 @@ jobs:
       - name: Install dependencies
         run: pip install tomlkit
 
+      - name: Determine Version Type
+        run: |
+          # Default to patch
+          VERSION_TYPE="patch"
+          MESSAGE=$(git log -1 --pretty=%B)
+
+          # Check for version bump keywords
+          if echo "$MESSAGE" | grep -qi '\[major\]'; then
+            VERSION_TYPE="major"
+          elif echo "$MESSAGE" | grep -qi '\[minor\]'; then
+            VERSION_TYPE="minor"
+          fi
+
+          echo "Determined VERSION_TYPE=$VERSION_TYPE"
+          echo "VERSION_TYPE=$VERSION_TYPE" >> $GITHUB_ENV        
+
       - name: Bump Version
-        run: python bump_version.py patch  # Change to "major" or "minor" as needed
+        run: python bump_version.py $VERSION_TYPE
 
       - name: Commit Version Bump
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add pyproject.toml
-          git commit -m "chore: bump version (patch) [skip ci]"  # <--- Prevents infinite loop
+          git commit -m "bump $VERSION_TYPE version [skip ci]"  # <--- Prevents infinite loop
           git push origin main  # Push only the version bump commit
 
   deploy:
