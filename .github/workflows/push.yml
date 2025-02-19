@@ -7,7 +7,7 @@ on:
 
 jobs:
   bump_version:
-    name: Bump Version (Main Branch Only)
+    name: Bump Version
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
@@ -51,10 +51,21 @@ jobs:
           git commit -m "bump $VERSION_TYPE version [skip ci]"  # <--- Prevents infinite loop
           git push origin main  # Push only the version bump commit
 
+      - name: Fetch latest commit after push
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+      
+      - name: Create Tag in Git
+        run: |
+          TAG_NAME="$(grep '^version' pyproject.toml | awk -F '"' '{print $2}')"
+          echo TAG_NAME
+          git tag $TAG_NAME
+          git push origin $TAG_NAME          
+
   deploy:
-    name: Deploy Documentation and Publish to PyPI
+    name: Deploy Documentation
     runs-on: ubuntu-latest
-    needs: bump_version
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: Check out repository
@@ -103,31 +114,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: _build/
           force_orphan: true
-  
-  tag:
-    name: Create Tag
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0        
-
-      - name: Set up Python
-        id: setup-python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          virtualenvs-path: .venv
-          installer-parallel: true
-      - name: Create Tag in Git
-        run: |
-          TAG_NAME="$(poetry version -s)"
-          git tag $TAG_NAME
-          git push origin $TAG_NAME
