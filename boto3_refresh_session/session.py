@@ -22,7 +22,7 @@ from typing import Type
 
 from attrs import define, field
 from attrs.validators import ge, instance_of, optional
-from boto3 import Session
+from boto3 import Session, client
 from botocore.credentials import (
     DeferredRefreshableCredentials,
     RefreshableCredentials,
@@ -115,7 +115,9 @@ class AutoRefreshableSession:
             )
 
         __session._credentials = __credentials
-        self.session = Session(botocore_session=__session)
+        self.session = Session(
+            botocore_session=__session, **self.session_kwargs
+        )
 
     def _get_credentials(self) -> dict:
         """Returns temporary credentials via AWS STS.
@@ -126,11 +128,10 @@ class AutoRefreshableSession:
             AWS temporary credentials.
         """
 
-        __session = Session(region_name=self.region, **self.session_kwargs)
-        __client = __session.client(
+        __sts_client = client(
             service_name="sts", region_name=self.region, **self.client_kwargs
         )
-        __temporary_credentials = __client.assume_role(
+        __temporary_credentials = __sts_client.assume_role(
             RoleArn=self.role_arn,
             RoleSessionName=self.session_name,
             DurationSeconds=self.ttl,

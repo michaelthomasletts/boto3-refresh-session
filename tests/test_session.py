@@ -16,6 +16,7 @@ def test_defer_refresh():
         defer_refresh=True,
     ).session
     s3 = session.client(service_name="s3")
+    s3.list_buckets()
 
     # testing defer_refresh = False
     logger.info("Testing AutoRefreshableSession with defer_refresh = False")
@@ -26,3 +27,4 @@ def test_defer_refresh():
         defer_refresh=False,
     ).session
     s3 = session.client(service_name="s3")
+    s3.list_buckets()
