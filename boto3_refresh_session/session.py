@@ -137,11 +137,10 @@ class AutoRefreshableSession:
         """
 
         # being careful not to duplicate logs
-        msg = "Refreshing temporary AWS credentials"
-        if self.defer_refresh and self._creds_already_fetched:
-            logger.info(msg)
-        elif not self.defer_refresh and self._creds_already_fetched > 1:
-            logger.info(msg)
+        if (self.defer_refresh and self._creds_already_fetched) or (
+            not self.defer_refresh and self._creds_already_fetched > 1
+        ):
+            logger.info("Refreshing temporary AWS credentials")
         else:
             self._creds_already_fetched += 1
 
