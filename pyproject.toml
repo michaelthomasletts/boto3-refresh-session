@@ -1,7 +1,7 @@
 [project]
 name = "boto3-refresh-session"
 version = "0.1.19"
-description = "A simple Python package for refreshing boto3 sessions automatically."
+description = "A simple Python package for refreshing AWS temporary credentials in boto3 automatically."
 authors = [
     {name = "Mike Letts",email = "lettsmt@gmail.com"}
 ]

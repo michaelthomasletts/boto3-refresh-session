@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 __doc__ = """
-Helper method for generating an automatically refreshing :class:`boto3.session.Session`
-object.
+Helper method for generating automatically refreshing temporary credentials 
+for a :class:`boto3.session.Session` object.
 
 .. warning::
     ``AutoRefreshableSession`` was not tested for manually passing hard-coded

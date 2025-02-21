@@ -15,7 +15,7 @@
 boto3-refresh-session
 ---------------------
 
-A simple Python package for refreshing temporary AWS credentials for ``boto3`` automatically.
+A simple Python package for refreshing AWS temporary credentials in ``boto3`` automatically.
 
 Who is this for?
 ----------------
