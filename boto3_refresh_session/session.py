@@ -14,7 +14,7 @@ object.
 """
 __all__ = ["AutoRefreshableSession"]
 
-import logging
+from logging import INFO, basicConfig, getLogger
 from typing import Type
 
 from attrs import define, field
@@ -27,13 +27,12 @@ from botocore.credentials import (
 from botocore.session import get_session
 
 # configuring logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+basicConfig(
+    level=INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 
 # creating logger
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 @define
@@ -137,6 +136,7 @@ class AutoRefreshableSession:
             AWS temporary credentials.
         """
 
+        # being careful not to duplicate logs
         msg = "Refreshing temporary AWS credentials"
         if self.defer_refresh and self._creds_already_fetched:
             logger.info(msg)
