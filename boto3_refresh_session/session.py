@@ -14,7 +14,7 @@ object.
 """
 __all__ = ["AutoRefreshableSession"]
 
-from logging import getLogger
+import logging
 from typing import Type
 
 from attrs import define, field
@@ -26,8 +26,14 @@ from botocore.credentials import (
 )
 from botocore.session import get_session
 
-logger = getLogger(__name__)
-has_logged = False
+# configuring logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+
+# creating logger
+logger = logging.getLogger(__name__)
 
 
 @define
@@ -99,9 +105,12 @@ class AutoRefreshableSession:
         default={}, validator=optional(instance_of(dict))
     )
     session: Type[Session] = field(init=False)
+    _creds_already_fetched: int = field(init=False, default=0)
 
     def __attrs_post_init__(self):
         __session = get_session()
+
+        logger.info("Fetching temporary AWS credentials.")
 
         if not self.defer_refresh:
             __credentials = RefreshableCredentials.create_from_metadata(
@@ -128,11 +137,13 @@ class AutoRefreshableSession:
             AWS temporary credentials.
         """
 
-        global has_logged
-        logger.info(
-            f"{'Fetching' if not has_logged else 'Refreshing'} temporary AWS credentials"
-        )
-        has_logged = True
+        msg = "Refreshing temporary AWS credentials"
+        if self.defer_refresh and self._creds_already_fetched:
+            logger.info(msg)
+        elif not self.defer_refresh and self._creds_already_fetched > 1:
+            logger.info(msg)
+        else:
+            self._creds_already_fetched += 1
 
         __sts_client = client(
             service_name="sts", region_name=self.region, **self.client_kwargs

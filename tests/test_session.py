@@ -1,9 +1,16 @@
-from logging import INFO, getLogger
+import logging
 from os import getenv
 
 from boto3_refresh_session import AutoRefreshableSession
 
-logger = getLogger(__name__)
+# configuring logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+
+# creating logger
+logger = logging.getLogger(__name__)
 
 
 def test_defer_refresh():
