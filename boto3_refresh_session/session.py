@@ -105,12 +105,20 @@ class AutoRefreshableSession:
     )
     session: Type[Session] = field(init=False)
     _creds_already_fetched: int = field(init=False, default=0)
+    _sts_client: Type["botocore.client.STS"] = field(init=False)
 
     def __attrs_post_init__(self):
-        __session = get_session()
+        # initializing session
+        _session = get_session()
+
+        # initializing STS client
+        self._sts_client = client(
+            service_name="sts", region_name=self.region, **self.client_kwargs
+        )
 
         logger.info("Fetching temporary AWS credentials.")
 
+        # determining how to refresh expired temporary credentials
         if not self.defer_refresh:
             __credentials = RefreshableCredentials.create_from_metadata(
                 metadata=self._get_credentials(),
@@ -122,9 +130,12 @@ class AutoRefreshableSession:
                 refresh_using=self._get_credentials, method="sts-assume-role"
             )
 
-        __session._credentials = __credentials
+        # mounting temporary credentials to session object
+        _session._credentials = __credentials
+
+        # initializing session using temporary credentials
         self.session = Session(
-            botocore_session=__session, **self.session_kwargs
+            botocore_session=_session, **self.session_kwargs
         )
 
     def _get_credentials(self) -> dict:
@@ -144,19 +155,17 @@ class AutoRefreshableSession:
         else:
             self._creds_already_fetched += 1
 
-        __sts_client = client(
-            service_name="sts", region_name=self.region, **self.client_kwargs
-        )
-        __temporary_credentials = __sts_client.assume_role(
+        # fetching temporary credentials
+        _temporary_credentials = self._sts_client.assume_role(
             RoleArn=self.role_arn,
             RoleSessionName=self.session_name,
             DurationSeconds=self.ttl,
         )["Credentials"]
         return {
-            "access_key": __temporary_credentials.get("AccessKeyId"),
-            "secret_key": __temporary_credentials.get("SecretAccessKey"),
-            "token": __temporary_credentials.get("SessionToken"),
-            "expiry_time": __temporary_credentials.get(
+            "access_key": _temporary_credentials.get("AccessKeyId"),
+            "secret_key": _temporary_credentials.get("SecretAccessKey"),
+            "token": _temporary_credentials.get("SessionToken"),
+            "expiry_time": _temporary_credentials.get(
                 "Expiration"
             ).isoformat(),
         }
