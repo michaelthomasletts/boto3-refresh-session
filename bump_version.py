@@ -1,7 +1,11 @@
+import argparse
 import sys
 from pathlib import Path
 
 import tomlkit
+
+HELP_MSG = """Which part of the version to bump (default: patch).
+Example: python bump_version.py minor"""
 
 
 def bump_version(version: str, part: str):
@@ -29,22 +33,30 @@ def run(part: str):
 
     path = Path("pyproject.toml")
 
-    with path.open("r", encoding="utf-8") as f:
-        pyproject = tomlkit.parse(f.read())
+    # reading current version from pyproject.toml
+    pyproject = path.read_text(encoding="utf-8")
+    pyproject = tomlkit.parse(pyproject)
 
-    current_version = str(pyproject["project"]["version"])
-    new_version = bump_version(current_version, part)
+    # bumping version
+    new_version = bump_version(
+        current_version := str(pyproject["project"]["version"]), part
+    )
     pyproject["project"]["version"] = new_version
 
-    with path.open("w", encoding="utf-8") as f:
-        f.write(tomlkit.dumps(pyproject))
+    # writing bumped version to pyproject.toml
+    path.write_text(tomlkit.dumps(pyproject), encoding="utf-8")
 
     print(f"Version bumped from {current_version} to {new_version}")
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python bump_version.py [major|minor|patch]")
-        sys.exit(1)
-
-    run(sys.argv[1])
+    parser = argparse.ArgumentParser(description="Bump the project version.")
+    parser.add_argument(
+        "part",
+        choices=["major", "minor", "patch"],
+        default="patch",
+        nargs="?",
+        help=HELP_MSG,
+    )
+    args = parser.parse_args()
+    run(part=args.part)
