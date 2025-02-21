@@ -9,7 +9,7 @@ Example: python bump_version.py minor"""
 
 
 def bump_version(version: str, part: str):
-    """Bumps version according to part parameter."""
+    """Bumps version according to the part parameter."""
 
     major, minor, patch = map(int, version.split("."))
 
