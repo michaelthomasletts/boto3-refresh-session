@@ -14,6 +14,7 @@ object.
 """
 __all__ = ["AutoRefreshableSession"]
 
+from logging import getLogger
 from typing import Type
 
 from attrs import define, field
@@ -24,6 +25,9 @@ from botocore.credentials import (
     RefreshableCredentials,
 )
 from botocore.session import get_session
+
+logger = getLogger(__name__)
+has_logged = False
 
 
 @define
@@ -123,6 +127,12 @@ class AutoRefreshableSession:
         dict
             AWS temporary credentials.
         """
+
+        global has_logged
+        logger.info(
+            f"{'Fetching' if not has_logged else 'Refreshing'} temporary AWS credentials"
+        )
+        has_logged = True
 
         __sts_client = client(
             service_name="sts", region_name=self.region, **self.client_kwargs
