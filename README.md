@@ -10,7 +10,7 @@
 
 ![BRS Image](https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/doc/brs.png)
 
-A simple Python package for refreshing boto3 sessions automatically.
+A simple Python package for refreshing AWS temporary credentials in ``boto3`` automatically.
 
 - [Documentation](https://michaelthomasletts.github.io/boto3-refresh-session/index.html)
 - [Source Code](https://github.com/michaelthomasletts/boto3-refresh-session)
