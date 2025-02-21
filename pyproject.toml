@@ -1,6 +1,6 @@
 [project]
 name = "boto3-refresh-session"
-version = "0.1.15"
+version = "0.1.16"
 description = "A simple Python package for refreshing boto3 sessions automatically."
 authors = [
     {name = "Mike Letts",email = "lettsmt@gmail.com"}
