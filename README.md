@@ -2,7 +2,6 @@
 [![PyPI Download](https://img.shields.io/pypi/v/boto3-refresh-session?logo=pypis.svg)](https://pypi.org/project/boto3-refresh-session/)
 [![Workflow](https://img.shields.io/github/actions/workflow/status/michaelthomasletts/boto3-refresh-session/push.yml?logo=github)](https://github.com/michaelthomasletts/boto3-refresh-session/actions/workflows/push_pullrequest.yml)
 ![Python Version](https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/michaelthomasletts/boto3-refresh-session/total?logo=github)
 ![GitHub last commit](https://img.shields.io/github/last-commit/michaelthomasletts/boto3-refresh-session?logo=github)
 ![GitHub Repo stars](https://img.shields.io/github/stars/michaelthomasletts/boto3-refresh-session?logo=github)
 ![GitHub forks](https://img.shields.io/github/forks/michaelthomasletts/boto3-refresh-session?logo=github)
