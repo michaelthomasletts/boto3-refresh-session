@@ -14,6 +14,7 @@ A simple Python package for refreshing AWS temporary credentials in ``boto3`` au
 - [Documentation](https://michaelthomasletts.github.io/boto3-refresh-session/index.html)
 - [Source Code](https://github.com/michaelthomasletts/boto3-refresh-session)
 - [PyPI](https://pypi.org/project/boto3-refresh-session/)
+- [Contributing](https://michaelthomasletts.github.io/boto3-refresh-session/contributing.html)
 
 ### Why should I use this?
 

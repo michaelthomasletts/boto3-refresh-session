@@ -11,6 +11,7 @@
    Installation <installation>
    Authorization <authorization>
    Authors <authors>
+   Contributing <contributing>
 
 boto3-refresh-session
 ---------------------
