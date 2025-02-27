@@ -24,7 +24,7 @@ expire.
 
 Usually, engineers deal with that problem one of two ways: 
 
-- `try except` blocks that catch `ClientError` exceptions
+- A `try except` block that catches `botocore.exceptions.ClientError` exceptions
 - A similar approach as that used in this project -- that is, using methods available 
   within `botocore` for refreshing temporary credentials automatically. 
   
