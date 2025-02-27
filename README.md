@@ -2,7 +2,6 @@
 [![PyPI Download](https://img.shields.io/pypi/v/boto3-refresh-session?logo=pypis.svg)](https://pypi.org/project/boto3-refresh-session/)
 [![Workflow](https://img.shields.io/github/actions/workflow/status/michaelthomasletts/boto3-refresh-session/push.yml?logo=github)](https://github.com/michaelthomasletts/boto3-refresh-session/actions/workflows/push_pullrequest.yml)
 ![Python Version](https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/michaelthomasletts/boto3-refresh-session/total?logo=github)
 ![GitHub last commit](https://img.shields.io/github/last-commit/michaelthomasletts/boto3-refresh-session?logo=github)
 ![GitHub Repo stars](https://img.shields.io/github/stars/michaelthomasletts/boto3-refresh-session?logo=github)
 ![GitHub forks](https://img.shields.io/github/forks/michaelthomasletts/boto3-refresh-session?logo=github)
@@ -15,6 +14,7 @@ A simple Python package for refreshing AWS temporary credentials in ``boto3`` au
 - [Documentation](https://michaelthomasletts.github.io/boto3-refresh-session/index.html)
 - [Source Code](https://github.com/michaelthomasletts/boto3-refresh-session)
 - [PyPI](https://pypi.org/project/boto3-refresh-session/)
+- [Contributing](https://michaelthomasletts.github.io/boto3-refresh-session/contributing.html)
 
 ### Why should I use this?
 
@@ -22,7 +22,7 @@ It is common for data pipelines and workflows that interact with the AWS API via
 `boto3` to run for a long time and, accordingly, for temporary credentials to 
 expire. 
 
-Usually, engineers deal with that problem one of two ways: 
+Usually, engineers deal with that problem one of two different ways: 
 
 - A `try except` block that catches `botocore.exceptions.ClientError` exceptions
 - A similar approach as that used in this project -- that is, using methods available 
