@@ -16,12 +16,12 @@
 boto3-refresh-session
 ---------------------
 
-A simple Python package for refreshing AWS temporary credentials in ``boto3`` automatically.
+A simple Python package for refreshing the temporary security credentials in a :class:`boto3.session.Session` object automatically.
 
 Who is this for?
 ----------------
 
-Software Engineers, Data Engineers, Machine Learning Engineers, DevOps Engineers -- anyone who uses AWS with ``boto3``.
+Software Engineers, Data Engineers, Machine Learning Engineers, DevOps Engineers -- anyone who uses ``boto3``.
 
 Why should I use this?
 ----------------------
@@ -51,12 +51,12 @@ How do I use this?
 ------------------
 
 This package is extremely easy to use. Simply pass the basic parameters and
-initialize the ``AutoRefreshableSession`` class; that's it! You're good to go!
+initialize the ``RefreshableSession`` class and that's it!
 
-``AutoRefreshableSession`` will refresh temporary credentials for you in the 
-background. In the following example, continue using the ``s3_client`` object 
+``RefreshableSession`` will refresh temporary credentials for you in the 
+background. In the following example, continue using the ``s3`` object 
 without worry of using ``try`` and ``except`` blocks! For context, you can pass
-any ``service_name`` parameter you want, so long as it's included in ``boto3``. 
+any ``service_name`` parameter you want, so long as it's available in ``boto3``. 
 The following example uses ``s3`` merely for illustrative purposes.
 
 To use this package, your machine must be configured with AWS
@@ -67,9 +67,19 @@ machine, check the :ref:`authorization documentation <authorization>`.
    
    import boto3_refresh_session as brs
 
-   sess = brs.AutoRefreshableSession(
-      region="<your-region>",
-      role_arn="<your-role-arn>",
-      session_name="<your-session-name>",
+   assume_role_kwargs = {
+       'RoleArn': '<your-role-arn>',
+       'RoleSessionName': '<your-role-session-name>',
+       'DurationSeconds': '<your-selection>',
+       ...
+   }
+   sts_client_kwargs = {
+      ...
+   }
+   session = brs.RefreshableSession(
+      assume_role_kwargs=assume_role_kwargs,
+      sts_client_kwargs=sts_client_kwargs,
+      region_name='us-east-1',
    )
-   s3_client = sess.session.client(service_name="s3")
+   s3 = session.client(service_name='s3')
+   buckets = s3.list_buckets()

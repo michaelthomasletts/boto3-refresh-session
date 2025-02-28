@@ -1,14 +1,14 @@
 [project]
 name = "boto3-refresh-session"
 version = "0.1.27"
-description = "A simple Python package for refreshing AWS temporary credentials in boto3 automatically."
+description = "A simple Python package for refreshing the temporary security credentials in a boto3.session.Session object automatically."
 authors = [
     {name = "Mike Letts",email = "lettsmt@gmail.com"}
 ]
 license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["boto3", "botocore", "attrs (>=24.3.0,<25.0.0)"]
+dependencies = ["boto3", "botocore"]
 keywords = ["boto3", "botocore", "aws"]
 maintainers = [
   {name="Michael Letts", email="lettsmt@gmail.com"},

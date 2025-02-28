@@ -1,7 +1,7 @@
 import logging
 from os import getenv
 
-from boto3_refresh_session import AutoRefreshableSession
+from boto3_refresh_session import RefreshableSession
 
 # configuring logging
 logging.basicConfig(
@@ -14,24 +14,32 @@ logger = logging.getLogger(__name__)
 
 
 def test_defer_refresh():
+    # initializing parameters
+    region_name = "us-east-1"
+    assume_role_kwargs = {
+        "RoleArn": getenv("ROLE_ARN"),
+        "RoleSessionName": "unit-testing",
+        "DurationSeconds": 900,
+    }
+    sts_client_kwargs = {"region_name": region_name}
+
     # testing defer_refresh = True
-    logger.info("Testing AutoRefreshableSession with defer_refresh = True")
-    session = AutoRefreshableSession(
-        region="us-east-1",
-        role_arn=getenv("ROLE_ARN"),
-        session_name="test_boto3_refresh_session_1",
-        defer_refresh=True,
-    ).session
+    logger.info("Testing RefreshableSession with defer_refresh = True")
+    session = RefreshableSession(
+        assume_role_kwargs=assume_role_kwargs,
+        sts_client_kwargs=sts_client_kwargs,
+        region_name=region_name,
+    )
     s3 = session.client(service_name="s3")
     s3.list_buckets()
 
     # testing defer_refresh = False
-    logger.info("Testing AutoRefreshableSession with defer_refresh = False")
-    session = AutoRefreshableSession(
-        region="us-east-1",
-        role_arn=getenv("ROLE_ARN"),
-        session_name="test_boto3_refresh_session_2",
+    logger.info("Testing RefreshableSession with defer_refresh = False")
+    session = RefreshableSession(
         defer_refresh=False,
-    ).session
+        assume_role_kwargs=assume_role_kwargs,
+        sts_client_kwargs=sts_client_kwargs,
+        region_name=region_name,
+    )
     s3 = session.client(service_name="s3")
     s3.list_buckets()

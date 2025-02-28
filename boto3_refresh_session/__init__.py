@@ -1,6 +1,6 @@
 __all__ = []
 
 from . import session
-from .session import AutoRefreshableSession
+from .session import RefreshableSession
 
-__all__.extend(["session", "AutoRefreshableSession"])
+__all__.extend(["session", "RefreshableSession"])
