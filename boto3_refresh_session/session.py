@@ -1,142 +1,126 @@
 from __future__ import annotations
 
 __doc__ = """
-Helper method for generating an automatically refreshing :class:`boto3.session.Session`
-object.
-
-.. warning::
-    ``AutoRefreshableSession`` was not tested for manually passing hard-coded
-    account credentials to the ``boto3.client`` object! There is an optional 
-    ``client_kwargs`` parameter available for doing so, which *should* work; 
-    however, that cannot be guaranteed as that functionality was not tested.
-    Pass hard-coded credentials with the ``client_kwargs`` parameter at your
-    own discretion.
+A :class:`boto3.session.Session` object that automatically refreshes temporary
+credentials.
 """
-__all__ = ["AutoRefreshableSession"]
+__all__ = ["RefreshableSession"]
 
-from logging import INFO, basicConfig, getLogger
-from typing import Type
-
-from attrs import define, field
-from attrs.validators import ge, instance_of, optional
-from boto3 import Session, client
+from boto3 import client
+from boto3.session import Session
 from botocore.credentials import (
     DeferredRefreshableCredentials,
     RefreshableCredentials,
 )
-from botocore.session import get_session
-
-# configuring logging
-basicConfig(
-    level=INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
-
-# creating logger
-logger = getLogger(__name__)
 
 
-@define
-class AutoRefreshableSession:
-    """Returns a :class:`boto3.session.Session` object which refreshes automatically, no extra
-    steps required.
-
-    This object is useful for long-running processes where temporary credentials
-    may expire.
+class RefreshableSession(Session):
+    """Returns a :class:`boto3.session.Session` object with temporary credentials
+    that refresh automatically.
 
     Parameters
     ----------
-    region : str
-        AWS region name.
-    role_arn : str
-        AWS role ARN.
-    session_name : str
-        Name for session.
+    assume_role_kwargs : dict
+        Required keyword arguments for the :meth:`STS.Client.assume_role` method.
     defer_refresh : bool, optional
         If ``True`` then temporary credentials are not automatically refreshed until
         they are explicitly needed. If ``False`` then temporary credentials refresh
-        immediately upon expiration. Default is ``True``.
-    ttl : int, optional
-        Number of seconds until temporary credentials expire. Must be greater than or
-        equal to 900 seconds. Default is 900.
-    session_kwargs : dict, optional
-        Optional keyword arguments for :class:`boto3.session.Session`.
-    client_kwargs : dict, optional
-        Optional keyword arguments for ``boto3.client``.
+        immediately upon expiration. It is highly recommended that you use ``True``.
+        Default is ``True``.
+    sts_client_kwargs : dict, optional
+        Optional keyword arguments for the :class:`STS.Client` object. Default is
+        an empty dictionary.
 
-    Attributes
-    ----------
-    session
-        Returns a :class:`boto3.session.Session` object with credentials which refresh
-        automatically.
+    Other Parameters
+    ----------------
+    kwargs : dict
+        Optional keyword arguments for the :class:`boto3.session.Session` object.
 
     Notes
     -----
     Check the :ref:`authorization documentation <authorization>` for additional
     information concerning how to authorize access to AWS.
 
-    The default ``defer_refresh`` parameter value results in temporary credentials not
-    being refreshed until they are explicitly requested; that is more efficient than
-    refreshing expired temporary credentials automatically after they expire.
+    Check the `AWS documentation <https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp.html>`_
+    for additional information concerning temporary security credentials in IAM.
 
     Examples
     --------
-    Here's how to initialize this object:
+    In order to use this object, you are required to configure parameters for the
+    :meth:`STS.Client.assume_role` method.
 
-    >>> sess = brs.AutoRefreshableSession(
-    >>>   region="us-east-1",
-    >>>   role_arn="<your-arn>",
-    >>>   session_name="test",
+    >>> assume_role_kwargs = {
+    >>>     'RoleArn': '<your-role-arn>',
+    >>>     'RoleSessionName': '<your-role-session-name>',
+    >>>     'DurationSeconds': '<your-selection>',
+    >>>     ...
+    >>> }
+
+    You may also want to provide optional parameters for the :class:`STS.Client` object.
+
+    >>> sts_client_kwargs = {
+    >>>     ...
+    >>> }
+
+    You may also provide optional parameters for the :class:`boto3.session.Session` object
+    when initializing the ``RefreshableSession`` object. Below, we use the ``region_name``
+    parameter for illustrative purposes.
+
+    >>> session = boto3_refresh_session.RefreshableSession(
+    >>>     assume_role_kwargs=assume_role_kwargs,
+    >>>     sts_client_kwargs=sts_client_kwargs,
+    >>>     region_name='us-east-1',
     >>> )
-    >>> s3_client = sess.session.client(service_name="s3")
+
+    Using the ``session`` variable that you just created, you can now use all of the methods
+    available from the :class:`boto3.session.Session` object. In the below example, we
+    initialize an S3 client and list all available buckets.
+
+    >>> s3 = session.client(service_name='s3')
+    >>> buckets = s3.list_buckets()
+
+    There are two ways of refreshing temporary credentials automatically with the
+    ``RefreshableSession`` object: refresh credentials the moment they expire, or wait until
+    temporary credentials are explicitly needed. The latter is the default. The former must
+    be configured using the ``defer_refresh`` parameter, as shown below.
+
+    >>> session = boto3_refresh_session.RefreshableSession(
+    >>>     defer_refresh=False,
+    >>>     assume_role_kwargs=assume_role_kwargs,
+    >>>     sts_client_kwargs=sts_client_kwargs,
+    >>>     region_name='us-east-1',
+    >>> )
     """
 
-    region: str = field(validator=instance_of(str))
-    role_arn: str = field(validator=instance_of(str))
-    session_name: str = field(validator=instance_of(str))
-    defer_refresh: bool = field(default=True, validator=instance_of(bool))
-    ttl: int = field(
-        default=900, validator=optional([instance_of(int), ge(900)])
-    )
-    session_kwargs: dict = field(
-        default={}, validator=optional(instance_of(dict))
-    )
-    client_kwargs: dict = field(
-        default={}, validator=optional(instance_of(dict))
-    )
-    session: Type[Session] = field(init=False)
-    _creds_already_fetched: int = field(init=False, default=0)
-    _sts_client: Type["botocore.client.STS"] = field(init=False)
+    def __init__(
+        self,
+        assume_role_kwargs: dict,
+        defer_refresh: bool = True,
+        sts_client_kwargs: dict = {},
+        **kwargs,
+    ):
+        # inheriting from boto3.session.Session
+        super().__init__(**kwargs)
 
-    def __attrs_post_init__(self):
-        # initializing session
-        _session = get_session()
+        # initializing custom parameters that are necessary outside of __init__
+        self.assume_role_kwargs = assume_role_kwargs
 
-        # initializing STS client
-        self._sts_client = client(
-            service_name="sts", region_name=self.region, **self.client_kwargs
-        )
+        # initializing the STS client
+        self._sts_client = client(service_name="sts", **sts_client_kwargs)
 
-        logger.info("Fetching temporary AWS credentials.")
-
-        # determining how to refresh expired temporary credentials
-        if not self.defer_refresh:
-            __credentials = RefreshableCredentials.create_from_metadata(
-                metadata=self._get_credentials(),
-                refresh_using=self._get_credentials,
-                method="sts-assume-role",
+        # determining how exactly to refresh expired temporary credentials
+        if not defer_refresh:
+            self._session._credentials = (
+                RefreshableCredentials.create_from_metadata(
+                    metadata=self._get_credentials(),
+                    refresh_using=self._get_credentials,
+                    method="sts-assume-role",
+                )
             )
         else:
-            __credentials = DeferredRefreshableCredentials(
+            self._session._credentials = DeferredRefreshableCredentials(
                 refresh_using=self._get_credentials, method="sts-assume-role"
             )
-
-        # mounting temporary credentials to session object
-        _session._credentials = __credentials
-
-        # initializing session using temporary credentials
-        self.session = Session(
-            botocore_session=_session, **self.session_kwargs
-        )
 
     def _get_credentials(self) -> dict:
         """Returns temporary credentials via AWS STS.
@@ -147,19 +131,9 @@ class AutoRefreshableSession:
             AWS temporary credentials.
         """
 
-        # being careful not to duplicate logs
-        if (self.defer_refresh and self._creds_already_fetched) or (
-            not self.defer_refresh and self._creds_already_fetched > 1
-        ):
-            logger.info("Refreshing temporary AWS credentials")
-        else:
-            self._creds_already_fetched += 1
-
         # fetching temporary credentials
         _temporary_credentials = self._sts_client.assume_role(
-            RoleArn=self.role_arn,
-            RoleSessionName=self.session_name,
-            DurationSeconds=self.ttl,
+            **self.assume_role_kwargs
         )["Credentials"]
         return {
             "access_key": _temporary_credentials.get("AccessKeyId"),

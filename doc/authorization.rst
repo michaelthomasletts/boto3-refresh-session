@@ -3,14 +3,6 @@
 Authorization
 *************
 
-.. warning::
-    ``AutoRefreshableSession`` was not tested for manually passing hard-coded
-    account credentials to the ``boto3.client`` object! There is an optional 
-    ``client_kwargs`` parameter available for doing so, which *should* work; 
-    however, that cannot be guaranteed as that functionality was not tested.
-    Pass hard-coded credentials with the ``client_kwargs`` parameter at your
-    own discretion.
-
 In order to use this package, it is **recommended** that you follow one of the
 below methods for authorizing access to your AWS instance:
 

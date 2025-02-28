@@ -8,5 +8,5 @@ boto3\_refresh\_session.session
 
    .. autosummary::
    
-      AutoRefreshableSession
+      RefreshableSession
    

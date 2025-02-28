@@ -3,13 +3,11 @@
 [![Workflow](https://img.shields.io/github/actions/workflow/status/michaelthomasletts/boto3-refresh-session/push.yml?logo=github)](https://github.com/michaelthomasletts/boto3-refresh-session/actions/workflows/push_pullrequest.yml)
 ![Python Version](https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi)
 ![GitHub last commit](https://img.shields.io/github/last-commit/michaelthomasletts/boto3-refresh-session?logo=github)
-![GitHub Repo stars](https://img.shields.io/github/stars/michaelthomasletts/boto3-refresh-session?logo=github)
-![GitHub forks](https://img.shields.io/github/forks/michaelthomasletts/boto3-refresh-session?logo=github)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/boto3-refresh-session?logo=pypi)
 
 ![BRS Image](https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/doc/brs.png)
 
-A simple Python package for refreshing AWS temporary credentials in ``boto3`` automatically.
+A simple Python package for refreshing the temporary security credentials in a `boto3.session.Session` object automatically.
 
 - [Documentation](https://michaelthomasletts.github.io/boto3-refresh-session/index.html)
 - [Source Code](https://github.com/michaelthomasletts/boto3-refresh-session)
@@ -41,10 +39,10 @@ If any of that sounds relatable, then `boto3-refresh-session` should help you!
 
 ### Usage
 
-Simply pass the basic parameters and initialize the `AutoRefreshableSession` object; 
+Simply pass the basic parameters and initialize the `RefreshableSession` object; 
 that's it! You're good to go!
 
-`AutoRefreshableSession` will refresh
+`RefreshableSession` will refresh
 temporary credentials for you in the background. In the following example,
 continue using the `s3_client` object without worry of using `try` and 
 `except` blocks!
@@ -56,13 +54,22 @@ machine, check [this documentation](https://boto3.amazonaws.com/v1/documentation
 ```python
 import boto3_refresh_session as brs
 
-
-sess = brs.AutoRefreshableSession(
-    region="<your-region>",
-    role_arn="<your-role-arn>",
-    session_name="<your-session-name>",
+assume_role_kwargs = {
+  'RoleArn': '<your-role-arn>',
+  'RoleSessionName': '<your-role-session-name>',
+  'DurationSeconds': '<your-selection>',
+  ...
+}
+sts_client_kwargs = {
+  ...
+}
+session = brs.RefreshableSession(
+  assume_role_kwargs=assume_role_kwargs,
+  sts_client_kwargs=sts_client_kwargs,
+  region_name='us-east-1',
 )
-s3_client = sess.session.client(service_name="s3")
+s3 = session.client(service_name='s3')
+buckets = s3.list_buckets()
 ```
 
 ### Installation

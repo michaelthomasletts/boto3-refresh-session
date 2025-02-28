@@ -1,7 +1,7 @@
 ## All submissions
 
 * [ ] Did you include the version part parameter, i.e. [major | minor | patch], to the beginning of the pull request title so that the version is bumped correctly? 
-    * Example pull request title: '[minor] Added a new parameter to the `AutoRefreshableSession` object.'
+    * Example pull request title: '[minor] Added a new parameter to the `RefreshableSession` object.'
     * Note: the version part parameter is only required for major and minor updates. Patches may exclude the part parameter from the pull request title, as the default is 'patch'.
 * [ ] Did you verify that your changes pass pre-commit checks before opening this pull request?
     * The pre-commit checks are identical to required status checks for pull requests in this repository. Know that suppressing pre-commit checks via the `--no-verify` | `-nv` arguments will not help you avoid the status checks!
