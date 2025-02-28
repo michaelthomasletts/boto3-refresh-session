@@ -60,13 +60,8 @@ assume_role_kwargs = {
   'DurationSeconds': '<your-selection>',
   ...
 }
-sts_client_kwargs = {
-  ...
-}
 session = brs.RefreshableSession(
-  assume_role_kwargs=assume_role_kwargs,
-  sts_client_kwargs=sts_client_kwargs,
-  region_name='us-east-1',
+  assume_role_kwargs=assume_role_kwargs
 )
 s3 = session.client(service_name='s3')
 buckets = s3.list_buckets()
