@@ -11,6 +11,7 @@ Quick and Dirty
 The following code block illustrates a minimal, quick and dirty configuration for initializing :class:`boto3_refresh_session.session.RefreshableSession` and subsequently creating an S3 client.
 
 .. code-block:: python
+    
     import boto3_refresh_session
     
     assume_role_kwargs = {
