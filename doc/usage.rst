@@ -3,6 +3,30 @@
 Usage
 *****
 
+In order to use this package, you must have AWS credentials configured on your machine locally. Check the :ref:`authorization documentation <authorization>` for additional details.
+
+Quick and Dirty
+---------------
+
+The following code block illustrates a minimal, quick and dirty configuration for initializing :class:`boto3_refresh_session.session.RefreshableSession` and subsequently creating an S3 client.
+
+.. code-block:: python
+    import boto3_refresh_session
+    
+    assume_role_kwargs = {
+        'RoleArn': '<your-role-arn>',
+        'RoleSessionName': '<your-role-session-name>',
+        'DurationSeconds': '<your-selection>',
+    }
+    session = boto3_refresh_session.RefreshableSession(
+        assume_role_kwargs=assume_role_kwargs
+    )
+    s3 = session.client(service_name='s3')
+    buckets = s3.list_buckets()    
+
+Detailed Instructions
+---------------------
+
 In order to use :class:`boto3_refresh_session.session.RefreshableSession`, you are required to configure parameters for the :meth:`STS.Client.assume_role` method.
 
 .. code-block:: python
