@@ -7,6 +7,7 @@ credentials.
 __all__ = ["RefreshableSession"]
 
 from typing import Any, Dict
+from warnings import warn
 
 from boto3 import client
 from boto3.session import Session
@@ -30,8 +31,8 @@ class RefreshableSession(Session):
         immediately upon expiration. It is highly recommended that you use ``True``.
         Default is ``True``.
     sts_client_kwargs : dict, optional
-        Optional keyword arguments for the :class:`STS.Client` object. Default is
-        None.
+        Optional keyword arguments for the :class:`STS.Client` object. Do not provide
+        values for ``service_name``. Default is None.
 
     Other Parameters
     ----------------
@@ -109,6 +110,12 @@ class RefreshableSession(Session):
 
         # initializing the STS client
         if sts_client_kwargs is not None:
+            # overwriting 'service_name' in case it appears in sts_client_kwargs
+            if "service_name" in sts_client_kwargs:
+                warn(
+                    "The sts_client_kwargs parameter cannot contain values for service_name. Reverting to service_name = 'sts'."
+                )
+                del sts_client_kwargs["service_name"]
             self._sts_client = client(service_name="sts", **sts_client_kwargs)
         else:
             self._sts_client = client(service_name="sts")
