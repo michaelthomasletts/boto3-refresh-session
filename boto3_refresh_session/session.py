@@ -6,6 +6,8 @@ credentials.
 """
 __all__ = ["RefreshableSession"]
 
+from typing import Any, Dict
+
 from boto3 import client
 from boto3.session import Session
 from botocore.credentials import (
@@ -29,7 +31,7 @@ class RefreshableSession(Session):
         Default is ``True``.
     sts_client_kwargs : dict, optional
         Optional keyword arguments for the :class:`STS.Client` object. Default is
-        an empty dictionary.
+        None.
 
     Other Parameters
     ----------------
@@ -94,9 +96,9 @@ class RefreshableSession(Session):
 
     def __init__(
         self,
-        assume_role_kwargs: dict,
+        assume_role_kwargs: Dict[Any],
         defer_refresh: bool = True,
-        sts_client_kwargs: dict = {},
+        sts_client_kwargs: Dict[Any] = None,
         **kwargs,
     ):
         # inheriting from boto3.session.Session
@@ -106,7 +108,10 @@ class RefreshableSession(Session):
         self.assume_role_kwargs = assume_role_kwargs
 
         # initializing the STS client
-        self._sts_client = client(service_name="sts", **sts_client_kwargs)
+        if sts_client_kwargs is not None:
+            self._sts_client = client(service_name="sts", **sts_client_kwargs)
+        else:
+            self._sts_client = client(service_name="sts")
 
         # determining how exactly to refresh expired temporary credentials
         if not defer_refresh:
@@ -122,7 +127,7 @@ class RefreshableSession(Session):
                 refresh_using=self._get_credentials, method="sts-assume-role"
             )
 
-    def _get_credentials(self) -> dict:
+    def _get_credentials(self) -> Dict[Any]:
         """Returns temporary credentials via AWS STS.
 
         Returns
@@ -132,14 +137,12 @@ class RefreshableSession(Session):
         """
 
         # fetching temporary credentials
-        _temporary_credentials = self._sts_client.assume_role(
+        temporary_credentials = self._sts_client.assume_role(
             **self.assume_role_kwargs
         )["Credentials"]
         return {
-            "access_key": _temporary_credentials.get("AccessKeyId"),
-            "secret_key": _temporary_credentials.get("SecretAccessKey"),
-            "token": _temporary_credentials.get("SessionToken"),
-            "expiry_time": _temporary_credentials.get(
-                "Expiration"
-            ).isoformat(),
+            "access_key": temporary_credentials.get("AccessKeyId"),
+            "secret_key": temporary_credentials.get("SecretAccessKey"),
+            "token": temporary_credentials.get("SessionToken"),
+            "expiry_time": temporary_credentials.get("Expiration").isoformat(),
         }
