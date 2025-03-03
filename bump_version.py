@@ -1,4 +1,5 @@
 import argparse
+import re
 import sys
 from pathlib import Path
 
@@ -31,11 +32,13 @@ def bump_version(version: str, part: str):
 def run(part: str):
     """Runs the bump_version method using the part parameter."""
 
-    path = Path("pyproject.toml")
-
     # reading current version from pyproject.toml
+    path = Path("pyproject.toml")
     pyproject = path.read_text(encoding="utf-8")
     pyproject = tomlkit.parse(pyproject)
+
+    # fetching old version
+    old_version = pyproject["project"]["version"]
 
     # bumping version
     new_version = bump_version(
@@ -46,7 +49,13 @@ def run(part: str):
     # writing bumped version to pyproject.toml
     path.write_text(tomlkit.dumps(pyproject), encoding="utf-8")
 
-    print(f"Version bumped from {current_version} to {new_version}")
+    print(
+        f"Version bumped from {current_version} to {new_version} in pyproject.toml"
+    )
+
+    # writing bumped version to __init__.py
+    path = Path("boto3_refresh_session/__init__.py")
+    path.write_text(re.sub(r"\d+\.\d+\.\d+", new_version, path.read_text()))
 
 
 if __name__ == "__main__":

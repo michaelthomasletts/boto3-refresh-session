@@ -50,27 +50,28 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add pyproject.toml
+          git add boto3_refresh_session/__init__.py
           git commit -m "bump $VERSION_TYPE version [skip ci]"  # <--- Prevents infinite loop
           git push origin main  # Push only the version bump commit
 
       - name: Fetch latest commit after push
         run: |
           git fetch origin main
-          git reset --hard origin/main    
-  
-      - name: Build wheel and publish to PyPI
-        env:
-            POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}      
-        run: |
-          poetry install --no-interaction --all-groups
-          poetry build
-          poetry publish --no-interaction
+          git reset --hard origin/main
 
       - name: Create tag
         run: |
           VERSION=$(grep '^version' pyproject.toml | awk -F'"' '{print $2}')
           git tag "$VERSION"
           git push origin "$VERSION"
+
+      - name: Build wheel and publish to PyPI
+        env:
+          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}      
+        run: |
+          poetry install --no-interaction --all-groups
+          poetry build
+          poetry publish --no-interaction          
 
   deploy:
     name: Deploy Documentation
