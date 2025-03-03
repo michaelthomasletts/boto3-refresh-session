@@ -37,9 +37,6 @@ def run(part: str):
     pyproject = path.read_text(encoding="utf-8")
     pyproject = tomlkit.parse(pyproject)
 
-    # fetching old version
-    old_version = pyproject["project"]["version"]
-
     # bumping version
     new_version = bump_version(
         current_version := str(pyproject["project"]["version"]), part
@@ -50,12 +47,16 @@ def run(part: str):
     path.write_text(tomlkit.dumps(pyproject), encoding="utf-8")
 
     print(
-        f"Version bumped from {current_version} to {new_version} in pyproject.toml"
+        f"Version bumped from {current_version} to {new_version} in {path.name}"
     )
 
     # writing bumped version to __init__.py
     path = Path("boto3_refresh_session/__init__.py")
     path.write_text(re.sub(r"\d+\.\d+\.\d+", new_version, path.read_text()))
+
+    print(
+        f"Version bumped from {current_version} to {new_version} in {path.name}"
+    )
 
 
 if __name__ == "__main__":
