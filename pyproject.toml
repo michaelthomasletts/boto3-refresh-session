@@ -1,6 +1,6 @@
 [project]
 name = "boto3-refresh-session"
-version = "1.0.0"
+version = "1.0.1"
 description = "A simple Python package for refreshing the temporary security credentials in a boto3.session.Session object automatically."
 authors = [
     {name = "Mike Letts",email = "lettsmt@gmail.com"}
