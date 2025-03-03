@@ -22,7 +22,7 @@ You may also want to provide optional parameters for the :class:`STS.Client` obj
         ...
     }
 
-You may also provide optional parameters for the :class:`boto3.session.Session` object when initializing the ``RefreshableSession`` object. Below, we use the ``region_name`` parameter for illustrative purposes.
+You may also provide optional parameters for the :class:`boto3.session.Session` object when initializing the :class:`boto3_refresh_session.session.RefreshableSession` object. Below, we use the ``region_name`` parameter for illustrative purposes.
 
 .. code-block:: python
 
