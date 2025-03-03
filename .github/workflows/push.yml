@@ -7,7 +7,7 @@ on:
 
 jobs:
   bump_version:
-    name: Bump Version, Publish to PyPI, and tag
+    name: Bump Version, Publish to PyPI, tag, and deploy docs
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
@@ -72,22 +72,6 @@ jobs:
           poetry install --no-interaction --all-groups
           poetry build
           poetry publish --no-interaction          
-
-  deploy:
-    name: Deploy Documentation
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Set up Python
-        id: setup-python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
 
       - name: Install Poetry
         uses: snok/install-poetry@v1
