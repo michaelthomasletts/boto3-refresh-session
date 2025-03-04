@@ -1,4 +1,7 @@
 name: Bump version, publish to PyPI, tag, and deploy docs
+permissions:
+  contents: read
+  pull-requests: write
 
 on:
   push:
