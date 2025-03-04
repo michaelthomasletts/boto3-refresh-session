@@ -1,7 +1,4 @@
 name: Lint, format, and test
-permissions:
-  contents: read
-  pull-requests: write
 
 on:
   pull_request:
