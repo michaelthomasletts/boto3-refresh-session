@@ -3,7 +3,8 @@
 [![Workflow](https://img.shields.io/github/actions/workflow/status/michaelthomasletts/boto3-refresh-session/push.yml?logo=github)](https://github.com/michaelthomasletts/boto3-refresh-session/actions/workflows/push.yml)
 ![Python Version](https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi)
 ![GitHub last commit](https://img.shields.io/github/last-commit/michaelthomasletts/boto3-refresh-session?logo=github)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/boto3-refresh-session?logo=pypi)
+![PyPI Downloads (Monthly)](https://img.shields.io/pypi/dm/boto3-refresh-session?logo=pypi)
+[![PyPI Downloads (Total)](https://static.pepy.tech/badge/boto3-refresh-session)
 
 ![BRS Image](https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/doc/brs.png)
 
