@@ -23,7 +23,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install tomlkit
+          pip install tomlkit laudanum
           pipx install poetry
 
       - name: Determine version part to update
@@ -44,6 +44,9 @@ jobs:
 
       - name: Bump version
         run: python bump_version.py $VERSION_TYPE
+      
+      - name: Update logo
+        run: laudanum --text brs --fontsize 12 --filename doc/brs.png
 
       - name: Commit version bump
         run: |
@@ -51,6 +54,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add pyproject.toml
           git add boto3_refresh_session/__init__.py
+          git add doc/brs.png
           git commit -m "bump $VERSION_TYPE version [skip ci]"  # <--- Prevents infinite loop
           git push origin main  # Push only the version bump commit
 
