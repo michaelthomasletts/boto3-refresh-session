@@ -46,7 +46,7 @@ jobs:
         run: python bump_version.py $VERSION_TYPE
       
       - name: Update logo
-        run: laudanum --text brs --fontsize 14 --filename doc/brs.png
+        run: laudanum --text brs --fontsize 15 --filename doc/brs.png
 
       - name: Commit version bump
         run: |
