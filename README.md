@@ -4,7 +4,7 @@
 ![Python Version](https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi)
 ![GitHub last commit](https://img.shields.io/github/last-commit/michaelthomasletts/boto3-refresh-session?logo=github)
 ![PyPI Downloads (Monthly)](https://img.shields.io/pypi/dm/boto3-refresh-session?logo=pypi)
-![PyPI Downloads (Total)](https://static.pepy.tech/badge/boto3-refresh-session)
+[![PyPI Downloads](https://static.pepy.tech/badge/boto3-refresh-session)](https://pepy.tech/projects/boto3-refresh-session)
 
 ![BRS Image](https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/doc/brs.png)
 
