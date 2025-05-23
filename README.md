@@ -1,12 +1,14 @@
 # boto3-refresh-session
-[![PyPI Download](https://img.shields.io/pypi/v/boto3-refresh-session?logo=pypis.svg)](https://pypi.org/project/boto3-refresh-session/)
+
+![PyPI - Version](https://img.shields.io/pypi/v/boto3-refresh-session)
 [![Workflow](https://img.shields.io/github/actions/workflow/status/michaelthomasletts/boto3-refresh-session/push.yml?logo=github)](https://github.com/michaelthomasletts/boto3-refresh-session/actions/workflows/push.yml)
 ![Python Version](https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi)
 ![GitHub last commit](https://img.shields.io/github/last-commit/michaelthomasletts/boto3-refresh-session?logo=github)
-![PyPI Downloads (Monthly)](https://img.shields.io/pypi/dm/boto3-refresh-session?logo=pypi)
 [![PyPI Downloads](https://static.pepy.tech/badge/boto3-refresh-session)](https://pepy.tech/projects/boto3-refresh-session)
 
-![BRS Image](https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/doc/brs.png)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/doc/brs.png" />
+</p>
 
 A simple Python package for refreshing the temporary security credentials in a `boto3.session.Session` object automatically.
 
@@ -15,6 +17,10 @@ A simple Python package for refreshing the temporary security credentials in a `
 - [PyPI](https://pypi.org/project/boto3-refresh-session/)
 - [Contributing](https://michaelthomasletts.github.io/boto3-refresh-session/contributing.html)
 - [Authorization](https://michaelthomasletts.github.io/boto3-refresh-session/authorization.html)
+
+### Testimonials
+
+_"Most of my work is on tooling related to AWS security, so I'm pretty choosy about boto3 credentials-adjacent code. I often opt to just write this sort of thing myself so I at least know that I can reason about it. But I found boto3-refresh-session to be very clean and intuitive . . . we're using the RefreshableSession class as part of a client cache construct . . . we're using AWS Lambda to perform lots of operations across several regions in hundreds of accounts, over and over again, all day every day. And it turns out that there's a surprising amount of overhead to creating boto3 clients (mostly deserializing service definition json), so we can run MUCH more efficiently if we keep a cache of clients, all equipped with automatically refreshing sessions."_
 
 ### Installation
 
