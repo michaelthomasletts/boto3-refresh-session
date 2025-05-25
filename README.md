@@ -13,6 +13,7 @@
 A simple Python package for refreshing the temporary security credentials in a `boto3.session.Session` object automatically.
 
 - [Official Documentation](https://michaelthomasletts.github.io/boto3-refresh-session/index.html)
+- [Q&A](https://michaelthomasletts.github.io/boto3-refresh-session/qanda.html)
 - [Source Code](https://github.com/michaelthomasletts/boto3-refresh-session)
 - [PyPI](https://pypi.org/project/boto3-refresh-session/)
 - [Contributing](https://michaelthomasletts.github.io/boto3-refresh-session/contributing.html)
