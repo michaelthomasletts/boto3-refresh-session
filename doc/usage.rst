@@ -8,7 +8,7 @@ In order to use this package, you must have AWS credentials configured on your m
 Basic Initialization
 --------------------
 
-``Client`` and ``Resource`` objects in ``boto3`` precede from the :class:`boto3.session.Session` object. 
+``Client`` and ``Resource`` objects in ``boto3`` are derived from the :class:`boto3.session.Session` object. 
 In other words, everything in ``boto3`` is basically a :class:`boto3.session.Session` object. 
 That knowledge matters because it directly implicates your ability to flexibly use boto3-refresh-session or incorporate it into your existing code with minimal effort.
 
