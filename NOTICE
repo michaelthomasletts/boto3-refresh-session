@@ -1,0 +1,12 @@
+boto3-refresh-session  
+Copyright 2024 Michael Letts
+
+boto3-refresh-session (BRS) includes software designed and developed by Michael Letts (the author).
+
+Although the author was formerly employed by Amazon, this project was conceived, designed, developed, and released independently after that period of employment. It is not affiliated with or endorsed by Amazon Web Services (AWS), Amazon, or any contributors to boto3 or botocore, regardless of their employment status.
+
+Developers are welcome and encouraged to modify and adapt this software to suit their needs — this is in fact already common practice among some of the largest users of BRS.
+
+If you find boto3-refresh-session (BRS) helpful in your work, a note of thanks or a mention in your project’s documentation or acknowledgments is appreciated — though not required under the terms of the MIT License.
+
+Licensed under the MIT License. See the LICENSE file for details.

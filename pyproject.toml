@@ -14,6 +14,9 @@ maintainers = [
   {name="Michael Letts", email="lettsmt@gmail.com"},
 ]
 
+[tool.poetry]
+include = ["NOTICE"]
+
 [project.urls]
 repository = "https://github.com/michaelthomasletts/boto3-refresh-session"
 documentation = "https://michaelthomasletts.github.io/boto3-refresh-session/index.html"
