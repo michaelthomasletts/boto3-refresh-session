@@ -98,12 +98,16 @@ class RefreshableSession(Session):
     def __init__(
         self,
         assume_role_kwargs: Dict[Any],
-        defer_refresh: bool = True,
+        defer_refresh: bool = None,
         sts_client_kwargs: Dict[Any] = None,
         **kwargs,
     ):
         # inheriting from boto3.session.Session
         super().__init__(**kwargs)
+
+        # setting defer_refresh default
+        if defer_refresh is None:
+            defer_refresh = True
 
         # initializing custom parameters that are necessary outside of __init__
         self.assume_role_kwargs = assume_role_kwargs
