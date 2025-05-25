@@ -8,6 +8,7 @@
    :hidden:
 
    Raison d'Être <raison>
+   Q&A <qanda>
    Installation <installation>   
    Usage <usage>
    API Reference <reference/index>
@@ -20,7 +21,8 @@ boto3-refresh-session
 **Version:** |release|
 
 **Useful Links:**
-:ref:`Raison d'Être <raison>` |  
+:ref:`Raison d'Être <raison>` |
+:ref:`Q&A <qanda>` |
 :ref:`Installation <installation>` |
 :ref:`Usage <usage>` |
 :ref:`API Reference <reference>` |

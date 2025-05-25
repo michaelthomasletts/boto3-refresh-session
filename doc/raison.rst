@@ -13,13 +13,13 @@ Usually, engineers deal with that problem one of two ways:
 - A similar approach as that used in this project -- that is, using methods available 
   within ``botocore`` for refreshing temporary credentials automatically. 
   
-Speaking personally, variations of the code found herein exists in code bases at 
+Speaking personally, variations of the code found in this package exists in code bases at 
 nearly every company where I have worked. Sometimes, I turned that code into a module; 
 other times, I wrote it from scratch. Clearly, that is inefficient.
 
 I decided to finally turn that code into a proper Python package with unit testing, 
 automatic documentation, and quality checks; the idea being that, henceforth, depending 
 on my employer's open source policy, I may simply import this package instead of 
-reproducing the code herein for the Nth time.
+reproducing this code for the Nth time.
 
 If any of that sounds relatable, then ``boto3-refresh-session`` should help you.
