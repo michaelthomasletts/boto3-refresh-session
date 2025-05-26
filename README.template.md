@@ -50,7 +50,7 @@
 
 - Auto-refreshing credentials for long-lived `boto3` sessions
 - Drop-in replacement for `boto3.session.Session`
-- Supports `assume_role` configuration, custom STS clients, and profile/region configuration, as well as all other parameters supported by `boto3.session.Session`
+- Supports `assume_role` configuration, custom STS clients, and profile / region configuration, as well as all other parameters supported by `boto3.session.Session`
 - Tested, documented, and published to PyPI
 - Used in production at major tech companies
 
