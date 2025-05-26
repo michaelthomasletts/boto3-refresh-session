@@ -27,7 +27,7 @@ jobs:
         run: pip install Jinja2 requests
 
       - name: Render README with PePy stats
-        run: ./readme.py
+        run: python3 readme.py
 
       - name: Commit and push if README changed
         run: |

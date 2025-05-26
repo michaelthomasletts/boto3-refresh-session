@@ -11,7 +11,11 @@ on:
 
 jobs:
   bump_version:
-    if: github.event.head_commit.message !~ '.*\[skip release\].*' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: |
+      !contains(github.event.head_commit.message, '[skip release]') &&
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main'
+
     name: Bump Version, Publish to PyPI, tag, and deploy docs
     runs-on: ubuntu-latest
     steps:
