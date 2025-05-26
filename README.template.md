@@ -13,7 +13,7 @@
 <div align="center">
 
   <a href="https://pypi.org/project/boto3-refresh-session/">
-    <img src="https://img.shields.io/pypi/v/boto3-refresh-session?color=%23FF0000FF" alt="PyPI - Version"/>
+    <img src="https://img.shields.io/pypi/v/boto3-refresh-session?color=%23FF0000FF&logo=python" alt="PyPI - Version"/>
   </a>
 
   <a href="https://github.com/michaelthomasletts/boto3-refresh-session/actions/workflows/push.yml">
@@ -21,7 +21,7 @@
   </a>
 
   <a href="https://pypi.org/project/boto3-refresh-session/">
-    <img src="https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi&color=%23FF0000FF" alt="Python Version"/>
+    <img src="https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi&color=%23FF0000FF&logo=python" alt="Python Version"/>
   </a>
 
   <a href="https://github.com/michaelthomasletts/boto3-refresh-session/commits/main">
@@ -32,18 +32,31 @@
     <img src="https://img.shields.io/badge/downloads-{{ downloads_abbr }}-red?logo=python&color=%23FF0000" alt="Downloads"/>
   </a>
 
+  <a href="https://michaelthomasletts.github.io/boto3-refresh-session/index.html">
+    <img src="https://img.shields.io/badge/official%20documentation-📘-FF0000?style=flat&labelColor=555&logo=readthedocs" alt="Documentation Badge"/>
+  </a>
+
+  <a href="https://github.com/michaelthomasletts/boto3-refresh-session">
+    <img src="https://img.shields.io/badge/source%20code-💻-FF0000?style=flat&labelColor=555&logo=github" alt="Source Code Badge"/>
+  </a>
+
+  <a href="https://michaelthomasletts.github.io/boto3-refresh-session/qanda.html">
+    <img src="https://img.shields.io/badge/Q%26A-❓-FF0000?style=flat&labelColor=555&logo=vercel" alt="Q&A Badge"/>
+  </a>
+
 </div>
 
-## Links
+## Features
 
-- [Official Documentation](https://michaelthomasletts.github.io/boto3-refresh-session/index.html)
-- [Q&A](https://michaelthomasletts.github.io/boto3-refresh-session/qanda.html)
-- [Source Code](https://github.com/michaelthomasletts/boto3-refresh-session)
-- [PyPI](https://pypi.org/project/boto3-refresh-session/)
-- [Contributing](https://michaelthomasletts.github.io/boto3-refresh-session/contributing.html)
-- [Authorization](https://michaelthomasletts.github.io/boto3-refresh-session/authorization.html)
+- Auto-refreshing credentials for long-lived `boto3` sessions
+- Drop-in replacement for `boto3.session.Session`
+- Supports `assume_role` configuration, custom STS clients, and profile/region configuration, as well as all other parameters supported by `boto3.session.Session`
+- Tested, documented, and published to PyPI
+- Used in production at major tech companies
 
 ## Adoption
+
+The following line plot illustrates the adoption of BRS in terms of total downloads over a rolling seven day window since the inception of BRS.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/doc/downloads.png" />
@@ -54,14 +67,6 @@
 From a Cyber Security Engineer at a FAANG company:
 
 > _Most of my work is on tooling related to AWS security, so I'm pretty choosy about boto3 credentials-adjacent code. I often opt to just write this sort of thing myself so I at least know that I can reason about it. But I found boto3-refresh-session to be very clean and intuitive . . . we're using the RefreshableSession class as part of a client cache construct . . . we're using AWS Lambda to perform lots of operations across several regions in hundreds of accounts, over and over again, all day every day. And it turns out that there's a surprising amount of overhead to creating boto3 clients (mostly deserializing service definition json), so we can run MUCH more efficiently if we keep a cache of clients, all equipped with automatically refreshing sessions._
-
-## Features
-
-- Auto-refreshing credentials for long-lived `boto3` sessions
-- Drop-in replacement for `boto3.session.Session`
-- Supports `assume_role`, custom STS clients, and profile/region configuration, as well as all other parameters supported by `boto3.session.Session`
-- Tested, documented, and published to PyPI
-- Used in production at major tech companies
 
 ## Installation
 
