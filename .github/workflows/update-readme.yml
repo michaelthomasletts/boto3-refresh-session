@@ -30,6 +30,8 @@ jobs:
         run: python3 readme.py
 
       - name: Commit and push if README changed
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
@@ -37,8 +39,7 @@ jobs:
           if [[ -n $(git status --porcelain README.md) ]]; then
             git add README.md
             git commit -m "chore: update README badge [skip release]"
-            git push
+            git push https://x-access-token:$GH_PAT@github.com/${{ github.repository }}.git HEAD:main
           else
             echo "No changes to commit."
           fi
-
