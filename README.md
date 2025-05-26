@@ -44,13 +44,9 @@
     <img src="https://img.shields.io/badge/Q%26A-❓-FF0000?style=flat&labelColor=555&logo=vercel" alt="Q&A Badge"/>
   </a>
 
-<<<<<<< HEAD
 </div>
 
 ## Features
-=======
-## Links
->>>>>>> 99cccbb7b40cf444acdf7867555042c72dec2ee2
 
 - Auto-refreshing credentials for long-lived `boto3` sessions
 - Drop-in replacement for `boto3.session.Session`
