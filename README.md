@@ -1,22 +1,39 @@
-<p align="center">
+<div align="center">
   <img src="https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/doc/brs.png" />
-</p>
+</div>
 
-<p align="center">
-    <em>A simple Python package for refreshing the temporary security credentials in a <code>boto3.session.Session</code> object automatically.</em>
-</p>
+</br>
 
-<p align="center">
-  <img src="https://img.shields.io/pypi/v/boto3-refresh-session?color=%23FF0000FF" alt="PyPI - Version"/>
+<div align="center"><em>
+  A simple Python package for refreshing the temporary security credentials in a <code>boto3.session.Session</code> object automatically.
+</em></div>
+
+</br>
+
+<div align="center">
+
+  <a href="https://pypi.org/project/boto3-refresh-session/">
+    <img src="https://img.shields.io/pypi/v/boto3-refresh-session?color=%23FF0000FF" alt="PyPI - Version"/>
+  </a>
+
   <a href="https://github.com/michaelthomasletts/boto3-refresh-session/actions/workflows/push.yml">
     <img src="https://img.shields.io/github/actions/workflow/status/michaelthomasletts/boto3-refresh-session/push.yml?logo=github&color=%23FF0000FF" alt="Workflow"/>
   </a>
-  <img src="https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi&color=%23FF0000FF" alt="Python Version"/>
-  <img src="https://img.shields.io/github/last-commit/michaelthomasletts/boto3-refresh-session?logo=github&color=%23FF0000FF" alt="GitHub last commit"/>
-  <a href="https://pepy.tech/projects/boto3-refresh-session">
+
+  <a href="https://pypi.org/project/boto3-refresh-session/">
+    <img src="https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi&color=%23FF0000FF" alt="Python Version"/>
+  </a>
+
+  <a href="https://github.com/michaelthomasletts/boto3-refresh-session/commits/main">
+    <img src="https://img.shields.io/github/last-commit/michaelthomasletts/boto3-refresh-session?logo=github&color=%23FF0000FF" alt="GitHub last commit"/>
+  </a>
+
+  <a href="https://pepy.tech/project/boto3-refresh-session">
     <img src="https://img.shields.io/badge/downloads-45.6K-red?logo=python&color=%23FF0000" alt="Downloads"/>
   </a>
-</p>
+
+</div>
+
 
 ## Links
 
