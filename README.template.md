@@ -41,7 +41,7 @@
   </a>
 
   <a href="https://michaelthomasletts.github.io/boto3-refresh-session/qanda.html">
-    <img src="https://img.shields.io/badge/Q%26A-❓-FF0000?style=flat&labelColor=555&logo=vercel" alt="Q&A Badge"/>
+    <img src="https://img.shields.io/badge/Q%26A-❔-FF0000?style=flat&labelColor=555&logo=vercel" alt="Q&A Badge"/>
   </a>
 
 </div>
