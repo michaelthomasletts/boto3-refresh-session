@@ -34,7 +34,6 @@
 
 </div>
 
-
 ## Links
 
 - [Official Documentation](https://michaelthomasletts.github.io/boto3-refresh-session/index.html)
