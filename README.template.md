@@ -14,7 +14,7 @@
   <img src="https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi&color=%23FF0000FF" alt="Python Version"/>
   <img src="https://img.shields.io/github/last-commit/michaelthomasletts/boto3-refresh-session?logo=github&color=%23FF0000FF" alt="GitHub last commit"/>
   <a href="https://pepy.tech/projects/boto3-refresh-session">
-    <img src="https://img.shields.io/badge/downloads-45.6K-red?logo=python&color=%23FF0000" alt="Downloads"/>
+    <img src="https://img.shields.io/badge/downloads-{{ downloads_abbr }}-red?logo=python&color=%23FF0000" alt="Downloads"/>
   </a>
 </p>
 

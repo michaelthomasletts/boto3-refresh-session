@@ -1,0 +1,44 @@
+name: Update README Download Badge
+
+on:
+  schedule:
+    - cron: "0 11 * * *"  # 6 AM EST = 11 AM UTC
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/update-readme.yml
+      - readme.py
+      - README.template.md
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install Jinja2
+        run: pip install Jinja2 requests
+
+      - name: Render README with PePy stats
+        run: ./readme.py
+
+      - name: Commit and push if README changed
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+          if [[ -n $(git status --porcelain README.md) ]]; then
+            git add README.md
+            git commit -m "chore: update README badge [skip release]"
+            git push
+          else
+            echo "No changes to commit."
+          fi
+
