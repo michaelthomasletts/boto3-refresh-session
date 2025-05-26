@@ -39,6 +39,14 @@ From a Cyber Security Engineer at a FAANG company:
 
 > _Most of my work is on tooling related to AWS security, so I'm pretty choosy about boto3 credentials-adjacent code. I often opt to just write this sort of thing myself so I at least know that I can reason about it. But I found boto3-refresh-session to be very clean and intuitive . . . we're using the RefreshableSession class as part of a client cache construct . . . we're using AWS Lambda to perform lots of operations across several regions in hundreds of accounts, over and over again, all day every day. And it turns out that there's a surprising amount of overhead to creating boto3 clients (mostly deserializing service definition json), so we can run MUCH more efficiently if we keep a cache of clients, all equipped with automatically refreshing sessions._
 
+## Features
+
+- Auto-refreshing credentials for long-lived `boto3` sessions
+- Drop-in replacement for `boto3.session.Session`
+- Supports `assume_role`, custom STS clients, and profile/region configuration, as well as all other parameters supported by `boto3.session.Session`
+- Tested, documented, and published to PyPI
+- Used in production at major tech companies
+
 ## Installation
 
 ```bash
@@ -106,3 +114,7 @@ on my employer's open source policy, I may simply import this package instead of
 reproducing the code herein for the Nth time.
 
 If any of that sounds relatable, then `boto3-refresh-session` should help you.
+
+---
+
+📄 Licensed under the MIT License.
