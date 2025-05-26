@@ -27,6 +27,12 @@
 - [Contributing](https://michaelthomasletts.github.io/boto3-refresh-session/contributing.html)
 - [Authorization](https://michaelthomasletts.github.io/boto3-refresh-session/authorization.html)
 
+## Adoption
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/doc/downloads.png" />
+</p>
+
 ## Testimonials
 
 From a Cyber Security Engineer at a FAANG company:
