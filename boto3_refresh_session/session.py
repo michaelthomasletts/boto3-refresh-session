@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 __doc__ = """
-A :class:`boto3.session.Session` object that automatically refreshes temporary
+A :class:`boto3.session.Session` object that automatically refreshes temporary AWS
 credentials.
 """
 __all__ = ["RefreshableSession"]
