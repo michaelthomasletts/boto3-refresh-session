@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-    <em>A simple Python package for refreshing the temporary security credentials in a `boto3.session.Session` object automatically.</em>
+    <em>A simple Python package for refreshing the temporary security credentials in a <code>boto3.session.Session</code> object automatically.</em>
 </p>
 
 <p align="center">
