@@ -24,10 +24,14 @@ jobs:
           python-version: "3.x"
 
       - name: Install Jinja2
-        run: pip install Jinja2 requests
+        run: pip install Jinja2 requests git+https://github.com/michaelthomasletts/pepy-chart.git
 
       - name: Render README with PePy stats
         run: python3 readme.py
+      
+      - name: Update download stats
+        run: |
+          pepy-chart -p boto3-refresh-session -op doc/downloads.png 
 
       - name: Commit and push if README changed
         env:
@@ -38,6 +42,7 @@ jobs:
 
           if [[ -n $(git status --porcelain README.md) ]]; then
             git add README.md
+            git add doc/downloads.png
             git commit -m "chore: update README badge [skip release]"
             git push https://x-access-token:$GH_PAT@github.com/${{ github.repository }}.git HEAD:main
           else
