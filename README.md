@@ -56,7 +56,7 @@
 
 ## Adoption
 
-The following line plot illustrates the adoption of BRS in terms of total downloads over a rolling seven day window since the inception of BRS.
+The following line plot illustrates the adoption of BRS from the last three months in terms of average daily downloads over a rolling seven day window.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/doc/downloads.png" />
