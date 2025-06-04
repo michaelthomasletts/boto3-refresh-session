@@ -13,35 +13,39 @@
 <div align="center">
 
   <a href="https://pypi.org/project/boto3-refresh-session/">
-    <img src="https://img.shields.io/pypi/v/boto3-refresh-session?color=%23FF0000FF&logo=python" alt="PyPI - Version"/>
-  </a>
-
-  <a href="https://github.com/michaelthomasletts/boto3-refresh-session/actions/workflows/push.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/michaelthomasletts/boto3-refresh-session/push.yml?logo=github&color=%23FF0000FF" alt="Workflow"/>
+    <img src="https://img.shields.io/pypi/v/boto3-refresh-session?color=%23FF0000FF&logo=python&label=Latest%20Version" alt="PyPI - Version"/>
   </a>
 
   <a href="https://pypi.org/project/boto3-refresh-session/">
-    <img src="https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi&color=%23FF0000FF&logo=python" alt="Python Version"/>
+    <img src="https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi&color=%23FF0000FF&logo=python&label=Compatible%20Python%20Versions" alt="Python Version"/>
+  </a>
+
+  <a href="https://github.com/michaelthomasletts/boto3-refresh-session/actions/workflows/push.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/michaelthomasletts/boto3-refresh-session/push.yml?logo=github&color=%23FF0000FF&label=Build" alt="Workflow"/>
   </a>
 
   <a href="https://github.com/michaelthomasletts/boto3-refresh-session/commits/main">
-    <img src="https://img.shields.io/github/last-commit/michaelthomasletts/boto3-refresh-session?logo=github&color=%23FF0000FF" alt="GitHub last commit"/>
-  </a>
-
-  <a href="https://pepy.tech/project/boto3-refresh-session">
-    <img src="https://img.shields.io/badge/downloads-{{ downloads_abbr }}-red?logo=python&color=%23FF0000" alt="Downloads"/>
-  </a>
-
-  <a href="https://michaelthomasletts.github.io/boto3-refresh-session/index.html">
-    <img src="https://img.shields.io/badge/official%20documentation-📘-FF0000?style=flat&labelColor=555&logo=readthedocs" alt="Documentation Badge"/>
-  </a>
-
-  <a href="https://github.com/michaelthomasletts/boto3-refresh-session">
-    <img src="https://img.shields.io/badge/source%20code-💻-FF0000?style=flat&labelColor=555&logo=github" alt="Source Code Badge"/>
+    <img src="https://img.shields.io/github/last-commit/michaelthomasletts/boto3-refresh-session?logo=github&color=%23FF0000FF&label=Last%20Commit" alt="GitHub last commit"/>
   </a>
 
   <a href="https://michaelthomasletts.github.io/boto3-refresh-session/qanda.html">
-    <img src="https://img.shields.io/badge/Q%26A-❔-FF0000?style=flat&labelColor=555&logo=vercel" alt="Q&A Badge"/>
+    <img src="https://img.shields.io/github/stars/michaelthomasletts/boto3-refresh-session?style=flat&logo=github&labelColor=555&color=FF0000&label=Stars" alt="Q&A Badge"/>
+  </a>
+
+  <a href="https://pepy.tech/project/boto3-refresh-session">
+    <img src="https://img.shields.io/badge/downloads-{{ downloads_abbr }}-red?logo=python&color=%23FF0000&label=Downloads" alt="Downloads"/>
+  </a>
+
+  <a href="https://michaelthomasletts.github.io/boto3-refresh-session/index.html">
+    <img src="https://img.shields.io/badge/Official%20Documentation-📘-FF0000?style=flat&labelColor=555&logo=readthedocs" alt="Documentation Badge"/>
+  </a>
+
+  <a href="https://github.com/michaelthomasletts/boto3-refresh-session">
+    <img src="https://img.shields.io/badge/Source%20Code-💻-FF0000?style=flat&labelColor=555&logo=github" alt="Source Code Badge"/>
+  </a>
+
+  <a href="https://michaelthomasletts.github.io/boto3-refresh-session/qanda.html">
+    <img src="https://img.shields.io/badge/Q%26A-❔-FF0000?style=flat&labelColor=555&logo=vercel&label=Q%26A" alt="Q&A Badge"/>
   </a>
 
 </div>
