@@ -4,5 +4,5 @@ from . import session
 from .session import RefreshableSession
 
 __all__.extend(session.__all__)
-__version__ = "1.0.39"
+__version__ = "1.0.40"
 __author__ = "Mike Letts"
