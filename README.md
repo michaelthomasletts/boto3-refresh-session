@@ -28,8 +28,8 @@
     <img src="https://img.shields.io/github/last-commit/michaelthomasletts/boto3-refresh-session?logo=github&color=%23FF0000FF&label=Last%20Commit" alt="GitHub last commit"/>
   </a>
 
-  <a href="https://michaelthomasletts.github.io/boto3-refresh-session/qanda.html">
-    <img src="https://img.shields.io/github/stars/michaelthomasletts/boto3-refresh-session?style=flat&logo=github&labelColor=555&color=FF0000&label=Stars" alt="Q&A Badge"/>
+  <a href="https://github.com/michaelthomasletts/boto3-refresh-session/stargazers">
+    <img src="https://img.shields.io/github/stars/michaelthomasletts/boto3-refresh-session?style=flat&logo=github&labelColor=555&color=FF0000&label=Stars" alt="Stars"/>
   </a>
 
   <a href="https://pepy.tech/project/boto3-refresh-session">
