@@ -60,11 +60,11 @@
 
 ## Adoption and Recognition
 
-BRS was [mentioned in TL;DR Sec](https://tldrsec.com/p/tldr-sec-282).
+[Mentioned in TL;DR Sec](https://tldrsec.com/p/tldr-sec-282).
 
-BRS received honorable mention during AWS Community Day Midwest on June 5th, 2025.
+Received honorable mention during AWS Community Day Midwest on June 5th, 2025.
 
-BRS is used by multiple teams and large companies including FAANG.
+Used by multiple teams and large companies including FAANG.
 
 The following line plot illustrates the adoption of BRS from the last three months in terms of average daily downloads over a rolling seven day window.
 
