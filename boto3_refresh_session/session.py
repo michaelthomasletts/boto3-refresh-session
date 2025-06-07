@@ -18,8 +18,8 @@ from botocore.credentials import (
 
 
 class RefreshableSession(Session):
-    """Returns a :class:`boto3.session.Session` object with temporary credentials
-    that refresh automatically.
+    """A :class:`boto3.session.Session` object that automatically refreshes temporary AWS 
+    credentials.
 
     Parameters
     ----------
