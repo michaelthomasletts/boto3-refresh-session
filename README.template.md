@@ -59,7 +59,7 @@
 
 ## Recognition, Adoption, and Testimonials
 
-[Mentioned in TL;DR Sec.](https://tldrsec.com/p/tldr-sec-282)
+[Featured in TL;DR Sec.](https://tldrsec.com/p/tldr-sec-282)
 
 Recognized during AWS Community Day Midwest on June 5th, 2025.
 
