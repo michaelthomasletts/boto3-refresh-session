@@ -3,23 +3,28 @@
 Raison d'Être
 -------------
 
-It is common for data pipelines and workflows that interact with the AWS API via 
-``boto3`` to run for a long time and, accordingly, for temporary credentials to 
-expire. 
+Long-running data pipelines, security tooling, ETL jobs, and cloud automation scripts frequently interact with the AWS API via ``boto3`` — and often run into the same problem:
 
-Usually, engineers deal with that problem one of two ways: 
+**Temporary credentials expire.**
 
-- ``try except`` blocks that catch ``ClientError`` exceptions
-- A similar approach as that used in this project -- that is, using methods available 
-  within ``botocore`` for refreshing temporary credentials automatically. 
-  
-Speaking personally, variations of the code found in this package exists in code bases at 
-nearly every company where I have worked. Sometimes, I turned that code into a module; 
-other times, I wrote it from scratch. Clearly, that is inefficient.
+When that happens, engineers typically fall back on one of two strategies:
 
-I decided to finally turn that code into a proper Python package with unit testing, 
-automatic documentation, and quality checks; the idea being that, henceforth, depending 
-on my employer's open source policy, I may simply import this package instead of 
-reproducing this code for the Nth time.
+- Wrapping AWS calls in ``try/except`` blocks that catch ``ClientError`` exceptions
+- Writing ad hoc logic to refresh credentials using ``botocore.credentials`` internals
 
-If any of that sounds relatable, then ``boto3-refresh-session`` should help you.
+Both approaches are fragile, tedious to maintain, and error-prone at scale.
+
+Over the years, I noticed that every company I worked for — whether a scrappy startup or FAANG — ended up with some variation of the same pattern:  
+a small in-house module to manage credential refresh, written in haste, duplicated across services, and riddled with edge cases. Things only 
+got more strange and difficult when I needed to run things in parallel.
+
+Eventually, I decided to build ``boto3-refresh-session`` as a proper open-source Python package:  
+
+- Fully tested  
+- Extensible  
+- Integrated with ``boto3`` idioms  
+- Equipped with automatic documentation and CI tooling  
+
+**The goal:** to solve a real, recurring problem once — cleanly, consistently, and for everyone -- with multiple refresh strategies.
+
+If you've ever written the same AWS credential-refresh boilerplate more than once, this library is for you. 

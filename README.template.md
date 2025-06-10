@@ -56,27 +56,22 @@
 - Drop-in replacement for `boto3.session.Session`
 - Supports `assume_role` configuration, custom STS clients, and profile / region configuration, as well as all other parameters supported by `boto3.session.Session`
 - Tested, documented, and published to PyPI
-- Used in production at major tech companies
 
-## Adoption and Recognition
+## Recognition, Adoption, and Testimonials
 
-[Mentioned in TL;DR Sec](https://tldrsec.com/p/tldr-sec-282).
+[Mentioned in TL;DR Sec.](https://tldrsec.com/p/tldr-sec-282)
 
-Received honorable mention during AWS Community Day Midwest on June 5th, 2025.
+Recognized during AWS Community Day Midwest on June 5th, 2025.
 
-Used by multiple teams and large companies including FAANG.
+A testimonial from a Cyber Security Engineer at a FAANG company:
 
-The following line plot illustrates the adoption of BRS from the last three months in terms of average daily downloads over a rolling seven day window.
+> _Most of my work is on tooling related to AWS security, so I'm pretty choosy about boto3 credentials-adjacent code. I often opt to just write this sort of thing myself so I at least know that I can reason about it. But I found boto3-refresh-session to be very clean and intuitive [...] We're using the RefreshableSession class as part of a client cache construct [...] We're using AWS Lambda to perform lots of operations across several regions in hundreds of accounts, over and over again, all day every day. And it turns out that there's a surprising amount of overhead to creating boto3 clients (mostly deserializing service definition json), so we can run MUCH more efficiently if we keep a cache of clients, all equipped with automatically refreshing sessions._
+
+The following line plot illustrates the adoption of BRS over the last three months in terms of average daily downloads over a rolling seven day window.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/doc/downloads.png" />
 </p>
-
-## Testimonials
-
-From a Cyber Security Engineer at a FAANG company:
-
-> _Most of my work is on tooling related to AWS security, so I'm pretty choosy about boto3 credentials-adjacent code. I often opt to just write this sort of thing myself so I at least know that I can reason about it. But I found boto3-refresh-session to be very clean and intuitive [...] We're using the RefreshableSession class as part of a client cache construct [...] We're using AWS Lambda to perform lots of operations across several regions in hundreds of accounts, over and over again, all day every day. And it turns out that there's a surprising amount of overhead to creating boto3 clients (mostly deserializing service definition json), so we can run MUCH more efficiently if we keep a cache of clients, all equipped with automatically refreshing sessions._
 
 ## Installation
 
@@ -125,27 +120,28 @@ buckets = s3.list_buckets()
 
 ## Raison d'être
 
-It is common for data pipelines and workflows that interact with the AWS API via 
-`boto3` to run for a long time and, accordingly, for temporary credentials to 
-expire. 
+Long-running data pipelines, security tooling, ETL jobs, and cloud automation scripts frequently interact with the AWS API using boto3 — and often run into the same problem:
 
-Usually, engineers deal with that problem one of two ways: 
+**Temporary credentials expire.**
 
-- `try except` blocks that catch `ClientError` exceptions
-- A similar approach as that used in this project -- that is, using methods available 
-  within `botocore` for refreshing temporary credentials automatically. 
-  
-Speaking personally, variations of the code found herein exists in code bases at 
-nearly every company where I have worked. Sometimes, I turned that code into a module; 
-other times, I wrote it from scratch. Clearly, that is inefficient.
+When that happens, engineers typically fall back on one of two strategies:
 
-I decided to finally turn that code into a proper Python package with unit testing, 
-automatic documentation, and quality checks; the idea being that, henceforth, depending 
-on my employer's open source policy, I may simply import this package instead of 
-reproducing the code herein for the Nth time.
+- Wrapping AWS calls in try/except blocks that catch ClientError exceptions
+- Writing ad hoc logic to refresh credentials using botocore credentials internals
 
-If any of that sounds relatable, then `boto3-refresh-session` should help you.
+Both approaches are fragile, tedious to maintain, and error-prone at scale.
 
----
+Over the years, I noticed that every company I worked for — whether a scrappy startup or FAANG — ended up with some variation of the same pattern:  
+a small in-house module to manage credential refresh, written in haste, duplicated across services, and riddled with edge cases. Things only 
+got more strange and difficult when I needed to run things in parallel.
 
-📄 Licensed under the MIT License.
+Eventually, I decided to build boto3-refresh-session as a proper open-source Python package:  
+
+- Fully tested  
+- Extensible  
+- Integrated with boto3 idioms  
+- Equipped with automatic documentation and CI tooling  
+
+**The goal:** to solve a real, recurring problem once — cleanly, consistently, and for everyone -- with multiple refresh strategies.
+
+If you've ever written the same AWS credential-refresh boilerplate more than once, this library is for you. 

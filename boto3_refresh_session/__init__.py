@@ -1,8 +1,6 @@
-__all__ = []
-
-from . import session
 from .session import RefreshableSession
+from .sts import STSRefreshableSession
 
-__all__.extend(session.__all__)
+__all__ = ["RefreshableSession"]
 __version__ = "1.0.41"
 __author__ = "Mike Letts"

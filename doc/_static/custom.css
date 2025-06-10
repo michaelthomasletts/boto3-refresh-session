@@ -1,6 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&display=swap');
+
+body {
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+}
+
 html[data-theme="dark"] img {
     filter: none;
 }
 html[data-theme="dark"] .bd-content img:not(.only-dark):not(.dark-light) {
     background: unset;
+}
+
+section {
+  margin-bottom: 2rem;
+}
+
+dl.field-list, div.seealso {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+code {
+  background-color: rgba(200, 200, 200, 0.07);
+  padding: 0.1em 0.2em;
+}
+
+h1 {
+  font-size: 2.2rem;
+}
+
+h2 {
+  font-size: 1.6rem;
+}
+
+div.highlight pre {
+  padding: 1em;
+}
+
+.bd-content {
+  max-width: 90ch;
 }

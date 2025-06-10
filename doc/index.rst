@@ -11,7 +11,7 @@
    Q&A <qanda>
    Installation <installation>   
    Usage <usage>
-   API Reference <reference/index>
+   Modules <modules/index>
    Authorization <authorization>
    Contributing <contributing>
 
@@ -25,7 +25,7 @@ boto3-refresh-session
 :ref:`Q&A <qanda>` |
 :ref:`Installation <installation>` |
 :ref:`Usage <usage>` |
-:ref:`API Reference <reference>` |
+:ref:`Modules <modules>` |
 :ref:`Authorization <authorization>`
 
 **Authors:** `Mike Letts <https://michaelthomasletts.github.io/>`_
