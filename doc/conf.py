@@ -41,7 +41,14 @@ html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
 html_file_suffix = ".html"
 html_sidebars = {
-    "**": [],
+    "index": [],
+    "usage": [],
+    "authorization": [],
+    "contributing": [],
+    "raison": [],
+    "qanda": [],
+    "installation": [],
+    "modules/**": ["sidebar-nav-bs.html", "search-field.html"],
 }
 html_context = {
     "default_mode": "dark",
@@ -73,8 +80,8 @@ html_theme_options = {
 # autodoc config
 autodoc_default_options = {
     "members": True,
-    "member-order": "alphabetical",
-    "exclude-members": "__init__",
+    "member-order": "bysource",
+    "exclude-members": "__init__,__new__",
 }
 autodoc_typehints = "none"
 autodoc_preserve_defaults = False
@@ -91,7 +98,7 @@ napoleon_numpy_docstring = True
 napoleon_include_init_with_doc = False
 
 # autosummary
-generate_autosummary = True
+autosummary_generate = False
 
 # intersphinx
 intersphinx_mapping = {

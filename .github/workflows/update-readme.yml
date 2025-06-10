@@ -5,6 +5,8 @@ on:
     - cron: "0 11 * * *"  # 6 AM EST = 11 AM UTC
   workflow_dispatch:
   push:
+    branches:
+      - main
     paths:
       - .github/workflows/update-readme.yml
       - readme.py

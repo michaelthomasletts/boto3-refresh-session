@@ -1,159 +1,155 @@
 from __future__ import annotations
 
 __doc__ = """
-A :class:`boto3.session.Session` object that automatically refreshes temporary AWS
-credentials.
+boto3_refresh_session.session
+=============================
+
+This module provides the main interface for constructing refreshable boto3 sessions.
+
+The ``RefreshableSession`` class serves as a factory that dynamically selects the appropriate 
+credential refresh strategy based on the ``method`` parameter, e.g., ``sts``.
+
+Users can interact with AWS services just like they would with a normal :class:`boto3.session.Session`, 
+with the added benefit of automatic credential refreshing.
+
+Examples
+--------
+>>> from boto3_refresh_session import RefreshableSession
+>>> session = RefreshableSession(
+...     assume_role_kwargs={"RoleArn": "...", "RoleSessionName": "..."},
+...     region_name="us-east-1"
+... )
+>>> s3 = session.client("s3")
+>>> s3.list_buckets()
+
+.. seealso::
+    :class:`boto3_refresh_session.sts.STSRefreshableSession`
+
+Factory interface
+-----------------
+.. autosummary::
+   :toctree: generated/
+   :nosignatures:
+
+   RefreshableSession
 """
+
 __all__ = ["RefreshableSession"]
 
-from typing import Any, Dict
+from abc import ABC, abstractmethod
+from typing import Any, Callable, ClassVar, Literal, get_args
 from warnings import warn
 
-from boto3 import client
 from boto3.session import Session
 from botocore.credentials import (
     DeferredRefreshableCredentials,
     RefreshableCredentials,
 )
 
+#: Type alias for all currently available credential refresh methods.
+Method = Literal["sts"]
+RefreshMethod = Literal["sts-assume-role"]
 
-class RefreshableSession(Session):
-    """A :class:`boto3.session.Session` object that automatically refreshes temporary AWS 
-    credentials.
+
+class BaseRefreshableSession(ABC, Session):
+    """Abstract base class for implementing refreshable AWS sessions.
+
+    Provides a common interface and factory registration mechanism
+    for subclasses that generate temporary credentials using various
+    AWS authentication methods (e.g., STS).
+
+    Subclasses must implement ``_get_credentials()`` and ``get_identity()``.
+    They should also register themselves using the ``method=...`` argument
+    to ``__init_subclass__``.
 
     Parameters
     ----------
-    assume_role_kwargs : dict
-        Required keyword arguments for the :meth:`STS.Client.assume_role` method.
-    defer_refresh : bool, optional
-        If ``True`` then temporary credentials are not automatically refreshed until
-        they are explicitly needed. If ``False`` then temporary credentials refresh
-        immediately upon expiration. It is highly recommended that you use ``True``.
-        Default is ``True``.
-    sts_client_kwargs : dict, optional
-        Optional keyword arguments for the :class:`STS.Client` object. Do not provide
-        values for ``service_name``. Default is None.
+    registry : dict[str, type[BaseRefreshableSession]]
+        Class-level registry mapping method names to registered session types.
+    """
+
+    # adding this and __init_subclass__ to avoid circular imports
+    # as well as simplify future addition of new methods
+    registry: ClassVar[dict[Method, type[BaseRefreshableSession]]] = {}
+
+    def __init_subclass__(cls, method: Method):
+        super().__init_subclass__()
+
+        # guarantees that methods are unique
+        if method in BaseRefreshableSession.registry:
+            warn(f"Method '{method}' is already registered. Overwriting.")
+
+        BaseRefreshableSession.registry[method] = cls
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    @abstractmethod
+    def _get_credentials(self) -> dict[str, str]: ...
+
+    @abstractmethod
+    def get_identity(self) -> dict[str, Any]: ...
+
+    def _refresh_using(
+        self,
+        credentials_method: Callable,
+        defer_refresh: bool,
+        refresh_method: RefreshMethod,
+    ):
+        # determining how exactly to refresh expired temporary credentials
+        if not defer_refresh:
+            self._credentials = RefreshableCredentials.create_from_metadata(
+                metadata=credentials_method(),
+                refresh_using=credentials_method,
+                method=refresh_method,
+            )
+        else:
+            self._credentials = DeferredRefreshableCredentials(
+                refresh_using=credentials_method, method=refresh_method
+            )
+
+
+class RefreshableSession:
+    """Factory class for constructing refreshable boto3 sessions using various authentication
+    methods, e.g. STS.
+
+    This class provides a unified interface for creating boto3 sessions whose credentials are
+    automatically refreshed in the background.
+
+    Use ``RefreshableSession(method="...")`` to construct an instance using the desired method.
+
+    For additional information on required parameters, refer to the See Also section below.
+
+    Parameters
+    ----------
+    method : Method
+        The authentication and refresh method to use for the session. Must match a registered method name.
+        Default is "sts".
 
     Other Parameters
     ----------------
-    kwargs : dict
-        Optional keyword arguments for the :class:`boto3.session.Session` object.
+    **kwargs : dict
+        Additional keyword arguments forwarded to the constructor of the selected session class.
 
-    Notes
-    -----
-    Check the :ref:`authorization documentation <authorization>` for additional
-    information concerning how to authorize access to AWS.
-
-    Check the `AWS documentation <https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp.html>`_
-    for additional information concerning temporary security credentials in IAM.
-
-    Examples
+    See Also
     --------
-    In order to use this object, you are required to configure parameters for the
-    :meth:`STS.Client.assume_role` method.
-
-    >>> assume_role_kwargs = {
-    >>>     'RoleArn': '<your-role-arn>',
-    >>>     'RoleSessionName': '<your-role-session-name>',
-    >>>     'DurationSeconds': '<your-selection>',
-    >>>     ...
-    >>> }
-
-    You may also want to provide optional parameters for the :class:`STS.Client` object.
-
-    >>> sts_client_kwargs = {
-    >>>     ...
-    >>> }
-
-    You may also provide optional parameters for the :class:`boto3.session.Session` object
-    when initializing the ``RefreshableSession`` object. Below, we use the ``region_name``
-    parameter for illustrative purposes.
-
-    >>> session = boto3_refresh_session.RefreshableSession(
-    >>>     assume_role_kwargs=assume_role_kwargs,
-    >>>     sts_client_kwargs=sts_client_kwargs,
-    >>>     region_name='us-east-1',
-    >>> )
-
-    Using the ``session`` variable that you just created, you can now use all of the methods
-    available from the :class:`boto3.session.Session` object. In the below example, we
-    initialize an S3 client and list all available buckets.
-
-    >>> s3 = session.client(service_name='s3')
-    >>> buckets = s3.list_buckets()
-
-    There are two ways of refreshing temporary credentials automatically with the
-    ``RefreshableSession`` object: refresh credentials the moment they expire, or wait until
-    temporary credentials are explicitly needed. The latter is the default. The former must
-    be configured using the ``defer_refresh`` parameter, as shown below.
-
-    >>> session = boto3_refresh_session.RefreshableSession(
-    >>>     defer_refresh=False,
-    >>>     assume_role_kwargs=assume_role_kwargs,
-    >>>     sts_client_kwargs=sts_client_kwargs,
-    >>>     region_name='us-east-1',
-    >>> )
+    boto3_refresh_session.sts.STSRefreshableSession
     """
 
-    def __init__(
-        self,
-        assume_role_kwargs: Dict[Any],
-        defer_refresh: bool = None,
-        sts_client_kwargs: Dict[Any] = None,
-        **kwargs,
-    ):
-        # inheriting from boto3.session.Session
-        super().__init__(**kwargs)
+    def __new__(
+        cls, method: Method = "sts", **kwargs
+    ) -> BaseRefreshableSession:
+        obj = BaseRefreshableSession.registry[method]
+        return obj(**kwargs)
 
-        # setting defer_refresh default
-        if defer_refresh is None:
-            defer_refresh = True
-
-        # initializing custom parameters that are necessary outside of __init__
-        self.assume_role_kwargs = assume_role_kwargs
-
-        # initializing the STS client
-        if sts_client_kwargs is not None:
-            # overwriting 'service_name' in case it appears in sts_client_kwargs
-            if "service_name" in sts_client_kwargs:
-                warn(
-                    "The sts_client_kwargs parameter cannot contain values for service_name. Reverting to service_name = 'sts'."
-                )
-                del sts_client_kwargs["service_name"]
-            self._sts_client = client(service_name="sts", **sts_client_kwargs)
-        else:
-            self._sts_client = client(service_name="sts")
-
-        # determining how exactly to refresh expired temporary credentials
-        if not defer_refresh:
-            self._session._credentials = (
-                RefreshableCredentials.create_from_metadata(
-                    metadata=self._get_credentials(),
-                    refresh_using=self._get_credentials,
-                    method="sts-assume-role",
-                )
-            )
-        else:
-            self._session._credentials = DeferredRefreshableCredentials(
-                refresh_using=self._get_credentials, method="sts-assume-role"
-            )
-
-    def _get_credentials(self) -> Dict[Any]:
-        """Returns temporary credentials via AWS STS.
+    @classmethod
+    def get_available_methods(cls) -> list[str]:
+        """Lists all currently available credential refresh methods.
 
         Returns
         -------
-        dict
-            AWS temporary credentials.
+        list[str]
+            A list of all currently available credential refresh methods, e.g. 'sts'.
         """
 
-        # fetching temporary credentials
-        temporary_credentials = self._sts_client.assume_role(
-            **self.assume_role_kwargs
-        )["Credentials"]
-        return {
-            "access_key": temporary_credentials.get("AccessKeyId"),
-            "secret_key": temporary_credentials.get("SecretAccessKey"),
-            "token": temporary_credentials.get("SessionToken"),
-            "expiry_time": temporary_credentials.get("Expiration").isoformat(),
-        }
+        return list(get_args(Method))
