@@ -73,7 +73,7 @@ class STSRefreshableSession(BaseRefreshableSession, method="sts"):
     def __init__(
         self,
         assume_role_kwargs: dict,
-        defer_refresh: bool = None,
+        defer_refresh: bool | None = None,
         sts_client_kwargs: dict | None = None,
         **kwargs,
     ):

@@ -24,6 +24,7 @@ Examples
 
 .. seealso::
     :class:`boto3_refresh_session.sts.STSRefreshableSession`
+    :class:`boto3_refresh_session.ecs.ECSRefreshableSession`
 
 Factory interface
 -----------------
@@ -47,8 +48,8 @@ from botocore.credentials import (
 )
 
 #: Type alias for all currently available credential refresh methods.
-Method = Literal["sts"]
-RefreshMethod = Literal["sts-assume-role"]
+Method = Literal["sts", "ecs"]
+RefreshMethod = Literal["sts-assume-role", "ecs-container-metadata"]
 
 
 class BaseRefreshableSession(ABC, Session):
@@ -108,6 +109,34 @@ class BaseRefreshableSession(ABC, Session):
                 refresh_using=credentials_method, method=refresh_method
             )
 
+    def refreshable_credentials(self) -> dict[str, str]:
+        """The current temporary AWS security credentials.
+
+        Returns
+        -------
+        dict[str, str]
+            Temporary AWS security credentials containing:
+                AWS_ACCESS_KEY_ID : str
+                    AWS access key identifier.
+                AWS_SECRET_ACCESS_KEY : str
+                    AWS secret access key.
+                AWS_SESSION_TOKEN : str
+                    AWS session token.
+        """
+
+        creds = self.get_credentials().get_frozen_credentials()
+        return {
+            "AWS_ACCESS_KEY_ID": creds.access_key,
+            "AWS_SECRET_ACCESS_KEY": creds.secret_key,
+            "AWS_SESSION_TOKEN": creds.token,
+        }
+
+    @property
+    def credentials(self) -> dict[str, str]:
+        """The current temporary AWS security credentials."""
+
+        return self.refreshable_credentials()
+
 
 class RefreshableSession:
     """Factory class for constructing refreshable boto3 sessions using various authentication
@@ -134,6 +163,7 @@ class RefreshableSession:
     See Also
     --------
     boto3_refresh_session.sts.STSRefreshableSession
+    boto3_refresh_session.ecs.ECSRefreshableSession
     """
 
     def __new__(
