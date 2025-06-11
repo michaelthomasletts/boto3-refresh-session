@@ -44,8 +44,6 @@ __all__ = ["STSRefreshableSession"]
 from typing import Any
 from warnings import warn
 
-from boto3 import client
-
 from .session import BaseRefreshableSession
 
 
@@ -90,9 +88,11 @@ class STSRefreshableSession(BaseRefreshableSession, method="sts"):
                     "The sts_client_kwargs parameter cannot contain values for service_name. Reverting to service_name = 'sts'."
                 )
                 del sts_client_kwargs["service_name"]
-            self._sts_client = client(service_name="sts", **sts_client_kwargs)
+            self._sts_client = self.client(
+                service_name="sts", **sts_client_kwargs
+            )
         else:
-            self._sts_client = client(service_name="sts")
+            self._sts_client = self.client(service_name="sts")
 
         # mounting refreshable credentials
         self._refresh_using(

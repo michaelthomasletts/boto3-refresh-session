@@ -32,7 +32,7 @@ Steps
    
    * You will be met by a pull request checklist when you attempt to create a pull request with your changes. Follow that checklist to ensure your changes satisfy the requirements in order to expedite the review process.
 
-8. If your changes include an additional dependency, then you will need to run ``poetry install <dependency>``. This command will update ``pyproject.toml`` with your dependency.
+8. If your changes include an additional dependency, then you will need to run ``poetry add <dependency>``. This command will update ``pyproject.toml`` with your dependency.
 9. Commit and push your changes to a branch on the forked repository.
    
    * ``pre-commit`` will run a few checks when ``git commit`` is run. Those checks **must** succeed for you to proceed to ``git push``!

@@ -142,6 +142,6 @@ Eventually, I decided to build boto3-refresh-session as a proper open-source Pyt
 - Integrated with boto3 idioms  
 - Equipped with automatic documentation and CI tooling  
 
-**The goal:** to solve a real, recurring problem once — cleanly, consistently, and for everyone -- with multiple refresh strategies.
+**The goal:** to solve a real, recurring problem once — cleanly, consistently, and for everyone - with multiple refresh strategies.
 
 If you've ever written the same AWS credential-refresh boilerplate more than once, this library is for you. 
