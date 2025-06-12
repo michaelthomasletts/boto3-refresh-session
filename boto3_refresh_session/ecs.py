@@ -77,9 +77,7 @@ class ECSRefreshableSession(BaseRefreshableSession, method="ecs"):
         Optional keyword arguments passed to :class:`boto3.session.Session`.
     """
 
-    def __init__(
-        self, defer_refresh: bool = True, **kwargs
-    ):
+    def __init__(self, defer_refresh: bool = True, **kwargs):
         super().__init__(**kwargs)
 
         self._endpoint = self._resolve_endpoint()
@@ -130,12 +128,11 @@ class ECSRefreshableSession(BaseRefreshableSession, method="ecs"):
         required = {"AccessKeyId", "SecretAccessKey", "Token", "Expiration"}
         if not required.issubset(credentials):
             raise ValueError(f"Incomplete credentials received: {credentials}")
-
         return {
-            "access_key": credentials["AccessKeyId"],
-            "secret_key": credentials["SecretAccessKey"],
-            "token": credentials["Token"],
-            "expiry_time": credentials["Expiration"],  # already ISO8601
+            "access_key": credentials.get("AccessKeyId"),
+            "secret_key": credentials.get("SecretAccessKey"),
+            "token": credentials.get("SessionToken"),
+            "expiry_time": credentials.get("Expiration"),  # already ISO8601
         }
 
     def get_identity(self) -> dict[str, str]:
