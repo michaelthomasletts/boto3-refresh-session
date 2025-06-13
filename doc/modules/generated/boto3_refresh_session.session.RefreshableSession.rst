@@ -5,15 +5,4 @@ boto3\_refresh\_session.session.RefreshableSession
 
 .. autoclass:: RefreshableSession
    :exclude-members: __init__, __new__
-
-   .. rubric:: Methods
-
-   .. autosummary::
-
-      ~RefreshableSession.get_available_methods
-   
-   
-
-   
-   
-   
+   :inherited-members:

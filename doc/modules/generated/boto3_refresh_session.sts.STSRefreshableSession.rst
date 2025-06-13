@@ -5,9 +5,4 @@ boto3\_refresh\_session.sts.STSRefreshableSession
 
 .. autoclass:: STSRefreshableSession
    :exclude-members: __init__, __new__
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~STSRefreshableSession.get_identity
+   :inherited-members:

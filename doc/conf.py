@@ -82,10 +82,10 @@ autodoc_default_options = {
     "members": True,
     "member-order": "bysource",
     "exclude-members": "__init__,__new__",
+    "inherited-members": True,
 }
-autodoc_typehints = "none"
-autodoc_preserve_defaults = False
-autodoc_class_signature = "separated"
+autodoc_typehints = "signature"
+autodoc_inherit_docstrings = True
 
 # numpydoc config
 numpydoc_show_class_members = False

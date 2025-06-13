@@ -1,49 +1,10 @@
 from __future__ import annotations
 
-__doc__ = """
-boto3_refresh_session.sts
-=========================
-
-Implements the STS-based credential refresh strategy for use with 
-:class:`boto3_refresh_session.session.RefreshableSession`.
-
-This module defines the :class:`STSRefreshableSession` class, which uses 
-IAM role assumption via STS to automatically refresh temporary credentials 
-in the background.
-
-.. versionadded:: 1.1.0
-
-Examples
---------
->>> from boto3_refresh_session import RefreshableSession
->>> session = RefreshableSession(
-...     method="sts",
-...     assume_role_kwargs={
-...         "RoleArn": "arn:aws:iam::123456789012:role/MyRole",
-...         "RoleSessionName": "my-session"
-...     },
-...     region_name="us-east-1"
-... )
->>> s3 = session.client("s3")
->>> s3.list_buckets()
-
-.. seealso::
-    :class:`boto3_refresh_session.session.RefreshableSession`
-
-STS
----    
-
-.. autosummary::
-   :toctree: generated/
-   :nosignatures:
-
-   STSRefreshableSession
-"""
 __all__ = ["STSRefreshableSession"]
 
 from typing import Any
-from warnings import warn
 
+from .exceptions import BRSWarning
 from .session import BaseRefreshableSession
 
 
@@ -73,7 +34,7 @@ class STSRefreshableSession(BaseRefreshableSession, method="sts"):
     def __init__(
         self,
         assume_role_kwargs: dict,
-        defer_refresh: bool = None,
+        defer_refresh: bool | None = None,
         sts_client_kwargs: dict | None = None,
         **kwargs,
     ):
@@ -84,8 +45,8 @@ class STSRefreshableSession(BaseRefreshableSession, method="sts"):
         if sts_client_kwargs is not None:
             # overwriting 'service_name' in case it appears in sts_client_kwargs
             if "service_name" in sts_client_kwargs:
-                warn(
-                    "The sts_client_kwargs parameter cannot contain values for service_name. Reverting to service_name = 'sts'."
+                BRSWarning(
+                    "'sts_client_kwargs' cannot contain values for 'service_name'. Reverting to service_name = 'sts'."
                 )
                 del sts_client_kwargs["service_name"]
             self._sts_client = self.client(

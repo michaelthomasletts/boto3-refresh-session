@@ -14,8 +14,10 @@ boto3-refresh-session includes multiple modules, grouped into two categories:
    :maxdepth: 1
    :hidden:
 
+   exceptions
    session
    sts
+   ecs
 
 Core interface
 --------------
@@ -25,7 +27,8 @@ The :class:`boto3_refresh_session.session.RefreshableSession` class provides a u
 
 .. tip::
    
-   For most users, STS is sufficient — there’s no need to manually specify the ``method`` parameter unless using advanced strategies like IoT or SSO.
+   For most users, STS is sufficient — there’s no need to manually specify the ``method`` parameter unless using advanced strategies like ECS.
+   All users should, however, familiarize themselves with the documentation in the Refresh strategies in order to understand required and optional parameters and available methods.
 
 - :ref:`session` — Factory interface for creating refreshable boto3 sessions
 
@@ -35,6 +38,18 @@ Refresh strategies
 boto3-refresh-session is designed to grow.
 In addition to the default STS strategy, support for additional credential sources like AWS IoT, SSO, and others will be added in future releases.
 
-Each strategy supported by boto3-refresh-session is encapsulated in its own module:
+.. tip::
+   
+   It is recommended to use :class:`boto3_refresh_session.session.RefreshableSession` instead of initializing the below classes. 
 
-- :ref:`sts` — Refresh strategy using :class:`botocore.client.STS`
+Each strategy supported by boto3-refresh-session is encapsulated in its own module below.
+
+- :ref:`sts` — Refresh strategy using :class:`STS.Client`
+- :ref:`ecs` - Refresh strategy using AWS ECS container metadata
+
+Exceptions and Warnings
+-----------------------
+
+Mistakes and problems happen. You can find all of the custom exceptions and warnings for boto3-refresh-session below.
+
+- :ref:`exceptions` - Exceptions and warnings for boto3-refresh-session.

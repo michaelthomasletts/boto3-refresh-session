@@ -1,44 +1,9 @@
 from __future__ import annotations
 
-__doc__ = """
-boto3_refresh_session.session
-=============================
-
-This module provides the main interface for constructing refreshable boto3 sessions.
-
-The ``RefreshableSession`` class serves as a factory that dynamically selects the appropriate 
-credential refresh strategy based on the ``method`` parameter, e.g., ``sts``.
-
-Users can interact with AWS services just like they would with a normal :class:`boto3.session.Session`, 
-with the added benefit of automatic credential refreshing.
-
-Examples
---------
->>> from boto3_refresh_session import RefreshableSession
->>> session = RefreshableSession(
-...     assume_role_kwargs={"RoleArn": "...", "RoleSessionName": "..."},
-...     region_name="us-east-1"
-... )
->>> s3 = session.client("s3")
->>> s3.list_buckets()
-
-.. seealso::
-    :class:`boto3_refresh_session.sts.STSRefreshableSession`
-
-Factory interface
------------------
-.. autosummary::
-   :toctree: generated/
-   :nosignatures:
-
-   RefreshableSession
-"""
-
 __all__ = ["RefreshableSession"]
 
 from abc import ABC, abstractmethod
 from typing import Any, Callable, ClassVar, Literal, get_args
-from warnings import warn
 
 from boto3.session import Session
 from botocore.credentials import (
@@ -46,9 +11,11 @@ from botocore.credentials import (
     RefreshableCredentials,
 )
 
+from .exceptions import BRSError, BRSWarning
+
 #: Type alias for all currently available credential refresh methods.
-Method = Literal["sts"]
-RefreshMethod = Literal["sts-assume-role"]
+Method = Literal["sts", "ecs"]
+RefreshMethod = Literal["sts-assume-role", "ecs-container-metadata"]
 
 
 class BaseRefreshableSession(ABC, Session):
@@ -77,7 +44,9 @@ class BaseRefreshableSession(ABC, Session):
 
         # guarantees that methods are unique
         if method in BaseRefreshableSession.registry:
-            warn(f"Method '{method}' is already registered. Overwriting.")
+            BRSWarning(
+                f"Method {repr(method)} is already registered. Overwriting."
+            )
 
         BaseRefreshableSession.registry[method] = cls
 
@@ -108,6 +77,34 @@ class BaseRefreshableSession(ABC, Session):
                 refresh_using=credentials_method, method=refresh_method
             )
 
+    def refreshable_credentials(self) -> dict[str, str]:
+        """The current temporary AWS security credentials.
+
+        Returns
+        -------
+        dict[str, str]
+            Temporary AWS security credentials containing:
+                AWS_ACCESS_KEY_ID : str
+                    AWS access key identifier.
+                AWS_SECRET_ACCESS_KEY : str
+                    AWS secret access key.
+                AWS_SESSION_TOKEN : str
+                    AWS session token.
+        """
+
+        creds = self.get_credentials().get_frozen_credentials()
+        return {
+            "AWS_ACCESS_KEY_ID": creds.access_key,
+            "AWS_SECRET_ACCESS_KEY": creds.secret_key,
+            "AWS_SESSION_TOKEN": creds.token,
+        }
+
+    @property
+    def credentials(self) -> dict[str, str]:
+        """The current temporary AWS security credentials."""
+
+        return self.refreshable_credentials()
+
 
 class RefreshableSession:
     """Factory class for constructing refreshable boto3 sessions using various authentication
@@ -134,11 +131,18 @@ class RefreshableSession:
     See Also
     --------
     boto3_refresh_session.sts.STSRefreshableSession
+    boto3_refresh_session.ecs.ECSRefreshableSession
     """
 
     def __new__(
         cls, method: Method = "sts", **kwargs
     ) -> BaseRefreshableSession:
+        if method not in (methods := cls.get_available_methods()):
+            raise BRSError(
+                f"{repr(method)} is an invalid method parameter. Available methods are "
+                f"{', '.join(repr(meth) for meth in methods)}."
+            )
+
         obj = BaseRefreshableSession.registry[method]
         return obj(**kwargs)
 
