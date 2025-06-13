@@ -4,8 +4,8 @@ __all__ = ["RefreshableSession"]
 
 from abc import ABC, abstractmethod
 from typing import Any, Callable, ClassVar, Literal, get_args
-from warnings import warn
 
+from .exceptions import BRSError, BRSWarning
 from boto3.session import Session
 from botocore.credentials import (
     DeferredRefreshableCredentials,
@@ -43,7 +43,9 @@ class BaseRefreshableSession(ABC, Session):
 
         # guarantees that methods are unique
         if method in BaseRefreshableSession.registry:
-            warn(f"Method '{method}' is already registered. Overwriting.")
+            BRSWarning(
+                f"Method {repr(method)} is already registered. Overwriting."
+            )
 
         BaseRefreshableSession.registry[method] = cls
 
@@ -134,6 +136,12 @@ class RefreshableSession:
     def __new__(
         cls, method: Method = "sts", **kwargs
     ) -> BaseRefreshableSession:
+        if method not in (methods := cls.get_available_methods()):
+            raise BRSError(
+                f"{repr(method)} is an invalid method parameter. Available methods are "
+                f"{', '.join(repr(meth) for meth in methods)}."
+            )
+
         obj = BaseRefreshableSession.registry[method]
         return obj(**kwargs)
 

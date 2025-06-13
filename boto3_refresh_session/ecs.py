@@ -5,6 +5,7 @@ __all__ = ["ECSRefreshableSession"]
 import os
 import requests
 
+from .exceptions import BRSError
 from .session import BaseRefreshableSession
 
 
@@ -21,7 +22,9 @@ class ECSRefreshableSession(BaseRefreshableSession, method="ecs"):
     Parameters
     ----------
     defer_refresh : bool, optional
-        If ``True``, credentials will not be refreshed until first use.
+        If ``True`` then temporary credentials are not automatically refreshed until
+        they are explicitly needed. If ``False`` then temporary credentials refresh
+        immediately upon expiration. It is highly recommended that you use ``True``.
         Default is ``True``.
 
     Other Parameters
@@ -30,7 +33,7 @@ class ECSRefreshableSession(BaseRefreshableSession, method="ecs"):
         Optional keyword arguments passed to :class:`boto3.session.Session`.
     """
 
-    def __init__(self, defer_refresh: bool = True, **kwargs):
+    def __init__(self, defer_refresh: bool | None = None, **kwargs):
         super().__init__(**kwargs)
 
         self._endpoint = self._resolve_endpoint()
@@ -48,7 +51,7 @@ class ECSRefreshableSession(BaseRefreshableSession, method="ecs"):
             _ECS_CREDENTIALS_RELATIVE_URI
         )
         if not uri:
-            raise EnvironmentError(
+            raise BRSError(
                 "Neither AWS_CONTAINER_CREDENTIALS_FULL_URI nor "
                 "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI is set. "
                 "Are you running inside an ECS container?"
@@ -73,7 +76,7 @@ class ECSRefreshableSession(BaseRefreshableSession, method="ecs"):
             response = self._http.get(self._endpoint, timeout=3)
             response.raise_for_status()
         except requests.RequestException as exc:
-            raise ConnectionError(
+            raise BRSError(
                 f"Failed to retrieve ECS credentials from {self._endpoint}"
             ) from exc
 
@@ -85,7 +88,7 @@ class ECSRefreshableSession(BaseRefreshableSession, method="ecs"):
             "Expiration",
         }
         if not required.issubset(credentials):
-            raise ValueError(f"Incomplete credentials received: {credentials}")
+            raise BRSError(f"Incomplete credentials received: {credentials}")
         return {
             "access_key": credentials.get("AccessKeyId"),
             "secret_key": credentials.get("SecretAccessKey"),

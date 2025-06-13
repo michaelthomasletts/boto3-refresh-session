@@ -3,8 +3,8 @@ from __future__ import annotations
 __all__ = ["STSRefreshableSession"]
 
 from typing import Any
-from warnings import warn
 
+from .exceptions import BRSWarning
 from .session import BaseRefreshableSession
 
 
@@ -45,8 +45,8 @@ class STSRefreshableSession(BaseRefreshableSession, method="sts"):
         if sts_client_kwargs is not None:
             # overwriting 'service_name' in case it appears in sts_client_kwargs
             if "service_name" in sts_client_kwargs:
-                warn(
-                    "The sts_client_kwargs parameter cannot contain values for service_name. Reverting to service_name = 'sts'."
+                BRSWarning(
+                    "'sts_client_kwargs' cannot contain values for 'service_name'. Reverting to service_name = 'sts'."
                 )
                 del sts_client_kwargs["service_name"]
             self._sts_client = self.client(
