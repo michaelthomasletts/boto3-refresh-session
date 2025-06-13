@@ -24,7 +24,7 @@ class BRSWarning(UserWarning):
     Parameters
     ----------
     message : str, optional
-        The message to raise.    
+        The message to raise.
     """
 
     def __init__(self, message: str | None = None):
