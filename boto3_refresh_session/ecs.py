@@ -3,11 +3,11 @@ from __future__ import annotations
 __all__ = ["ECSRefreshableSession"]
 
 import os
+
 import requests
 
 from .exceptions import BRSError
 from .session import BaseRefreshableSession
-
 
 _ECS_CREDENTIALS_RELATIVE_URI = "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI"
 _ECS_CREDENTIALS_FULL_URI = "AWS_CONTAINER_CREDENTIALS_FULL_URI"

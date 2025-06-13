@@ -1,6 +1,6 @@
 class BRSError(Exception):
     """The base exception for boto3-refresh-session.
-    
+
     Parameters
     ----------
     message : str, optional
@@ -20,7 +20,7 @@ class BRSError(Exception):
 
 class BRSWarning(UserWarning):
     """The base warning for boto3-refresh-session.
-    
+
     Parameters
     ----------
     message : str, optional

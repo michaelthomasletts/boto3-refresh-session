@@ -5,12 +5,13 @@ __all__ = ["RefreshableSession"]
 from abc import ABC, abstractmethod
 from typing import Any, Callable, ClassVar, Literal, get_args
 
-from .exceptions import BRSError, BRSWarning
 from boto3.session import Session
 from botocore.credentials import (
     DeferredRefreshableCredentials,
     RefreshableCredentials,
 )
+
+from .exceptions import BRSError, BRSWarning
 
 #: Type alias for all currently available credential refresh methods.
 Method = Literal["sts", "ecs"]
