@@ -63,6 +63,8 @@
 
 [Featured in TL;DR Sec.](https://tldrsec.com/p/tldr-sec-282)
 
+[Featured in CloudSecList.](https://cloudseclist.com/issues/issue-290)
+
 Recognized during AWS Community Day Midwest on June 5th, 2025.
 
 A testimonial from a Cyber Security Engineer at a FAANG company:
