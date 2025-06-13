@@ -1,5 +1,11 @@
 class BRSError(Exception):
-    """The base exception for boto3-refresh-session."""
+    """The base exception for boto3-refresh-session.
+    
+    Parameters
+    ----------
+    message : str, optional
+        The message to raise.
+    """
 
     def __init__(self, message: str | None = None):
         self.message = "" if message is None else message
@@ -13,7 +19,13 @@ class BRSError(Exception):
 
 
 class BRSWarning(UserWarning):
-    """The base warning for boto3-refresh-session."""
+    """The base warning for boto3-refresh-session.
+    
+    Parameters
+    ----------
+    message : str, optional
+        The message to raise.    
+    """
 
     def __init__(self, message: str | None = None):
         self.message = "" if message is None else message

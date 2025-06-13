@@ -6,9 +6,3 @@ boto3\_refresh\_session.session.RefreshableSession
 .. autoclass:: RefreshableSession
    :exclude-members: __init__, __new__
    :inherited-members:
-   
-   
-
-   
-   
-   

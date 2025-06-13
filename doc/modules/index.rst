@@ -14,6 +14,7 @@ boto3-refresh-session includes multiple modules, grouped into two categories:
    :maxdepth: 1
    :hidden:
 
+   exceptions
    session
    sts
    ecs
@@ -45,3 +46,10 @@ Each strategy supported by boto3-refresh-session is encapsulated in its own modu
 
 - :ref:`sts` — Refresh strategy using :class:`STS.Client`
 - :ref:`ecs` - Refresh strategy using AWS ECS container metadata
+
+Exceptions and Warnings
+-----------------------
+
+Mistakes and problems happen. You can find all of the custom exceptions and warnings for boto3-refresh-session below.
+
+- :ref:`exceptions` - Exceptions and warnings for boto3-refresh-session.
