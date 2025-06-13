@@ -48,12 +48,16 @@
     <img src="https://img.shields.io/badge/Q%26A-❔-FF0000?style=flat&labelColor=555&logo=vercel&label=Q%26A" alt="Q&A Badge"/>
   </a>
 
+  <a href="https://medium.com/@lettsmt/you-shouldnt-have-to-think-about-refreshing-aws-credentials-214f7cbbd83b">
+    <img src="https://img.shields.io/badge/Medium%20Article-📘-FF0000?style=flat&labelColor=555&logo=readthedocs" alt="Medium Article"/>
+  </a>    
+
 </div>
 
 ## Features
 
 - Drop-in replacement for `boto3.session.Session`
-- Supports automatic credential refresh methods for the following AWS services:
+- Supports automatic credential refresh methods for various AWS services:
   - STS
   - ECS
 - Supports `assume_role` configuration, custom STS clients, and profile / region configuration, as well as all other parameters supported by `boto3.session.Session`
