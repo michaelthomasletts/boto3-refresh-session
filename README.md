@@ -56,7 +56,6 @@
 - Supports automatic credential refresh methods for the following AWS services:
   - STS
   - ECS
-- Supports automatic refresh methods for STS and ECS
 - Supports `assume_role` configuration, custom STS clients, and profile / region configuration, as well as all other parameters supported by `boto3.session.Session`
 - Tested, documented, and published to PyPI
 
