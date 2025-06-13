@@ -50,7 +50,7 @@
 
   <a href="https://medium.com/@lettsmt/you-shouldnt-have-to-think-about-refreshing-aws-credentials-214f7cbbd83b">
     <img src="https://img.shields.io/badge/Medium%20Article-📘-FF0000?style=flat&labelColor=555&logo=readthedocs" alt="Medium Article"/>
-  </a>  
+  </a>    
 
 </div>
 
