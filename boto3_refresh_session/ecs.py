@@ -78,7 +78,12 @@ class ECSRefreshableSession(BaseRefreshableSession, method="ecs"):
             ) from exc
 
         credentials = response.json()
-        required = {"AccessKeyId", "SecretAccessKey", "Token", "Expiration"}
+        required = {
+            "AccessKeyId",
+            "SecretAccessKey",
+            "SessionToken",
+            "Expiration",
+        }
         if not required.issubset(credentials):
             raise ValueError(f"Incomplete credentials received: {credentials}")
         return {
@@ -88,7 +93,8 @@ class ECSRefreshableSession(BaseRefreshableSession, method="ecs"):
             "expiry_time": credentials.get("Expiration"),  # already ISO8601
         }
 
-    def get_identity(self) -> dict[str, str]:
+    @staticmethod
+    def get_identity() -> dict[str, str]:
         """Returns metadata about ECS.
 
         Returns

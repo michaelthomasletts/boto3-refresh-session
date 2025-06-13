@@ -27,6 +27,7 @@ The :class:`boto3_refresh_session.session.RefreshableSession` class provides a u
 .. tip::
    
    For most users, STS is sufficient — there’s no need to manually specify the ``method`` parameter unless using advanced strategies like ECS.
+   All users should, however, familiarize themselves with the documentation in the Refresh strategies in order to understand required and optional parameters and available methods.
 
 - :ref:`session` — Factory interface for creating refreshable boto3 sessions
 
