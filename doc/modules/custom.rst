@@ -16,7 +16,7 @@ This module is useful for users with highly sophisticated, novel, or idiosyncrat
 authentication flows not included in this library. This module is AWS service agnostic.
 Meaning: this module is extremely flexible.
 
-.. versionadded:: 1.2.4
+.. versionadded:: 1.3.0
 
 Examples
 --------
