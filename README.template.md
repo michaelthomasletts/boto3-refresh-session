@@ -83,27 +83,27 @@ A testimonial from a Cyber Security Engineer at a FAANG company:
 pip install boto3-refresh-session
 ```
 
-## Usage
+## Usage (STS)
 
 ```python
 import boto3_refresh_session as brs
 
-# you can pass all of the params associated with boto3.session.Session
-profile_name = '<your-profile-name>'
-region_name = 'us-east-1'
+# you can pass all of the params normally associated with boto3.session.Session
+profile_name = "<your-profile-name>"
+region_name = "us-east-1"
 ...
 
 # as well as all of the params associated with STS.Client.assume_role
 assume_role_kwargs = {
-  'RoleArn': '<your-role-arn>',
-  'RoleSessionName': '<your-role-session-name>',
-  'DurationSeconds': '<your-selection>',
+  "RoleArn": "<your-role-arn>",
+  "RoleSessionName": "<your-role-session-name>",
+  "DurationSeconds": "<your-selection>",
   ...
 }
 
 # as well as all of the params associated with STS.Client, except for 'service_name'
 sts_client_kwargs = {
-  'region_name': region_name,
+  "region_name": region_name,
   ...
 }
 
@@ -115,9 +115,41 @@ session = brs.RefreshableSession(
   profile_name=profile_name,
   ...
 )
+```
 
-# now you can create clients, resources, etc. without worrying about expired temporary 
-# security credentials
-s3 = session.client(service_name='s3')
-buckets = s3.list_buckets()
+## Usage (ECS)
+
+```python
+session = RefreshableSession(
+  method="ecs", 
+  region_name=region_name, 
+  profile_name=profile_name,
+  ...
+)
+```
+
+## Usage (Custom)
+
+If you have a highly sophisticated, novel, or idiosyncratic authentication flow not included in boto3-refresh-session then you will need to provide your own custom temporary credentials method. `RefreshableSession` accepts custom credentials methods, as shown below.
+
+```python
+# create (or import) your custom credential method
+def your_custom_credential_getter(...):
+    ...
+    return {
+        "access_key": ...,
+        "secret_key": ...,
+        "token": ...,
+        "expiry_time": ...,
+    }
+
+# and pass it to RefreshableSession
+session = RefreshableSession(
+    method="custom",
+    custom_credentials_method=your_custom_credential_getter,
+    custom_credentials_methods_args=...,
+    region_name=region_name,
+    profile_name=profile_name,
+    ...
+)
 ```
