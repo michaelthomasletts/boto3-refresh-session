@@ -130,7 +130,7 @@ session = RefreshableSession(
 
 ## Usage (Custom)
 
-If you have a highly sophisticated, novel, or idiosyncratic authentication flow not included in boto3-refresh-session then you will need to provide your own custom temporary credentials method. `RefreshableSession` accepts custom credentials methods, as shown below.
+If you have a highly sophisticated, novel, or idiosyncratic authentication flow not included in boto3-refresh-session then you will need to provide your own custom temporary credentials callable object. `RefreshableSession` accepts custom credentials callable objects, as shown below.
 
 ```python
 # create (or import) your custom credential method
