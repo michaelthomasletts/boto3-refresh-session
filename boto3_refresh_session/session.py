@@ -14,8 +14,8 @@ from botocore.credentials import (
 from .exceptions import BRSError, BRSWarning
 
 #: Type alias for all currently available credential refresh methods.
-Method = Literal["sts", "ecs"]
-RefreshMethod = Literal["sts-assume-role", "ecs-container-metadata"]
+Method = Literal["sts", "ecs", "custom"]
+RefreshMethod = Literal["sts-assume-role", "ecs-container-metadata", "custom"]
 
 
 class BaseRefreshableSession(ABC, Session):
