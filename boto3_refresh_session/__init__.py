@@ -4,5 +4,5 @@ from .session import RefreshableSession
 from .sts import STSRefreshableSession
 
 __all__ = ["RefreshableSession"]
-__version__ = "1.3.9"
+__version__ = "1.3.10"
 __author__ = "Mike Letts"
