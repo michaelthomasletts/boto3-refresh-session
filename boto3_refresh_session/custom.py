@@ -35,11 +35,7 @@ class CustomRefreshableSession(BaseRefreshableSession, method="custom"):
         Examples
         --------
         Write (or import) the method for obtaining temporary AWS security credentials.
-    <<<<<<< feature/custom_get_credentials
 
-    =======
-
-    >>>>>>> main
         >>> def your_custom_credential_getter(your_param, another_param):
         >>>     ...
         >>>     return {
