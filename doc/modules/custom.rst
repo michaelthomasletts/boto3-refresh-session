@@ -36,7 +36,7 @@ Pass that method to ``RefreshableSession``.
 >>> sess = RefreshableSession(
 >>>     method='custom',
 >>>     custom_credentials_method=your_custom_credential_getter,
->>>     custom_credentials_methods_args=...,
+>>>     custom_credentials_method_args=...,
 >>> )
 
 .. seealso::

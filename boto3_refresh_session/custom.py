@@ -4,6 +4,7 @@ __all__ = ["CustomRefreshableSession"]
 
 from typing import Any, Callable
 
+from .exceptions import BRSError
 from .session import BaseRefreshableSession
 
 
@@ -50,7 +51,7 @@ class CustomRefreshableSession(BaseRefreshableSession, method="custom"):
     >>> sess = RefreshableSession(
     >>>     method='custom',
     >>>     custom_credentials_method=your_custom_credential_getter,
-    >>>     custom_credentials_methods_args=...,
+    >>>     custom_credentials_method_args=...,
     >>> )
     """
 
@@ -77,11 +78,20 @@ class CustomRefreshableSession(BaseRefreshableSession, method="custom"):
         )
 
     def _get_credentials(self) -> dict[str, str]:
-        return self._custom_get_credentials(
+        credentials = self._custom_get_credentials(
             **self._custom_get_credentials_args
         )
+        required_keys = {"access_key", "secret_key", "token", "expiry_time"}
 
-    def get_identity(self):
+        if missing := required_keys - credentials.keys():
+            raise BRSError(
+                f"The dict returned by custom_credentials_method is missing these key-value pairs: "
+                f"{', '.join(repr(param) for param in missing)}. "
+            )
+
+        return credentials
+
+    def get_identity(self) -> dict[str, str]:
         """Returns metadata about the custom credential getter.
 
         Returns
@@ -90,7 +100,9 @@ class CustomRefreshableSession(BaseRefreshableSession, method="custom"):
             Dict containing information about the custom credential getter.
         """
 
-        return {
-            "method": "custom",
-            "source": repr(self._custom_get_credentials.__name__),
-        }
+        source = getattr(
+            self._custom_get_credentials,
+            "__name__",
+            repr(self._custom_get_credentials),
+        )
+        return {"method": "custom", "source": repr(source)}
