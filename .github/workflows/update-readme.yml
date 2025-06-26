@@ -32,12 +32,8 @@ jobs:
 
       - name: Render README with PePy stats
         run: python3 readme.py
-      
-      - name: Update download stats
-        run: |
-          pepy-chart -p boto3-refresh-session -op doc/downloads.png 
 
-      - name: Commit and push if README and/or downloads.png changed
+      - name: Commit and push if README changed
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"

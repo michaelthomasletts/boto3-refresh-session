@@ -60,8 +60,10 @@
 - Supports automatic credential refresh methods for various AWS services:
   - STS
   - ECS
-- Supports `assume_role` configuration, custom STS clients, and profile / region configuration, as well as all other parameters supported by `boto3.session.Session`
+- Supports custom authentication methods for complicated authentication flows
+- Natively supports all parameters supported by `boto3.session.Session`
 - Tested, documented, and published to PyPI
+- Future releases will include support for EC2, IoT, SSO, and OIDC
 
 ## Recognition, Adoption, and Testimonials
 
@@ -74,12 +76,6 @@ Recognized during AWS Community Day Midwest on June 5th, 2025.
 A testimonial from a Cyber Security Engineer at a FAANG company:
 
 > _Most of my work is on tooling related to AWS security, so I'm pretty choosy about boto3 credentials-adjacent code. I often opt to just write this sort of thing myself so I at least know that I can reason about it. But I found boto3-refresh-session to be very clean and intuitive [...] We're using the RefreshableSession class as part of a client cache construct [...] We're using AWS Lambda to perform lots of operations across several regions in hundreds of accounts, over and over again, all day every day. And it turns out that there's a surprising amount of overhead to creating boto3 clients (mostly deserializing service definition json), so we can run MUCH more efficiently if we keep a cache of clients, all equipped with automatically refreshing sessions._
-
-The following line plot illustrates the adoption of BRS over the last three months in terms of average daily downloads over a rolling seven day window.
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/doc/downloads.png" />
-</p>
 
 ## Installation
 
