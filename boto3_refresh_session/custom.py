@@ -16,8 +16,8 @@ class CustomRefreshableSession(BaseRefreshableSession, method="custom"):
     Parameters
     ----------
     custom_credentials_method: Callable
-        Required. Accepts a Python function that returns temporary AWS security credentials. That
-        function must return a dictionary containing 'access_key', 'secret_key', 'token', and
+        Required. Accepts a callable object that returns temporary AWS security credentials. That
+        object must return a dictionary containing 'access_key', 'secret_key', 'token', and
         'expiry_time' when called.
     custom_credentials_method_args : dict[str, Any], optional
         Optional keyword arguments for the function passed to the ``custom_credentials_method``
@@ -35,7 +35,7 @@ class CustomRefreshableSession(BaseRefreshableSession, method="custom"):
 
     Examples
     --------
-    Write (or import) the method for obtaining temporary AWS security credentials.
+    Write (or import) the callable object for obtaining temporary AWS security credentials.
 
     >>> def your_custom_credential_getter(your_param, another_param):
     >>>     ...
@@ -46,7 +46,7 @@ class CustomRefreshableSession(BaseRefreshableSession, method="custom"):
     >>>         'expiry_time': ...,
     >>>     }
 
-    Pass that method to ``RefreshableSession``.
+    Pass that callable object to ``RefreshableSession``.
 
     >>> sess = RefreshableSession(
     >>>     method='custom',

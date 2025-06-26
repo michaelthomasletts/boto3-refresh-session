@@ -9,7 +9,7 @@ Implements a custom credential refresh strategy for use with
 :class:`boto3_refresh_session.session.RefreshableSession`.
 
 This module defines the :class:`CustomRefreshableSession` class, which retrieves
-temporary credentials using a user provided custom credential method and automatically
+temporary credentials using a user provided custom credential object and automatically
 refreshes those credentials in the background.
 
 This module is useful for users with highly sophisticated, novel, or idiosyncratic
@@ -20,7 +20,7 @@ Meaning: this module is extremely flexible.
 
 Examples
 --------
-Write (or import) the method for obtaining temporary AWS security credentials.
+Write (or import) the callable object for obtaining temporary AWS security credentials.
 
 >>> def your_custom_credential_getter(your_param, another_param):
 >>>     ...
@@ -31,7 +31,7 @@ Write (or import) the method for obtaining temporary AWS security credentials.
 >>>         'expiry_time': ...,
 >>>     }
 
-Pass that method to ``RefreshableSession``.
+Pass that callable object to ``RefreshableSession``.
 
 >>> sess = RefreshableSession(
 >>>     method='custom',
