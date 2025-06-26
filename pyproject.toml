@@ -9,7 +9,7 @@ license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = ["boto3", "botocore", "requests"]
-keywords = ["boto3", "botocore", "aws"]
+keywords = ["boto3", "botocore", "aws", "sts", "ecs", "credentials", "token", "refresh"]
 maintainers = [
   {name="Michael Letts", email="lettsmt@gmail.com"},
 ]
