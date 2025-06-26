@@ -1,8 +1,9 @@
 import logging
 from os import getenv
 
-from boto3_refresh_session import RefreshableSession
 import boto3
+
+from boto3_refresh_session import RefreshableSession
 
 # configuring logging
 logging.basicConfig(

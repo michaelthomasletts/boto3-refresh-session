@@ -1,0 +1,19 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install dependencies
+RUN pip install flask boto3 botocore requests
+
+# Copy your project code (assumes local build)
+COPY . /app
+
+# Set env var to mock ECS endpoint
+ENV AWS_CONTAINER_CREDENTIALS_FULL_URI=http://localhost:1338/v2/credentials
+
+# Run mock server + test
+CMD ["sh", "-c", "python3 tests/ecs_mock_server.py & sleep 2 && python3 -c '\
+from boto3_refresh_session.ecs import ECSRefreshableSession; \
+session = ECSRefreshableSession(); \
+print(session.get_identity());
+'"]
