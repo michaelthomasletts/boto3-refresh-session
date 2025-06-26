@@ -8,7 +8,7 @@ authors = [
 license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["boto3", "botocore"]
+dependencies = ["boto3", "botocore", "requests"]
 keywords = ["boto3", "botocore", "aws"]
 maintainers = [
   {name="Michael Letts", email="lettsmt@gmail.com"},

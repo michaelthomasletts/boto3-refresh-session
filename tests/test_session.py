@@ -2,6 +2,7 @@ import logging
 from os import getenv
 
 from boto3_refresh_session import RefreshableSession
+import boto3
 
 # configuring logging
 logging.basicConfig(
@@ -11,6 +12,33 @@ logging.basicConfig(
 
 # creating logger
 logger = logging.getLogger(__name__)
+
+
+def custom_credentials_method() -> dict[str, str]:
+    assume_role_kwargs = {
+        "RoleArn": getenv("ROLE_ARN"),
+        "RoleSessionName": "unit-testing-custom",
+        "DurationSeconds": 900,
+    }
+    temporary_credentials = boto3.client(
+        "sts", region_name="us-east-1"
+    ).assume_role(**assume_role_kwargs)["Credentials"]
+    return {
+        "access_key": temporary_credentials.get("AccessKeyId"),
+        "secret_key": temporary_credentials.get("SecretAccessKey"),
+        "token": temporary_credentials.get("SessionToken"),
+        "expiry_time": temporary_credentials.get("Expiration").isoformat(),
+    }
+
+
+def test_custom():
+    region_name = "us-east-1"
+    session = RefreshableSession(
+        method="custom",
+        custom_credentials_method=custom_credentials_method,
+        region_name=region_name,
+    )
+    s3 = session.client(service_name="s3")
 
 
 def test_defer_refresh():
