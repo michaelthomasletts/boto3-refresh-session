@@ -130,6 +130,7 @@ class RefreshableSession:
 
     See Also
     --------
+    boto3_refresh_session.custom.CustomRefreshableSession
     boto3_refresh_session.sts.STSRefreshableSession
     boto3_refresh_session.ecs.ECSRefreshableSession
     """
