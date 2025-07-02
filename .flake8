@@ -19,3 +19,5 @@ exclude =
     *.bat
     *.png
 max-line-length = 79
+per-file-ignores = 
+    __init__.py:F401
