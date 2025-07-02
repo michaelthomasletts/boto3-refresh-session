@@ -96,14 +96,12 @@ class CustomRefreshableSession(BaseRefreshableSession, method="custom"):
         return credentials
 
     def get_identity(self) -> dict[str, str]:
-        """
-        Returns metadata about the custom credential getter.
+        """Returns metadata about the custom credential getter.
 
         Returns
         -------
         dict[str, str]
             Dict containing information about the custom credential getter.
-
         """
 
         source = getattr(

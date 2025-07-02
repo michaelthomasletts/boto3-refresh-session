@@ -19,8 +19,7 @@ RefreshMethod = Literal["sts-assume-role", "ecs-container-metadata", "custom"]
 
 
 class BaseRefreshableSession(ABC, Session):
-    """
-    Abstract base class for implementing refreshable AWS sessions.
+    """Abstract base class for implementing refreshable AWS sessions.
 
     Provides a common interface and factory registration mechanism
     for subclasses that generate temporary credentials using various
@@ -34,7 +33,6 @@ class BaseRefreshableSession(ABC, Session):
     ----------
     registry : dict[str, type[BaseRefreshableSession]]
         Class-level registry mapping method names to registered session types.
-
     """
 
     # adding this and __init_subclass__ to avoid circular imports
@@ -80,8 +78,7 @@ class BaseRefreshableSession(ABC, Session):
             )
 
     def refreshable_credentials(self) -> dict[str, str]:
-        """
-        The current temporary AWS security credentials.
+        """The current temporary AWS security credentials.
 
         Returns
         -------
@@ -93,7 +90,6 @@ class BaseRefreshableSession(ABC, Session):
                     AWS secret access key.
                 AWS_SESSION_TOKEN : str
                     AWS session token.
-
         """
 
         creds = self.get_credentials().get_frozen_credentials()
@@ -140,7 +136,6 @@ class RefreshableSession:
     boto3_refresh_session.custom.CustomRefreshableSession
     boto3_refresh_session.sts.STSRefreshableSession
     boto3_refresh_session.ecs.ECSRefreshableSession
-
     """
 
     def __new__(
