@@ -1,23 +1,4 @@
 [flake8]
-exclude = 
-    .gitignore
-    .pre-commit-config.yaml
-    poetry.lock
-    pyproject.toml
-    README.md
-    __pycache__
-    .poetry
-    .pytest_cache
-    .DS_Store
-    tests/*
-    dist/*
-    Makefile
-    *.rst
-    *.md
-    *.html
-    *.css
-    *.bat
-    *.png
 max-line-length = 79
 per-file-ignores = 
     __init__.py:F401

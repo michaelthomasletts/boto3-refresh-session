@@ -40,6 +40,7 @@ def test_custom():
         region_name=region_name,
     )
     s3 = session.client(service_name="s3")
+    s3.list_buckets()
 
 
 def test_defer_refresh():
