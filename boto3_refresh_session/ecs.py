@@ -22,10 +22,10 @@ class ECSRefreshableSession(BaseRefreshableSession, method="ecs"):
     Parameters
     ----------
     defer_refresh : bool, optional
-        If ``True`` then temporary credentials are not automatically refreshed until
-        they are explicitly needed. If ``False`` then temporary credentials refresh
-        immediately upon expiration. It is highly recommended that you use ``True``.
-        Default is ``True``.
+        If ``True`` then temporary credentials are not automatically
+        refreshed until they are explicitly needed. If ``False`` then
+        temporary credentials refresh immediately upon expiration. It
+        is highly recommended that you use ``True``. Default is ``True``.
 
     Other Parameters
     ----------------

@@ -9,33 +9,36 @@ from .session import BaseRefreshableSession
 
 
 class CustomRefreshableSession(BaseRefreshableSession, method="custom"):
-    """A :class:`boto3.session.Session` object that automatically refreshes temporary credentials
-    returned by a custom credential getter provided by the user. Useful for users with highly
-    sophisticated or idiosyncratic authentication flows.
+    """A :class:`boto3.session.Session` object that automatically refreshes
+    temporary credentials returned by a custom credential getter provided
+    by the user. Useful for users with highly sophisticated or idiosyncratic
+    authentication flows.
 
     Parameters
     ----------
     custom_credentials_method: Callable
-        Required. Accepts a callable object that returns temporary AWS security credentials. That
-        object must return a dictionary containing 'access_key', 'secret_key', 'token', and
-        'expiry_time' when called.
+        Required. Accepts a callable object that returns temporary AWS
+        security credentials. That object must return a dictionary containing
+        'access_key', 'secret_key', 'token', and 'expiry_time' when called.
     custom_credentials_method_args : dict[str, Any], optional
-        Optional keyword arguments for the function passed to the ``custom_credentials_method``
-        parameter.
+        Optional keyword arguments for the function passed to the
+        ``custom_credentials_method`` parameter.
     defer_refresh : bool, optional
-        If ``True`` then temporary credentials are not automatically refreshed until
-        they are explicitly needed. If ``False`` then temporary credentials refresh
-        immediately upon expiration. It is highly recommended that you use ``True``.
-        Default is ``True``.
+        If ``True`` then temporary credentials are not automatically refreshed
+        until they are explicitly needed. If ``False`` then temporary
+        credentials refresh immediately upon expiration. It is highly
+        recommended that you use ``True``. Default is ``True``.
 
     Other Parameters
     ----------------
     kwargs : dict
-        Optional keyword arguments for the :class:`boto3.session.Session` object.
+        Optional keyword arguments for the :class:`boto3.session.Session`
+        object.
 
     Examples
     --------
-    Write (or import) the callable object for obtaining temporary AWS security credentials.
+    Write (or import) the callable object for obtaining temporary AWS security
+    credentials.
 
     >>> def your_custom_credential_getter(your_param, another_param):
     >>>     ...
@@ -85,19 +88,22 @@ class CustomRefreshableSession(BaseRefreshableSession, method="custom"):
 
         if missing := required_keys - credentials.keys():
             raise BRSError(
-                f"The dict returned by custom_credentials_method is missing these key-value pairs: "
+                f"The dict returned by custom_credentials_method is missing "
+                "these key-value pairs: "
                 f"{', '.join(repr(param) for param in missing)}. "
             )
 
         return credentials
 
     def get_identity(self) -> dict[str, str]:
-        """Returns metadata about the custom credential getter.
+        """
+        Returns metadata about the custom credential getter.
 
         Returns
         -------
         dict[str, str]
             Dict containing information about the custom credential getter.
+
         """
 
         source = getattr(

@@ -9,26 +9,29 @@ from .session import BaseRefreshableSession
 
 
 class STSRefreshableSession(BaseRefreshableSession, method="sts"):
-    """A :class:`boto3.session.Session` object that automatically refreshes temporary AWS
-    credentials using an IAM role that is assumed via STS.
+    """A :class:`boto3.session.Session` object that automatically refreshes
+    temporary AWS credentials using an IAM role that is assumed via STS.
 
     Parameters
     ----------
     assume_role_kwargs : dict
-        Required keyword arguments for :meth:`STS.Client.assume_role` (i.e. boto3 STS client).
+        Required keyword arguments for :meth:`STS.Client.assume_role` (i.e.
+        boto3 STS client).
     defer_refresh : bool, optional
-        If ``True`` then temporary credentials are not automatically refreshed until
-        they are explicitly needed. If ``False`` then temporary credentials refresh
-        immediately upon expiration. It is highly recommended that you use ``True``.
-        Default is ``True``.
+        If ``True`` then temporary credentials are not automatically refreshed
+        until they are explicitly needed. If ``False`` then temporary
+        credentials refresh immediately upon expiration. It is highly
+        recommended that you use ``True``. Default is ``True``.
     sts_client_kwargs : dict, optional
-        Optional keyword arguments for the :class:`STS.Client` object. Do not provide
-        values for ``service_name`` as they are unnecessary. Default is None.
+        Optional keyword arguments for the :class:`STS.Client` object. Do not
+        provide values for ``service_name`` as they are unnecessary. Default
+        is None.
 
     Other Parameters
     ----------------
     kwargs : dict
-        Optional keyword arguments for the :class:`boto3.session.Session` object.
+        Optional keyword arguments for the :class:`boto3.session.Session`
+        object.
     """
 
     def __init__(
@@ -43,10 +46,11 @@ class STSRefreshableSession(BaseRefreshableSession, method="sts"):
         self.assume_role_kwargs = assume_role_kwargs
 
         if sts_client_kwargs is not None:
-            # overwriting 'service_name' in case it appears in sts_client_kwargs
+            # overwriting 'service_name' if if appears in sts_client_kwargs
             if "service_name" in sts_client_kwargs:
                 BRSWarning(
-                    "'sts_client_kwargs' cannot contain values for 'service_name'. Reverting to service_name = 'sts'."
+                    "'sts_client_kwargs' cannot contain values for "
+                    "'service_name'. Reverting to service_name = 'sts'."
                 )
                 del sts_client_kwargs["service_name"]
             self._sts_client = self.client(
