@@ -33,8 +33,12 @@
   </a>
 
   <a href="https://pepy.tech/project/boto3-refresh-session">
-    <img src="https://img.shields.io/badge/downloads-67.0K-red?logo=python&color=%23FF0000&label=Downloads" alt="Downloads"/>
+    <img src="https://img.shields.io/badge/downloads-67.6K-red?logo=python&color=%23FF0000&label=Downloads%20%28with%20mirrors%29" alt="Downloads with mirrors"/>
   </a>
+
+  <a href="https://pepy.tech/project/boto3-refresh-session">
+    <img src="https://img.shields.io/badge/downloads-17.3K-red?logo=python&color=%23FF0000&label=Downloads%20%28without%20mirrors%29" alt="Downloads without mirrors"/>
+  </a>  
 
   <a href="https://michaelthomasletts.github.io/boto3-refresh-session/index.html">
     <img src="https://img.shields.io/badge/Official%20Documentation-📘-FF0000?style=flat&labelColor=555&logo=readthedocs" alt="Documentation Badge"/>
