@@ -54,7 +54,12 @@
 
   <a href="https://medium.com/@lettsmt/you-shouldnt-have-to-think-about-refreshing-aws-credentials-214f7cbbd83b">
     <img src="https://img.shields.io/badge/Medium%20Article-📘-FF0000?style=flat&labelColor=555&logo=readthedocs" alt="Medium Article"/>
-  </a>    
+  </a>
+
+<a href="https://github.com/sponsors/michaelthomasletts">
+  <img src="https://img.shields.io/badge/Sponsor%20this%20Project-💙-FF0000?style=flat&labelColor=555&logo=githubsponsors" alt="Sponsorship"/>
+</a>
+
 
 </div>
 
