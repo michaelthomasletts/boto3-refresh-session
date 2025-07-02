@@ -18,11 +18,4 @@ exclude =
     *.css
     *.bat
     *.png
-extend-ignore =
-    E501
-    F404
-    W291
 max-line-length = 79
-per-file-ignores = 
-    __init__.py:F401
-    session.py:F821

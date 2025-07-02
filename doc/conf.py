@@ -122,5 +122,10 @@ def linkcode_resolve(domain, info):
         return None
     if not info["module"]:
         return None
+
     filename = info["module"].replace(".", "/")
-    return f"https://github.com/michaelthomasletts/{project}/blob/main/{filename}.py"
+    result = (
+        f"https://github.com/michaelthomasletts/{project}/blob/main/"
+        f"{filename}.py"
+    )
+    return result
