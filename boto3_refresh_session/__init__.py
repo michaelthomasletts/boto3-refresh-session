@@ -4,7 +4,7 @@ from .session import RefreshableSession
 from .sts import STSRefreshableSession
 
 __all__ = ["RefreshableSession"]
-__version__ = "1.3.14"
+__version__ = "1.3.15"
 __title__ = "boto3-refresh-session"
 __author__ = "Mike Letts"
 __maintainer__ = "Mike Letts"
