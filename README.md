@@ -33,7 +33,7 @@
   </a>
 
   <a href="https://pypistats.org/packages/boto3-refresh-session">
-    <img src="https://img.shields.io/badge/downloads-70.3K-red?logo=python&color=%23FF0000&label=Downloads%20%28with%20mirrors%29" alt="Downloads with mirrors"/>
+    <img src="https://img.shields.io/badge/downloads-70.5K-red?logo=python&color=%23FF0000&label=Downloads%20%28with%20mirrors%29" alt="Downloads with mirrors"/>
   </a>
 
   <a href="https://pypistats.org/packages/boto3-refresh-session">
