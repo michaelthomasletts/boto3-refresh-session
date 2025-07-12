@@ -94,7 +94,7 @@ pip install boto3-refresh-session
 
 ## Usage (STS)
 
-Most users use AWS STS to assume an IAM role and return a set of temporary security credentials. boto3-refresh-session can be used to ensure those temporary credentials refresh automatically.
+Most users use AWS STS to assume an IAM role and return a set of temporary security credentials. boto3-refresh-session can be used to ensure those temporary credentials refresh automatically. 
 
 ```python
 import boto3_refresh_session as brs
