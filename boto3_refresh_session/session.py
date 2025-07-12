@@ -3,7 +3,8 @@ from __future__ import annotations
 __all__ = ["RefreshableSession"]
 
 from abc import ABC, abstractmethod
-from typing import Any, Callable, ClassVar, Literal, get_args
+from datetime import datetime
+from typing import Any, Callable, ClassVar, Literal, TypedDict, get_args
 
 from boto3.session import Session
 from botocore.credentials import (
@@ -16,6 +17,15 @@ from .exceptions import BRSError, BRSWarning
 #: Type alias for all currently available credential refresh methods.
 Method = Literal["sts", "ecs", "custom"]
 RefreshMethod = Literal["sts-assume-role", "ecs-container-metadata", "custom"]
+
+
+class TemporaryCredentials(TypedDict):
+    """Temporary IAM credentials."""
+
+    access_key: str
+    secret_key: str
+    token: str
+    expiry_time: datetime | str
 
 
 class BaseRefreshableSession(ABC, Session):
@@ -54,7 +64,7 @@ class BaseRefreshableSession(ABC, Session):
         super().__init__(**kwargs)
 
     @abstractmethod
-    def _get_credentials(self) -> dict[str, str]: ...
+    def _get_credentials(self) -> TemporaryCredentials: ...
 
     @abstractmethod
     def get_identity(self) -> dict[str, Any]: ...

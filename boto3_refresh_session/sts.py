@@ -5,7 +5,7 @@ __all__ = ["STSRefreshableSession"]
 from typing import Any
 
 from .exceptions import BRSWarning
-from .session import BaseRefreshableSession
+from .session import BaseRefreshableSession, TemporaryCredentials
 
 
 class STSRefreshableSession(BaseRefreshableSession, method="sts"):
@@ -66,7 +66,7 @@ class STSRefreshableSession(BaseRefreshableSession, method="sts"):
             refresh_method="sts-assume-role",
         )
 
-    def _get_credentials(self) -> dict[str, str]:
+    def _get_credentials(self) -> TemporaryCredentials:
         temporary_credentials = self._sts_client.assume_role(
             **self.assume_role_kwargs
         )["Credentials"]
