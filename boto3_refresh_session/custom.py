@@ -5,7 +5,7 @@ __all__ = ["CustomRefreshableSession"]
 from typing import Any, Callable
 
 from .exceptions import BRSError
-from .session import BaseRefreshableSession
+from .session import BaseRefreshableSession, TemporaryCredentials
 
 
 class CustomRefreshableSession(BaseRefreshableSession, method="custom"):
@@ -80,8 +80,8 @@ class CustomRefreshableSession(BaseRefreshableSession, method="custom"):
             refresh_method="custom",
         )
 
-    def _get_credentials(self) -> dict[str, str]:
-        credentials = self._custom_get_credentials(
+    def _get_credentials(self) -> TemporaryCredentials:
+        credentials: TemporaryCredentials = self._custom_get_credentials(
             **self._custom_get_credentials_args
         )
         required_keys = {"access_key", "secret_key", "token", "expiry_time"}

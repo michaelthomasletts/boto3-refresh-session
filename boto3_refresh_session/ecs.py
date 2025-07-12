@@ -7,7 +7,7 @@ import os
 import requests
 
 from .exceptions import BRSError
-from .session import BaseRefreshableSession
+from .session import BaseRefreshableSession, TemporaryCredentials
 
 _ECS_CREDENTIALS_RELATIVE_URI = "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI"
 _ECS_CREDENTIALS_FULL_URI = "AWS_CONTAINER_CREDENTIALS_FULL_URI"
@@ -71,7 +71,7 @@ class ECSRefreshableSession(BaseRefreshableSession, method="ecs"):
         session.headers.update(self._headers)
         return session
 
-    def _get_credentials(self) -> dict[str, str]:
+    def _get_credentials(self) -> TemporaryCredentials:
         try:
             response = self._http.get(self._endpoint, timeout=3)
             response.raise_for_status()
