@@ -4,11 +4,12 @@ __all__ = ["STSRefreshableSession"]
 
 from typing import Any
 
-from .exceptions import BRSWarning
-from .session import BaseRefreshableSession, TemporaryCredentials
+from ..exceptions import BRSWarning
+from ..session import BaseRefreshableSession
+from ..utils import TemporaryCredentials
 
 
-class STSRefreshableSession(BaseRefreshableSession, method="sts"):
+class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
     """A :class:`boto3.session.Session` object that automatically refreshes
     temporary AWS credentials using an IAM role that is assumed via STS.
 
@@ -42,7 +43,6 @@ class STSRefreshableSession(BaseRefreshableSession, method="sts"):
         **kwargs,
     ):
         super().__init__(**kwargs)
-        defer_refresh = defer_refresh is not False
         self.assume_role_kwargs = assume_role_kwargs
 
         if sts_client_kwargs is not None:
@@ -60,9 +60,9 @@ class STSRefreshableSession(BaseRefreshableSession, method="sts"):
             self._sts_client = self.client(service_name="sts")
 
         # mounting refreshable credentials
-        self._refresh_using(
+        self.initialize(
             credentials_method=self._get_credentials,
-            defer_refresh=defer_refresh,
+            defer_refresh=defer_refresh is not False,
             refresh_method="sts-assume-role",
         )
 

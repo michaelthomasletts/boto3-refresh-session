@@ -4,11 +4,12 @@ __all__ = ["CustomRefreshableSession"]
 
 from typing import Any, Callable
 
-from .exceptions import BRSError
-from .session import BaseRefreshableSession, TemporaryCredentials
+from ..exceptions import BRSError
+from ..session import BaseRefreshableSession
+from ..utils import TemporaryCredentials
 
 
-class CustomRefreshableSession(BaseRefreshableSession, method="custom"):
+class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
     """A :class:`boto3.session.Session` object that automatically refreshes
     temporary credentials returned by a custom credential getter provided
     by the user. Useful for users with highly sophisticated or idiosyncratic
@@ -74,7 +75,7 @@ class CustomRefreshableSession(BaseRefreshableSession, method="custom"):
             else {}
         )
 
-        self._refresh_using(
+        self.initialize(
             credentials_method=self._get_credentials,
             defer_refresh=defer_refresh is not False,
             refresh_method="custom",

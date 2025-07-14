@@ -15,7 +15,7 @@ class BRSError(Exception):
         return self.message
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({repr(self.message)})"
+        return f"{self.__class__.__name__}({self.message!r})"
 
 
 class BRSWarning(UserWarning):
@@ -35,4 +35,4 @@ class BRSWarning(UserWarning):
         return self.message
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({repr(self.message)})"
+        return f"{self.__class__.__name__}({self.message!r})"
