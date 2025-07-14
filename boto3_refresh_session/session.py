@@ -2,13 +2,10 @@ from __future__ import annotations
 
 __all__ = ["RefreshableSession"]
 
-from typing import Literal, get_args
+from typing import get_args
 
 from .exceptions import BRSError
-from .utils import BRSSession, CredentialProvider, Registry
-
-#: Type alias for all currently available credential refresh methods.
-Method = Literal["sts", "ecs", "custom", "iot"]
+from .utils import BRSSession, CredentialProvider, Method, Registry
 
 
 class BaseRefreshableSession(

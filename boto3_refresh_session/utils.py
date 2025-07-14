@@ -18,6 +18,13 @@ from botocore.credentials import (
 
 from .exceptions import BRSWarning
 
+#: Type alias for all currently available IoT authentication methods.
+AuthenticationMethod = Literal["certificate", "cognito"]
+
+#: Type alias for all currently available credential refresh methods.
+Method = Literal["sts", "ecs", "custom", "iot"]
+
+#: Type alias for all refresh method names.
 RefreshMethod = Literal[
     "sts-assume-role",
     "ecs-container-metadata",
@@ -25,6 +32,8 @@ RefreshMethod = Literal[
     "iot-certificate",
     "iot-cognito",
 ]
+
+#: Type alias for all currently registered credential refresh methods.
 RegistryKey = TypeVar("RegistryKey", bound=str)
 
 
@@ -68,6 +77,13 @@ class CredentialProvider(ABC):
 
 
 class BRSSession(Session):
+    """Wrapper for boto3.session.Session.
+
+    Other Parameters
+    ----------------
+    kwargs : Any
+        Optional keyword arguments for initializing boto3.session.Session."""
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 

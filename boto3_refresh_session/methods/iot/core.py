@@ -2,14 +2,16 @@ from __future__ import annotations
 
 __all__ = ["IoTRefreshableSession"]
 
-from typing import Literal, get_args
+from typing import get_args
 
 from ...exceptions import BRSError
 from ...session import BaseRefreshableSession
-from ...utils import BRSSession, CredentialProvider, Registry
-
-#: Type alias for all currently available IoT authentication methods.
-AuthenticationMethod = Literal["certificate", "cognito"]
+from ...utils import (
+    AuthenticationMethod,
+    BRSSession,
+    CredentialProvider,
+    Registry,
+)
 
 
 class BaseIoTRefreshableSession(
