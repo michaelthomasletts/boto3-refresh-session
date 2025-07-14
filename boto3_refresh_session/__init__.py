@@ -1,7 +1,8 @@
-from .custom import CustomRefreshableSession
-from .ecs import ECSRefreshableSession
+from .methods.custom import CustomRefreshableSession
+from .methods.ecs import ECSRefreshableSession
+from .methods.iot import IoTRefreshableSession
+from .methods.sts import STSRefreshableSession
 from .session import RefreshableSession
-from .sts import STSRefreshableSession
 
 __all__ = ["RefreshableSession"]
 __version__ = "1.3.21"
