@@ -28,7 +28,7 @@ RefreshMethod = Literal[
 RegistryKey = TypeVar("RegistryKey", bound=str)
 
 
-class Registry(Generic[RegistryKey], ABC):
+class Registry(Generic[RegistryKey]):
     """Gives any hierarchy a class-level registry."""
 
     registry: ClassVar[dict[RegistryKey, type]] = {}
