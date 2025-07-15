@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 
-import requests
-from jinja2 import Environment, FileSystemLoader
+from os import getenv
 
-package = "boto3-refresh-session"
-url = f"https://pypistats.org/api/packages/{package}/overall"
+from jinja2 import Environment, FileSystemLoader
+from pepy_chart import PepyStats
 
 
 def abbreviate(n):
@@ -19,29 +18,18 @@ def abbreviate(n):
 
 
 def run():
-    with requests.Session() as session:
-        # SSL verification deactivated due to issues with pypistats cert
-        response = session.get(url=url, verify=False)
-        response.raise_for_status()
-        with_mirrors = 0
-        without_mirrors = 0
-
-        for daily_downloads in response.json()["data"]:
-            if daily_downloads["category"] == "with_mirrors":
-                with_mirrors += daily_downloads["downloads"]
-            else:
-                without_mirrors += daily_downloads["downloads"]
+    pepy = PepyStats(
+        package="boto3-refresh-session",
+        api_key=getenv("PEPY_API_KEY"),
+        create_image=False,
+    )
+    total_downloads = pepy.total_downloads
 
     env = Environment(loader=FileSystemLoader("."))
     template = env.get_template("README.template.md")
 
     with open("README.md", "w") as f:
-        f.write(
-            template.render(
-                with_mirrors=abbreviate(n=with_mirrors),
-                without_mirrors=abbreviate(n=without_mirrors),
-            ),
-        )
+        f.write(template.render(total_downloads=abbreviate(n=total_downloads)))
 
 
 if __name__ == "__main__":

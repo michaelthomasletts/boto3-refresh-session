@@ -33,12 +33,8 @@
   </a>
 
   <a href="https://pypistats.org/packages/boto3-refresh-session">
-    <img src="https://img.shields.io/badge/downloads-72.1K-red?logo=python&color=%23FF0000&label=Downloads%20%28with%20mirrors%29" alt="Downloads with mirrors"/>
+    <img src="https://img.shields.io/badge/downloads-73.4K-red?logo=python&color=%23FF0000&label=Downloads" alt="Downloads"/>
   </a>
-
-  <a href="https://pypistats.org/packages/boto3-refresh-session">
-    <img src="https://img.shields.io/badge/downloads-17.7K-red?logo=python&color=%23FF0000&label=Downloads%20%28without%20mirrors%29" alt="Downloads without mirrors"/>
-  </a>  
 
   <a href="https://michaelthomasletts.github.io/boto3-refresh-session/index.html">
     <img src="https://img.shields.io/badge/Official%20Documentation-📘-FF0000?style=flat&labelColor=555&logo=readthedocs" alt="Documentation Badge"/>
