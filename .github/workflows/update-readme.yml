@@ -32,6 +32,8 @@ jobs:
 
       - name: Render README with PePy stats
         run: python3 readme.py
+        env:
+          PEPY_API_KEY: ${{ secrets.PEPY_API_KEY }}
 
       - name: Commit and push if README changed
         run: |
