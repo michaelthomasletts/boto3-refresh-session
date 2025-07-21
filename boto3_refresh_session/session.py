@@ -86,7 +86,9 @@ class RefreshableSession:
         -------
         list[str]
             A list of all currently available credential refresh methods,
-            e.g. 'sts'.
+            e.g. 'sts', 'ecs', 'custom'.
         """
 
-        return list(get_args(Method))
+        args = list(get_args(Method))
+        args.remove("__sentinel__")
+        return args

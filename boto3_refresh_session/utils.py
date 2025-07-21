@@ -5,6 +5,7 @@ from typing import (
     Callable,
     ClassVar,
     Generic,
+    List,
     Literal,
     TypedDict,
     TypeVar,
@@ -18,11 +19,16 @@ from botocore.credentials import (
 
 from .exceptions import BRSWarning
 
+try:
+    from typing import NotRequired  # type: ignore[import]
+except ImportError:
+    from typing_extensions import NotRequired
+
 #: Type alias for all currently available IoT authentication methods.
-AuthenticationMethod = Literal["certificate", "cognito"]
+AuthenticationMethod = Literal["certificate", "cognito", "__iot_sentinel__"]
 
 #: Type alias for all currently available credential refresh methods.
-Method = Literal["sts", "ecs", "custom", "iot"]
+Method = Literal["sts", "ecs", "custom", "iot", "__sentinel__"]
 
 #: Type alias for all refresh method names.
 RefreshMethod = Literal[
@@ -40,7 +46,7 @@ RegistryKey = TypeVar("RegistryKey", bound=str)
 class Registry(Generic[RegistryKey]):
     """Gives any hierarchy a class-level registry."""
 
-    registry: ClassVar[dict[RegistryKey, type]] = {}
+    registry: ClassVar[dict[str, type]] = {}
 
     def __init_subclass__(cls, *, registry_key: RegistryKey, **kwargs: Any):
         super().__init_subclass__(**kwargs)
@@ -52,7 +58,7 @@ class Registry(Generic[RegistryKey]):
             cls.registry[registry_key] = cls
 
     @classmethod
-    def items(cls) -> dict[RegistryKey, type]:
+    def items(cls) -> dict[str, type]:
         """Typed accessor for introspection / debugging."""
 
         return dict(cls.registry)
@@ -133,3 +139,45 @@ class BRSSession(Session):
         """The current temporary AWS security credentials."""
 
         return self.refreshable_credentials()
+
+
+class Tag(TypedDict):
+    Key: str
+    Value: str
+
+
+class PolicyDescriptorType(TypedDict):
+    arn: str
+
+
+class ProvidedContext(TypedDict):
+    ProviderArn: str
+    ContextAssertion: str
+
+
+class AssumeRoleParams(TypedDict):
+    RoleArn: str
+    RoleSessionName: str
+    PolicyArns: NotRequired[List[PolicyDescriptorType]]
+    Policy: NotRequired[str]
+    DurationSeconds: NotRequired[int]
+    ExternalId: NotRequired[str]
+    SerialNumber: NotRequired[str]
+    TokenCode: NotRequired[str]
+    Tags: NotRequired[List[Tag]]
+    TransitiveTagKeys: NotRequired[List[str]]
+    SourceIdentity: NotRequired[str]
+    ProvidedContexts: NotRequired[List[ProvidedContext]]
+
+
+class STSClientParams(TypedDict):
+    region_name: NotRequired[str]
+    api_version: NotRequired[str]
+    use_ssl: NotRequired[bool]
+    verify: NotRequired[bool | str]
+    endpoint_url: NotRequired[str]
+    aws_access_key_id: NotRequired[str]
+    aws_secret_access_key: NotRequired[str]
+    aws_session_token: NotRequired[str]
+    config: NotRequired[Any]
+    aws_account_id: NotRequired[str]

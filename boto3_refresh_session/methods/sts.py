@@ -6,7 +6,7 @@ from typing import Any
 
 from ..exceptions import BRSWarning
 from ..session import BaseRefreshableSession
-from ..utils import TemporaryCredentials
+from ..utils import AssumeRoleParams, STSClientParams, TemporaryCredentials
 
 
 class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
@@ -15,7 +15,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
 
     Parameters
     ----------
-    assume_role_kwargs : dict
+    assume_role_kwargs : AssumeRoleParams
         Required keyword arguments for :meth:`STS.Client.assume_role` (i.e.
         boto3 STS client).
     defer_refresh : bool, optional
@@ -23,7 +23,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
         until they are explicitly needed. If ``False`` then temporary
         credentials refresh immediately upon expiration. It is highly
         recommended that you use ``True``. Default is ``True``.
-    sts_client_kwargs : dict, optional
+    sts_client_kwargs : STSClientParams, optional
         Optional keyword arguments for the :class:`STS.Client` object. Do not
         provide values for ``service_name`` as they are unnecessary. Default
         is None.
@@ -37,9 +37,9 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
 
     def __init__(
         self,
-        assume_role_kwargs: dict,
+        assume_role_kwargs: AssumeRoleParams,
         defer_refresh: bool | None = None,
-        sts_client_kwargs: dict | None = None,
+        sts_client_kwargs: STSClientParams | None = None,
         **kwargs,
     ):
         super().__init__(**kwargs)

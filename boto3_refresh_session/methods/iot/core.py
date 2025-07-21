@@ -45,4 +45,6 @@ class IoTRefreshableSession(BaseRefreshableSession, registry_key="iot"):
 
     @classmethod
     def get_available_authentication_methods(cls) -> list[str]:
-        return list(get_args(AuthenticationMethod))
+        args = list(get_args(AuthenticationMethod))
+        args.remove("__iot_sentinel__")
+        return args
