@@ -1,9 +1,9 @@
 .. _sts:
 
-.. currentmodule:: boto3_refresh_session.sts
+.. currentmodule:: boto3_refresh_session.methods.sts
 
-boto3_refresh_session.sts
-=========================
+boto3_refresh_session.methods.sts
+=================================
 
 Implements the STS-based credential refresh strategy for use with 
 :class:`boto3_refresh_session.session.RefreshableSession`.
