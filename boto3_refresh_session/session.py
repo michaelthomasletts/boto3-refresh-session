@@ -61,9 +61,9 @@ class RefreshableSession:
 
     See Also
     --------
-    boto3_refresh_session.custom.CustomRefreshableSession
-    boto3_refresh_session.sts.STSRefreshableSession
-    boto3_refresh_session.ecs.ECSRefreshableSession
+    boto3_refresh_session.methods.custom.CustomRefreshableSession
+    boto3_refresh_session.methods.sts.STSRefreshableSession
+    boto3_refresh_session.methods.ecs.ECSRefreshableSession
     """
 
     def __new__(
