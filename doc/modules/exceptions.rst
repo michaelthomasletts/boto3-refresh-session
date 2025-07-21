@@ -3,7 +3,7 @@
 boto3_refresh_session.exceptions
 ================================
 
-.. currentmodule:: boto3_refresh_session.session
+.. currentmodule:: boto3_refresh_session.exceptions
 
 .. autoclass:: BRSError
    :exclude-members: __init__
