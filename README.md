@@ -32,7 +32,7 @@
     <img src="https://img.shields.io/github/stars/michaelthomasletts/boto3-refresh-session?style=flat&logo=github&labelColor=555&color=FF0000&label=Stars" alt="Stars"/>
   </a>
 
-  <a href="https://pypistats.org/packages/boto3-refresh-session">
+  <a href="https://pepy.tech/projects/boto3-refresh-session">
     <img src="https://img.shields.io/badge/downloads-76.2K-red?logo=python&color=%23FF0000&label=Downloads" alt="Downloads"/>
   </a>
 
@@ -70,7 +70,7 @@
 - [Tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [documented](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/)
 - Future releases will include support for EC2, IoT, SSO, and OIDC
 
-## Recognition, Adoption, and Testimonials
+## Recognition and Testimonials
 
 [Featured in TL;DR Sec.](https://tldrsec.com/p/tldr-sec-282)
 
@@ -88,77 +88,94 @@ A testimonial from a Cyber Security Engineer at a FAANG company:
 pip install boto3-refresh-session
 ```
 
-## Usage (STS)
+## Usage
 
-Most users use AWS STS to assume an IAM role and return a set of temporary security credentials. boto3-refresh-session can be used to ensure those temporary credentials refresh automatically. 
+<details>
+  <summary><strong>STS (click to expand)</strong></summary>
 
-```python
-import boto3_refresh_session as brs
+  ### STS
 
-# you can pass all of the params normally associated with boto3.session.Session
-profile_name = "<your-profile-name>"
-region_name = "us-east-1"
-...
+  Most users use AWS STS to assume an IAM role and return a set of temporary security credentials. boto3-refresh-session can be used to ensure those temporary credentials refresh automatically. 
 
-# as well as all of the params associated with STS.Client.assume_role
-assume_role_kwargs = {
-  "RoleArn": "<your-role-arn>",
-  "RoleSessionName": "<your-role-session-name>",
-  "DurationSeconds": "<your-selection>",
+  ```python
+  import boto3_refresh_session as brs
+
+  # you can pass all of the params normally associated with boto3.session.Session
+  profile_name = "<your-profile-name>"
+  region_name = "us-east-1"
   ...
-}
 
-# as well as all of the params associated with STS.Client, except for 'service_name'
-sts_client_kwargs = {
-  "region_name": region_name,
-  ...
-}
-
-# basic initialization of boto3.session.Session
-session = brs.RefreshableSession(
-  assume_role_kwargs=assume_role_kwargs, # required
-  sts_client_kwargs=sts_client_kwargs,
-  region_name=region_name,
-  profile_name=profile_name,
-  ...
-)
-```
-
-## Usage (ECS)
-
-You can use boto3-refresh-session in an ECS container to automatically refresh temporary security credentials.
-
-```python
-session = RefreshableSession(
-  method="ecs", 
-  region_name=region_name, 
-  profile_name=profile_name,
-  ...
-)
-```
-
-## Usage (Custom)
-
-If you have a highly sophisticated, novel, or idiosyncratic authentication flow not included in boto3-refresh-session then you will need to provide your own custom temporary credentials callable object. `RefreshableSession` accepts custom credentials callable objects, as shown below.
-
-```python
-# create (or import) your custom credential method
-def your_custom_credential_getter(...):
+  # as well as all of the params associated with STS.Client.assume_role
+  assume_role_kwargs = {
+    "RoleArn": "<your-role-arn>",
+    "RoleSessionName": "<your-role-session-name>",
+    "DurationSeconds": "<your-selection>",
     ...
-    return {
-        "access_key": ...,
-        "secret_key": ...,
-        "token": ...,
-        "expiry_time": ...,
-    }
+  }
 
-# and pass it to RefreshableSession
-session = RefreshableSession(
-    method="custom",
-    custom_credentials_method=your_custom_credential_getter,
-    custom_credentials_method_args=...,
+  # as well as all of the params associated with STS.Client, except for 'service_name'
+  sts_client_kwargs = {
+    "region_name": region_name,
+    ...
+  }
+
+  # basic initialization of boto3.session.Session
+  session = brs.RefreshableSession(
+    assume_role_kwargs=assume_role_kwargs, # required
+    sts_client_kwargs=sts_client_kwargs,
     region_name=region_name,
     profile_name=profile_name,
     ...
-)
-```
+  )
+  ```
+
+</details>
+
+<details>
+   <summary><strong>ECS (click to expand)</strong></summary>
+
+  ### ECS
+
+  You can use boto3-refresh-session in an ECS container to automatically refresh temporary security credentials.
+
+  ```python
+  session = RefreshableSession(
+    method="ecs", 
+    region_name=region_name, 
+    profile_name=profile_name,
+    ...
+  )
+  ```
+
+</details>
+
+<details>
+   <summary><strong>Custom authentication flows (click to expand)</strong></summary>
+
+  ### Custom
+
+  If you have a highly sophisticated, novel, or idiosyncratic authentication flow not included in boto3-refresh-session then you will need to provide your own custom temporary credentials callable object. `RefreshableSession` accepts custom credentials callable objects, as shown below.
+
+  ```python
+  # create (or import) your custom credential method
+  def your_custom_credential_getter(...):
+      ...
+      return {
+          "access_key": ...,
+          "secret_key": ...,
+          "token": ...,
+          "expiry_time": ...,
+      }
+
+  # and pass it to RefreshableSession
+  session = RefreshableSession(
+      method="custom",
+      custom_credentials_method=your_custom_credential_getter,
+      custom_credentials_method_args=...,
+      region_name=region_name,
+      profile_name=profile_name,
+      ...
+  )
+  ```
+
+</details>
