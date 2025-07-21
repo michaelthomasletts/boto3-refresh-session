@@ -1,5 +1,7 @@
 __all__ = ["IoTCognitoRefreshableSession"]
 
+from typing import Any
+
 from ...utils import TemporaryCredentials
 from .core import BaseIoTRefreshableSession
 
@@ -11,4 +13,4 @@ class IoTCognitoRefreshableSession(
 
     def _get_credentials(self) -> TemporaryCredentials: ...
 
-    def get_identity(self): ...
+    def get_identity(self) -> dict[str, Any]: ...

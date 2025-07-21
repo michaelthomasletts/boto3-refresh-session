@@ -179,4 +179,4 @@ doc/_build
 _build
 
 # VS Code
-.vscode/*
+.vscode/
