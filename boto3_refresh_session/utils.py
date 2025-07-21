@@ -44,6 +44,7 @@ class Registry(Generic[RegistryKey]):
 
     def __init_subclass__(cls, *, registry_key: RegistryKey, **kwargs: Any):
         super().__init_subclass__(**kwargs)
+
         if registry_key in cls.registry:
             BRSWarning(f"{registry_key!r} already registered. Overwriting.")
 
