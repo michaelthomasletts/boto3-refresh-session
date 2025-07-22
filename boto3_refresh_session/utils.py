@@ -73,7 +73,7 @@ class TemporaryCredentials(TypedDict):
     expiry_time: datetime | str
 
 
-class RefreshableCredentials(TypedDict):
+class RefreshableTemporaryCredentials(TypedDict):
     """Refreshable IAM credentials.
 
     Parameters
@@ -130,12 +130,12 @@ class BRSSession(Session):
                 refresh_using=credentials_method, method=refresh_method
             )
 
-    def refreshable_credentials(self) -> RefreshableCredentials:
+    def refreshable_credentials(self) -> RefreshableTemporaryCredentials:
         """The current temporary AWS security credentials.
 
         Returns
         -------
-        RefreshableCredentials
+        RefreshableTemporaryCredentials
             Temporary AWS security credentials containing:
                 AWS_ACCESS_KEY_ID : str
                     AWS access key identifier.
@@ -153,7 +153,7 @@ class BRSSession(Session):
         }
 
     @property
-    def credentials(self) -> RefreshableCredentials:
+    def credentials(self) -> RefreshableTemporaryCredentials:
         """The current temporary AWS security credentials."""
 
         return self.refreshable_credentials()
