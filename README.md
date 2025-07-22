@@ -33,7 +33,7 @@
   </a>
 
   <a href="https://pepy.tech/projects/boto3-refresh-session">
-    <img src="https://img.shields.io/badge/downloads-76.2K-red?logo=python&color=%23FF0000&label=Downloads" alt="Downloads"/>
+    <img src="https://img.shields.io/badge/downloads-76.9K-red?logo=python&color=%23FF0000&label=Downloads" alt="Downloads"/>
   </a>
 
   <a href="https://michaelthomasletts.github.io/boto3-refresh-session/index.html">
@@ -68,7 +68,7 @@
 - Supports custom authentication methods for complicated authentication flows
 - Natively supports all parameters supported by `boto3.session.Session`
 - [Tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [documented](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/)
-- Future releases will include support for EC2, IoT, SSO, and OIDC
+- Future releases will include support for IoT (coming soon), EC2, and SSO
 
 ## Recognition and Testimonials
 
