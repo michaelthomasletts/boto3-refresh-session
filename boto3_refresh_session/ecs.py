@@ -96,8 +96,7 @@ class ECSRefreshableSession(BaseRefreshableSession, method="ecs"):
             "expiry_time": credentials.get("Expiration"),  # already ISO8601
         }
 
-    @staticmethod
-    def get_identity() -> dict[str, str]:
+    def get_identity(self) -> dict[str, str]:
         """Returns metadata about ECS.
 
         Returns
