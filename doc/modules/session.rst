@@ -24,8 +24,9 @@ Examples
 >>> s3.list_buckets()
 
 .. seealso::
-    :class:`boto3_refresh_session.sts.STSRefreshableSession`
+    :class:`boto3_refresh_session.custom.CustomRefreshableSession`
     :class:`boto3_refresh_session.ecs.ECSRefreshableSession`
+    :class:`boto3_refresh_session.sts.STSRefreshableSession`
 
 Factory interface
 -----------------
