@@ -4,17 +4,18 @@ __all__ = ["STSRefreshableSession"]
 
 from typing import Any
 
-from .exceptions import BRSWarning
-from .session import BaseRefreshableSession, TemporaryCredentials
+from ..exceptions import BRSWarning
+from ..session import BaseRefreshableSession
+from ..utils import AssumeRoleParams, STSClientParams, TemporaryCredentials
 
 
-class STSRefreshableSession(BaseRefreshableSession, method="sts"):
+class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
     """A :class:`boto3.session.Session` object that automatically refreshes
     temporary AWS credentials using an IAM role that is assumed via STS.
 
     Parameters
     ----------
-    assume_role_kwargs : dict
+    assume_role_kwargs : AssumeRoleParams
         Required keyword arguments for :meth:`STS.Client.assume_role` (i.e.
         boto3 STS client).
     defer_refresh : bool, optional
@@ -22,7 +23,7 @@ class STSRefreshableSession(BaseRefreshableSession, method="sts"):
         until they are explicitly needed. If ``False`` then temporary
         credentials refresh immediately upon expiration. It is highly
         recommended that you use ``True``. Default is ``True``.
-    sts_client_kwargs : dict, optional
+    sts_client_kwargs : STSClientParams, optional
         Optional keyword arguments for the :class:`STS.Client` object. Do not
         provide values for ``service_name`` as they are unnecessary. Default
         is None.
@@ -36,13 +37,12 @@ class STSRefreshableSession(BaseRefreshableSession, method="sts"):
 
     def __init__(
         self,
-        assume_role_kwargs: dict,
+        assume_role_kwargs: AssumeRoleParams,
         defer_refresh: bool | None = None,
-        sts_client_kwargs: dict | None = None,
+        sts_client_kwargs: STSClientParams | None = None,
         **kwargs,
     ):
         super().__init__(**kwargs)
-        defer_refresh = defer_refresh is not False
         self.assume_role_kwargs = assume_role_kwargs
 
         if sts_client_kwargs is not None:
@@ -60,9 +60,9 @@ class STSRefreshableSession(BaseRefreshableSession, method="sts"):
             self._sts_client = self.client(service_name="sts")
 
         # mounting refreshable credentials
-        self._refresh_using(
+        self.initialize(
             credentials_method=self._get_credentials,
-            defer_refresh=defer_refresh,
+            defer_refresh=defer_refresh is not False,
             refresh_method="sts-assume-role",
         )
 

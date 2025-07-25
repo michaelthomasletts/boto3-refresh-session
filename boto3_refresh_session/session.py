@@ -2,33 +2,18 @@ from __future__ import annotations
 
 __all__ = ["RefreshableSession"]
 
-from abc import ABC, abstractmethod
-from datetime import datetime
-from typing import Any, Callable, ClassVar, Literal, TypedDict, get_args
+from typing import get_args
 
-from boto3.session import Session
-from botocore.credentials import (
-    DeferredRefreshableCredentials,
-    RefreshableCredentials,
-)
-
-from .exceptions import BRSError, BRSWarning
-
-#: Type alias for all currently available credential refresh methods.
-Method = Literal["sts", "ecs", "custom"]
-RefreshMethod = Literal["sts-assume-role", "ecs-container-metadata", "custom"]
+from .exceptions import BRSError
+from .utils import BRSSession, CredentialProvider, Method, Registry
 
 
-class TemporaryCredentials(TypedDict):
-    """Temporary IAM credentials."""
-
-    access_key: str
-    secret_key: str
-    token: str
-    expiry_time: datetime | str
-
-
-class BaseRefreshableSession(ABC, Session):
+class BaseRefreshableSession(
+    Registry[Method],
+    CredentialProvider,
+    BRSSession,
+    registry_key="__sentinel__",
+):
     """Abstract base class for implementing refreshable AWS sessions.
 
     Provides a common interface and factory registration mechanism
@@ -45,75 +30,8 @@ class BaseRefreshableSession(ABC, Session):
         Class-level registry mapping method names to registered session types.
     """
 
-    # adding this and __init_subclass__ to avoid circular imports
-    # as well as simplify future addition of new methods
-    registry: ClassVar[dict[Method, type[BaseRefreshableSession]]] = {}
-
-    def __init_subclass__(cls, method: Method):
-        super().__init_subclass__()
-
-        # guarantees that methods are unique
-        if method in BaseRefreshableSession.registry:
-            BRSWarning(
-                f"Method {repr(method)} is already registered. Overwriting."
-            )
-
-        BaseRefreshableSession.registry[method] = cls
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
-    @abstractmethod
-    def _get_credentials(self) -> TemporaryCredentials: ...
-
-    @abstractmethod
-    def get_identity(self) -> dict[str, Any]: ...
-
-    def _refresh_using(
-        self,
-        credentials_method: Callable,
-        defer_refresh: bool,
-        refresh_method: RefreshMethod,
-    ):
-        # determining how exactly to refresh expired temporary credentials
-        if not defer_refresh:
-            self._credentials = RefreshableCredentials.create_from_metadata(
-                metadata=credentials_method(),
-                refresh_using=credentials_method,
-                method=refresh_method,
-            )
-        else:
-            self._credentials = DeferredRefreshableCredentials(
-                refresh_using=credentials_method, method=refresh_method
-            )
-
-    def refreshable_credentials(self) -> dict[str, str]:
-        """The current temporary AWS security credentials.
-
-        Returns
-        -------
-        dict[str, str]
-            Temporary AWS security credentials containing:
-                AWS_ACCESS_KEY_ID : str
-                    AWS access key identifier.
-                AWS_SECRET_ACCESS_KEY : str
-                    AWS secret access key.
-                AWS_SESSION_TOKEN : str
-                    AWS session token.
-        """
-
-        creds = self.get_credentials().get_frozen_credentials()
-        return {
-            "AWS_ACCESS_KEY_ID": creds.access_key,
-            "AWS_SECRET_ACCESS_KEY": creds.secret_key,
-            "AWS_SESSION_TOKEN": creds.token,
-        }
-
-    @property
-    def credentials(self) -> dict[str, str]:
-        """The current temporary AWS security credentials."""
-
-        return self.refreshable_credentials()
 
 
 class RefreshableSession:
@@ -143,9 +61,9 @@ class RefreshableSession:
 
     See Also
     --------
-    boto3_refresh_session.custom.CustomRefreshableSession
-    boto3_refresh_session.sts.STSRefreshableSession
-    boto3_refresh_session.ecs.ECSRefreshableSession
+    boto3_refresh_session.methods.custom.CustomRefreshableSession
+    boto3_refresh_session.methods.sts.STSRefreshableSession
+    boto3_refresh_session.methods.ecs.ECSRefreshableSession
     """
 
     def __new__(
@@ -153,13 +71,12 @@ class RefreshableSession:
     ) -> BaseRefreshableSession:
         if method not in (methods := cls.get_available_methods()):
             raise BRSError(
-                f"{repr(method)} is an invalid method parameter. "
+                f"{method!r} is an invalid method parameter. "
                 "Available methods are "
                 f"{', '.join(repr(meth) for meth in methods)}."
             )
 
-        obj = BaseRefreshableSession.registry[method]
-        return obj(**kwargs)
+        return BaseRefreshableSession.registry[method](**kwargs)
 
     @classmethod
     def get_available_methods(cls) -> list[str]:
@@ -169,7 +86,9 @@ class RefreshableSession:
         -------
         list[str]
             A list of all currently available credential refresh methods,
-            e.g. 'sts'.
+            e.g. 'sts', 'ecs', 'custom'.
         """
 
-        return list(get_args(Method))
+        args = list(get_args(Method))
+        args.remove("__sentinel__")
+        return args

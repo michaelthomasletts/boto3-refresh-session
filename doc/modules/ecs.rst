@@ -1,9 +1,9 @@
 .. _ecs:
 
-.. currentmodule:: boto3_refresh_session.ecs
+.. currentmodule:: boto3_refresh_session.methods.ecs
 
-boto3_refresh_session.ecs
-=========================
+boto3_refresh_session.methods.ecs
+=================================
 
 Implements the ECS-based credential refresh strategy for use with
 :class:`boto3_refresh_session.session.RefreshableSession`.

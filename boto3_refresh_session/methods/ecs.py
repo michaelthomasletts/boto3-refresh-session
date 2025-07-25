@@ -6,8 +6,9 @@ import os
 
 import requests
 
-from .exceptions import BRSError
-from .session import BaseRefreshableSession, TemporaryCredentials
+from ..exceptions import BRSError
+from ..session import BaseRefreshableSession
+from ..utils import TemporaryCredentials
 
 _ECS_CREDENTIALS_RELATIVE_URI = "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI"
 _ECS_CREDENTIALS_FULL_URI = "AWS_CONTAINER_CREDENTIALS_FULL_URI"
@@ -15,7 +16,7 @@ _ECS_AUTHORIZATION_TOKEN = "AWS_CONTAINER_AUTHORIZATION_TOKEN"
 _DEFAULT_ENDPOINT_BASE = "http://169.254.170.2"
 
 
-class ECSRefreshableSession(BaseRefreshableSession, method="ecs"):
+class ECSRefreshableSession(BaseRefreshableSession, registry_key="ecs"):
     """A boto3 session that automatically refreshes temporary AWS credentials
     from the ECS container credentials metadata endpoint.
 
@@ -40,7 +41,7 @@ class ECSRefreshableSession(BaseRefreshableSession, method="ecs"):
         self._headers = self._build_headers()
         self._http = self._init_http_session()
 
-        self._refresh_using(
+        self.initialize(
             credentials_method=self._get_credentials,
             defer_refresh=defer_refresh is not False,
             refresh_method="ecs-container-metadata",
