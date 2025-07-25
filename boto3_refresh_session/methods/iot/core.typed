@@ -7,7 +7,7 @@ from typing import get_args
 from ...exceptions import BRSError
 from ...session import BaseRefreshableSession
 from ...utils import (
-    AuthenticationMethod,
+    IoTAuthenticationMethod,
     BRSSession,
     CredentialProvider,
     Registry,
@@ -15,7 +15,7 @@ from ...utils import (
 
 
 class BaseIoTRefreshableSession(
-    Registry[AuthenticationMethod],
+    Registry[IoTAuthenticationMethod],
     CredentialProvider,
     BRSSession,
     registry_key="__iot_sentinel__",
@@ -27,7 +27,7 @@ class BaseIoTRefreshableSession(
 class IoTRefreshableSession(BaseRefreshableSession, registry_key="iot"):
     def __new__(
         cls,
-        authentication_method: AuthenticationMethod = "certificate",
+        authentication_method: IoTAuthenticationMethod = "certificate",
         **kwargs,
     ) -> BaseIoTRefreshableSession:
         if authentication_method not in (
@@ -45,6 +45,6 @@ class IoTRefreshableSession(BaseRefreshableSession, registry_key="iot"):
 
     @classmethod
     def get_available_authentication_methods(cls) -> list[str]:
-        args = list(get_args(AuthenticationMethod))
+        args = list(get_args(IoTAuthenticationMethod))
         args.remove("__iot_sentinel__")
         return args

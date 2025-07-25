@@ -25,19 +25,22 @@ except ImportError:
     from typing_extensions import NotRequired
 
 #: Type alias for all currently available IoT authentication methods.
-AuthenticationMethod = Literal["certificate", "cognito", "__iot_sentinel__"]
+IoTAuthenticationMethod = Literal["certificate", "cognito", "__iot_sentinel__"]
 
 #: Type alias for all currently available credential refresh methods.
-Method = Literal["sts", "ecs", "custom", "iot", "__sentinel__"]
+Method = Literal[
+    "sts",
+    "ecs",
+    "custom",
+    "__sentinel__",
+]  # TODO: Add iot when implemented
 
 #: Type alias for all refresh method names.
 RefreshMethod = Literal[
     "sts-assume-role",
     "ecs-container-metadata",
     "custom",
-    "iot-certificate",
-    "iot-cognito",
-]
+]  # Add iot-certificate and iot-cognito when iot implemented
 
 #: Type alias for all currently registered credential refresh methods.
 RegistryKey = TypeVar("RegistryKey", bound=str)
@@ -199,3 +202,11 @@ class STSClientParams(TypedDict):
     aws_session_token: NotRequired[str]
     config: NotRequired[Any]
     aws_account_id: NotRequired[str]
+
+
+class PKCS11(TypedDict):
+    pkcs11_loc: str
+    user_pin: NotRequired[str]
+    slot_id: NotRequired[int]
+    token_label: NotRequired[str | None]
+    private_key_label: NotRequired[str | None]
