@@ -33,7 +33,7 @@
   </a>
 
   <a href="https://pepy.tech/projects/boto3-refresh-session">
-    <img src="https://img.shields.io/badge/downloads-79.3K-red?logo=python&color=%23FF0000&label=Downloads" alt="Downloads"/>
+    <img src="https://img.shields.io/badge/downloads-79.6K-red?logo=python&color=%23FF0000&label=Downloads" alt="Downloads"/>
   </a>
 
   <a href="https://michaelthomasletts.github.io/boto3-refresh-session/index.html">
