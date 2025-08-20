@@ -59,6 +59,16 @@
 
 </div>
 
+---
+
+## ⚠️ Important Update
+
+I am currently grappling with a serious medical condition that negatively impacts my vision. Accordingly, development of the `iot` and `ec2` modules has been delayed. Expect delayed responses to issues and pull requests until my health stabilizes. 
+
+Thank you for supporting this project. 
+
+---
+
 ## Features
 
 - Drop-in replacement for `boto3.session.Session`
