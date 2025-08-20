@@ -49,7 +49,7 @@
 
 <a href="https://pepy.tech/projects/boto3-refresh-session">
   <img
-    src="https://img.shields.io/endpoint?url=https%3A%2F%2Fmichaelthomasletts.github.io%2Fpepy-stats%2Fboto3-refresh-session.json&style=flat&logo=github&labelColor=555&color=FF0000"
+    src="https://img.shields.io/endpoint?url=https%3A%2F%2Fmichaelthomasletts.github.io%2Fpepy-stats%2Fboto3-refresh-session.json&style=flat&logo=python&labelColor=555&color=FF0000"
     alt="Downloads"
   />
 </a>
