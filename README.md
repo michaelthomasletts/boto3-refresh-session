@@ -13,49 +13,82 @@
 <div align="center">
 
   <a href="https://pypi.org/project/boto3-refresh-session/">
-    <img src="https://img.shields.io/pypi/v/boto3-refresh-session?color=%23FF0000FF&logo=python&label=Latest%20Version" alt="PyPI - Version"/>
+    <img 
+      src="https://img.shields.io/pypi/v/boto3-refresh-session?color=%23FF0000FF&logo=python&label=Latest%20Version"
+      alt="PyPI - Version"
+    />
   </a>
 
   <a href="https://pypi.org/project/boto3-refresh-session/">
-    <img src="https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi&color=%23FF0000FF&logo=python&label=Compatible%20Python%20Versions" alt="Python Version"/>
+    <img 
+      src="https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi&color=%23FF0000FF&logo=python&label=Compatible%20Python%20Versions" 
+      alt="Python Version"
+    />
   </a>
 
   <a href="https://github.com/michaelthomasletts/boto3-refresh-session/actions/workflows/push.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/michaelthomasletts/boto3-refresh-session/push.yml?logo=github&color=%23FF0000FF&label=Build" alt="Workflow"/>
+    <img 
+      src="https://img.shields.io/github/actions/workflow/status/michaelthomasletts/boto3-refresh-session/push.yml?logo=github&color=%23FF0000FF&label=Build" 
+      alt="Workflow"
+    />
   </a>
 
   <a href="https://github.com/michaelthomasletts/boto3-refresh-session/commits/main">
-    <img src="https://img.shields.io/github/last-commit/michaelthomasletts/boto3-refresh-session?logo=github&color=%23FF0000FF&label=Last%20Commit" alt="GitHub last commit"/>
+    <img 
+      src="https://img.shields.io/github/last-commit/michaelthomasletts/boto3-refresh-session?logo=github&color=%23FF0000FF&label=Last%20Commit" 
+      alt="GitHub last commit"
+    />
   </a>
 
   <a href="https://github.com/michaelthomasletts/boto3-refresh-session/stargazers">
-    <img src="https://img.shields.io/github/stars/michaelthomasletts/boto3-refresh-session?style=flat&logo=github&labelColor=555&color=FF0000&label=Stars" alt="Stars"/>
+    <img 
+      src="https://img.shields.io/github/stars/michaelthomasletts/boto3-refresh-session?style=flat&logo=github&labelColor=555&color=FF0000&label=Stars" 
+      alt="Stars"
+    />
   </a>
 
-  <a href="https://pepy.tech/projects/boto3-refresh-session">
-    <img src="https://img.shields.io/badge/downloads-85.0K-red?logo=python&color=%23FF0000&label=Downloads" alt="Downloads"/>
-  </a>
+<a href="https://pepy.tech/projects/boto3-refresh-session">
+  <img
+    src="https://img.shields.io/endpoint?url=https%3A%2F%2Fmichaelthomasletts.github.io%2Fpepy-stats%2Fboto3-refresh-session.json&style=flat&logo=github&labelColor=555&color=FF0000"
+    alt="Downloads"
+  />
+</a>
+
 
   <a href="https://michaelthomasletts.github.io/boto3-refresh-session/index.html">
-    <img src="https://img.shields.io/badge/Official%20Documentation-📘-FF0000?style=flat&labelColor=555&logo=readthedocs" alt="Documentation Badge"/>
+    <img 
+      src="https://img.shields.io/badge/Official%20Documentation-📘-FF0000?style=flat&labelColor=555&logo=readthedocs" 
+      alt="Documentation Badge"
+    />
   </a>
 
   <a href="https://github.com/michaelthomasletts/boto3-refresh-session">
-    <img src="https://img.shields.io/badge/Source%20Code-💻-FF0000?style=flat&labelColor=555&logo=github" alt="Source Code Badge"/>
+    <img 
+      src="https://img.shields.io/badge/Source%20Code-💻-FF0000?style=flat&labelColor=555&logo=github" 
+      alt="Source Code Badge"
+    />
   </a>
 
   <a href="https://michaelthomasletts.github.io/boto3-refresh-session/qanda.html">
-    <img src="https://img.shields.io/badge/Q%26A-❔-FF0000?style=flat&labelColor=555&logo=vercel&label=Q%26A" alt="Q&A Badge"/>
+    <img 
+      src="https://img.shields.io/badge/Q%26A-❔-FF0000?style=flat&labelColor=555&logo=vercel&label=Q%26A" 
+      alt="Q&A Badge"
+    />
   </a>
 
   <a href="https://medium.com/@lettsmt/you-shouldnt-have-to-think-about-refreshing-aws-credentials-214f7cbbd83b">
-    <img src="https://img.shields.io/badge/Medium%20Article-📘-FF0000?style=flat&labelColor=555&logo=readthedocs" alt="Medium Article"/>
+    <img 
+      src="https://img.shields.io/badge/Medium%20Article-📘-FF0000?style=flat&labelColor=555&logo=readthedocs" 
+      alt="Medium Article"
+    />
   </a>
 
 <a href="https://github.com/sponsors/michaelthomasletts">
-  <img src="https://img.shields.io/badge/Sponsor%20this%20Project-💙-FF0000?style=flat&labelColor=555&logo=githubsponsors" alt="Sponsorship"/>
+  <img 
+    src="https://img.shields.io/badge/Sponsor%20this%20Project-💙-FF0000?style=flat&labelColor=555&logo=githubsponsors" 
+    alt="Sponsorship"
+  />
 </a>
-
 
 </div>
 
