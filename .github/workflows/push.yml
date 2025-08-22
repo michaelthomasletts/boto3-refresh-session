@@ -1,9 +1,23 @@
+name: Bump version, publish to PyPI, tag, and deploy docs
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "boto3_refresh_session/**"
+      - "README.md"
+      - "doc/brs.png"
+
+permissions:
+  contents: write   # needed for pushing commits and tags
+
 jobs:
   bump_version:
     if: |
       !contains(github.event.head_commit.message, '[skip release]') &&
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main'
+
     name: Bump Version, Publish to PyPI, tag, and deploy docs
     runs-on: ubuntu-latest
     steps:
@@ -14,6 +28,7 @@ jobs:
 
       - name: Set up Python
         uses: actions/setup-python@v5
+        id: setup-python
         with:
           python-version: '3.10'
 
@@ -71,8 +86,6 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add pyproject.toml boto3_refresh_session/__init__.py || true
-
-          # Only commit if something changed (idempotent safety)
           if ! git diff --cached --quiet; then
             git commit -m "bump $VERSION_TYPE version [skip ci]"
             git push origin main
@@ -80,19 +93,20 @@ jobs:
             echo "No changes to commit."
           fi
 
-      - name: Fetch latest commit after push
+      - name: Sync local repo to latest
         run: |
-          git fetch origin main
+          git fetch origin main --tags
           git reset --hard origin/main
 
       - name: Create tag
         run: |
-          VERSION="${NEW_VERSION}"
-          if [ -z "$VERSION" ]; then
-            VERSION=$(poetry version -s)
+          VERSION="${NEW_VERSION:-$(poetry version -s)}"
+          if git rev-parse "$VERSION" >/dev/null 2>&1; then
+            echo "Tag $VERSION already exists; skipping."
+          else
+            git tag "$VERSION"
+            git push origin "$VERSION"
           fi
-          git tag "$VERSION"
-          git push origin "$VERSION"
 
       - name: Build wheel and publish to PyPI
         env:
