@@ -1,85 +1,21 @@
-name: Bump version, publish to PyPI, tag, and deploy docs
-
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - "boto3_refresh_session/**"
-      - "README.md"
-      - "doc/brs.png"
-
 jobs:
   bump_version:
     if: |
       !contains(github.event.head_commit.message, '[skip release]') &&
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main'
-
     name: Bump Version, Publish to PyPI, tag, and deploy docs
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GH_PAT }}  # Use the PAT for push permissions
+          token: ${{ secrets.GH_PAT }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-
-      - name: Install dependencies
-        run: |
-          pip install tomlkit
-          pipx install poetry
-
-      - name: Determine version part to update
-        run: |
-          # Default to patch
-          VERSION_TYPE="patch"
-          MESSAGE=$(git log -1 --pretty=%B)
-
-          # Check for version bump keywords
-          if echo "$MESSAGE" | grep -qi '\[major\]'; then
-            VERSION_TYPE="major"
-          elif echo "$MESSAGE" | grep -qi '\[minor\]'; then
-            VERSION_TYPE="minor"
-          fi
-
-          echo "Determined VERSION_TYPE=$VERSION_TYPE"
-          echo "VERSION_TYPE=$VERSION_TYPE" >> $GITHUB_ENV        
-
-      - name: Bump version
-        run: python bump_version.py $VERSION_TYPE
-
-      - name: Commit version bump
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add pyproject.toml
-          git add boto3_refresh_session/__init__.py
-          git commit -m "bump $VERSION_TYPE version [skip ci]"  # <--- Prevents infinite loop
-          git push origin main  # Push only the version bump commit
-
-      - name: Fetch latest commit after push
-        run: |
-          git fetch origin main
-          git reset --hard origin/main
-
-      - name: Create tag
-        run: |
-          VERSION=$(grep '^version' pyproject.toml | awk -F'"' '{print $2}')
-          git tag "$VERSION"
-          git push origin "$VERSION"
-
-      - name: Build wheel and publish to PyPI
-        env:
-          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}      
-        run: |
-          poetry install --no-interaction --all-groups
-          poetry build
-          poetry publish --no-interaction          
 
       - name: Install Poetry
         uses: snok/install-poetry@v1
@@ -96,12 +32,75 @@ jobs:
           path: .venv
           key: poetry-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
 
-      - name: Install dependencies
+      - name: Install dependencies (no-root)
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root --all-groups
 
-      - name: Install project
-        run: poetry install --no-interaction --all-groups
+      - name: Determine version part to update
+        run: |
+          VERSION_TYPE="patch"
+          MESSAGE=$(git log -1 --pretty=%B)
+
+          if echo "$MESSAGE" | grep -qi '\[major\]'; then
+            VERSION_TYPE="major"
+          elif echo "$MESSAGE" | grep -qi '\[minor\]'; then
+            VERSION_TYPE="minor"
+          fi
+
+          echo "Determined VERSION_TYPE=$VERSION_TYPE"
+          echo "VERSION_TYPE=$VERSION_TYPE" >> $GITHUB_ENV
+
+      - name: Bump version with Poetry
+        run: |
+          poetry version $VERSION_TYPE
+          echo "NEW_VERSION=$(poetry version -s)" >> $GITHUB_ENV
+
+      - name: Sync __init__.__version__
+        run: |
+          python - << 'PY'
+          import subprocess
+          from pathlib import Path
+          ver = subprocess.check_output(["poetry", "version", "-s"], text=True).strip()
+          pkg_init = Path("boto3_refresh_session/__init__.py")
+          if pkg_init.exists():
+              pkg_init.write_text(f"__version__ = '{ver}'\n")
+          PY
+
+      - name: Commit version bump
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add pyproject.toml boto3_refresh_session/__init__.py || true
+
+          # Only commit if something changed (idempotent safety)
+          if ! git diff --cached --quiet; then
+            git commit -m "bump $VERSION_TYPE version [skip ci]"
+            git push origin main
+          else
+            echo "No changes to commit."
+          fi
+
+      - name: Fetch latest commit after push
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - name: Create tag
+        run: |
+          VERSION="${NEW_VERSION}"
+          if [ -z "$VERSION" ]; then
+            VERSION=$(poetry version -s)
+          fi
+          git tag "$VERSION"
+          git push origin "$VERSION"
+
+      - name: Build wheel and publish to PyPI
+        env:
+          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          poetry install --no-interaction --all-groups
+          poetry build
+          poetry publish --no-interaction
 
       - name: Build Documentation
         run: |
