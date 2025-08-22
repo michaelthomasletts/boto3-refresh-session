@@ -15,42 +15,42 @@
   <a href="https://pypi.org/project/boto3-refresh-session/">
     <img 
       src="https://img.shields.io/pypi/v/boto3-refresh-session?color=%23FF0000FF&logo=python&label=Latest%20Version"
-      alt="PyPI - Version"
+      alt="pypi_version"
     />
   </a>
 
   <a href="https://pypi.org/project/boto3-refresh-session/">
     <img 
       src="https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi&color=%23FF0000FF&logo=python&label=Compatible%20Python%20Versions" 
-      alt="Python Version"
+      alt="py_version"
     />
   </a>
 
   <a href="https://github.com/michaelthomasletts/boto3-refresh-session/actions/workflows/push.yml">
     <img 
       src="https://img.shields.io/github/actions/workflow/status/michaelthomasletts/boto3-refresh-session/push.yml?logo=github&color=%23FF0000FF&label=Build" 
-      alt="Workflow"
+      alt="workflow"
     />
   </a>
 
   <a href="https://github.com/michaelthomasletts/boto3-refresh-session/commits/main">
     <img 
       src="https://img.shields.io/github/last-commit/michaelthomasletts/boto3-refresh-session?logo=github&color=%23FF0000FF&label=Last%20Commit" 
-      alt="GitHub last commit"
+      alt="last_commit"
     />
   </a>
 
   <a href="https://github.com/michaelthomasletts/boto3-refresh-session/stargazers">
     <img 
       src="https://img.shields.io/github/stars/michaelthomasletts/boto3-refresh-session?style=flat&logo=github&labelColor=555&color=FF0000&label=Stars" 
-      alt="Stars"
+      alt="stars"
     />
   </a>
 
 <a href="https://pepy.tech/projects/boto3-refresh-session">
   <img
     src="https://img.shields.io/endpoint?url=https%3A%2F%2Fmichaelthomasletts.github.io%2Fpepy-stats%2Fboto3-refresh-session.json&style=flat&logo=python&labelColor=555&color=FF0000"
-    alt="Downloads"
+    alt="downloads"
   />
 </a>
 
@@ -58,35 +58,35 @@
   <a href="https://michaelthomasletts.github.io/boto3-refresh-session/index.html">
     <img 
       src="https://img.shields.io/badge/Official%20Documentation-📘-FF0000?style=flat&labelColor=555&logo=readthedocs" 
-      alt="Documentation Badge"
+      alt="documentation"
     />
   </a>
 
   <a href="https://github.com/michaelthomasletts/boto3-refresh-session">
     <img 
       src="https://img.shields.io/badge/Source%20Code-💻-FF0000?style=flat&labelColor=555&logo=github" 
-      alt="Source Code Badge"
+      alt="github"
     />
   </a>
 
   <a href="https://michaelthomasletts.github.io/boto3-refresh-session/qanda.html">
     <img 
       src="https://img.shields.io/badge/Q%26A-❔-FF0000?style=flat&labelColor=555&logo=vercel&label=Q%26A" 
-      alt="Q&A Badge"
+      alt="qanda"
     />
   </a>
 
   <a href="https://medium.com/@lettsmt/you-shouldnt-have-to-think-about-refreshing-aws-credentials-214f7cbbd83b">
     <img 
       src="https://img.shields.io/badge/Medium%20Article-📘-FF0000?style=flat&labelColor=555&logo=readthedocs" 
-      alt="Medium Article"
+      alt="medium"
     />
   </a>
 
 <a href="https://github.com/sponsors/michaelthomasletts">
   <img 
     src="https://img.shields.io/badge/Sponsor%20this%20Project-💙-FF0000?style=flat&labelColor=555&logo=githubsponsors" 
-    alt="Sponsorship"
+    alt="sponsorship"
   />
 </a>
 
