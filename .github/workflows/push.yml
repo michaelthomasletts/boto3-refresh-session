@@ -70,15 +70,43 @@ jobs:
           poetry version $VERSION_TYPE
           echo "NEW_VERSION=$(poetry version -s)" >> $GITHUB_ENV
 
-      - name: Sync __init__.__version__
+      - name: Update __version__ in package __init__.py
         run: |
           python - << 'PY'
-          import subprocess
+          import re, subprocess, sys
           from pathlib import Path
+
+          # Get the version Poetry just set in pyproject.toml
           ver = subprocess.check_output(["poetry", "version", "-s"], text=True).strip()
+
           pkg_init = Path("boto3_refresh_session/__init__.py")
-          if pkg_init.exists():
-              pkg_init.write_text(f"__version__ = '{ver}'\n")
+          if not pkg_init.exists():
+              print("No __init__.py found; skipping.")
+              sys.exit(0)
+
+          text = pkg_init.read_text(encoding="utf-8")
+
+          # Replace existing __version__ line if present
+          pattern = re.compile(r'(?m)^(?P<prefix>__version__\s*=\s*)([\'"])(?P<val>.*?)(\2)')
+          if pattern.search(text):
+              new_text = pattern.sub(lambda m: f"{m.group('prefix')}{m.group(2)}{ver}{m.group(2)}", text, count=1)
+          else:
+              # Otherwise, try to insert after the last import; fall back to appending
+              import_pat = re.compile(r'(?m)^(?:from\s+\S+\s+import\s+.+|import\s+\S+.*)$')
+              last_import = None
+              for m in import_pat.finditer(text):
+                  last_import = m
+              if last_import:
+                  insert_at = last_import.end()
+                  new_text = text[:insert_at] + f"\n__version__ = '{ver}'\n" + text[insert_at:]
+              else:
+                  new_text = text.rstrip() + f"\n\n__version__ = '{ver}'\n"
+
+          if new_text != text:
+              pkg_init.write_text(new_text, encoding="utf-8")
+              print(f"Updated __version__ to {ver}")
+          else:
+              print("No change required.")
           PY
 
       - name: Commit version bump
