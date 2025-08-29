@@ -10,6 +10,9 @@ from typing import (
     Generic,
     List,
     Literal,
+    Mapping,
+    Protocol,
+    TypeAlias,
     TypedDict,
     TypeVar,
     cast,
@@ -124,6 +127,17 @@ class TemporaryCredentials(TypedDict):
     secret_key: str
     token: str
     expiry_time: datetime | str
+
+
+class _CustomCredentialsMethod(Protocol):
+    def __call__(self, **kwargs: Any) -> TemporaryCredentials: ...
+
+
+#: Type alias for custom credential retrieval methods.
+CustomCredentialsMethod: TypeAlias = _CustomCredentialsMethod
+
+#: Type alias for custom credential method arguments.
+CustomCredentialsMethodArgs: TypeAlias = Mapping[str, Any]
 
 
 class RefreshableTemporaryCredentials(TypedDict):
