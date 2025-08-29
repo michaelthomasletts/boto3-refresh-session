@@ -8,7 +8,7 @@ import requests
 
 from ..exceptions import BRSError
 from ..session import BaseRefreshableSession
-from ..utils import TemporaryCredentials
+from ..utils import RefreshMethod, TemporaryCredentials
 
 _ECS_CREDENTIALS_RELATIVE_URI = "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI"
 _ECS_CREDENTIALS_FULL_URI = "AWS_CONTAINER_CREDENTIALS_FULL_URI"
@@ -35,17 +35,13 @@ class ECSRefreshableSession(BaseRefreshableSession, registry_key="ecs"):
     """
 
     def __init__(self, defer_refresh: bool | None = None, **kwargs):
-        super().__init__(**kwargs)
+        self.defer_refresh: bool = defer_refresh is not False
+        self.refresh_method: RefreshMethod = "ecs-container-metadata"
+        super().__init__(**kwargs)  # mounting refreshable credentials
 
         self._endpoint = self._resolve_endpoint()
         self._headers = self._build_headers()
         self._http = self._init_http_session()
-
-        self.initialize(
-            credentials_method=self._get_credentials,
-            defer_refresh=defer_refresh is not False,
-            refresh_method="ecs-container-metadata",
-        )
 
     def _resolve_endpoint(self) -> str:
         uri = os.environ.get(_ECS_CREDENTIALS_FULL_URI) or os.environ.get(

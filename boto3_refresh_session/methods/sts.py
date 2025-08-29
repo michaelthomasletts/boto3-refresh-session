@@ -6,7 +6,12 @@ from typing import Any
 
 from ..exceptions import BRSWarning
 from ..session import BaseRefreshableSession
-from ..utils import AssumeRoleParams, STSClientParams, TemporaryCredentials
+from ..utils import (
+    AssumeRoleParams,
+    RefreshMethod,
+    STSClientParams,
+    TemporaryCredentials,
+)
 
 
 class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
@@ -42,7 +47,10 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
         sts_client_kwargs: STSClientParams | None = None,
         **kwargs,
     ):
-        super().__init__(**kwargs)
+        self.defer_refresh: bool = defer_refresh is not False
+        self.refresh_method: RefreshMethod = "sts-assume-role"
+        super().__init__(**kwargs)  # mounting refreshable credentials
+
         self.assume_role_kwargs = assume_role_kwargs
 
         if sts_client_kwargs is not None:
@@ -58,13 +66,6 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
             )
         else:
             self._sts_client = self.client(service_name="sts")
-
-        # mounting refreshable credentials
-        self.initialize(
-            credentials_method=self._get_credentials,
-            defer_refresh=defer_refresh is not False,
-            refresh_method="sts-assume-role",
-        )
 
     def _get_credentials(self) -> TemporaryCredentials:
         temporary_credentials = self._sts_client.assume_role(
