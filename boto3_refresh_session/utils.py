@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from datetime import datetime
+from functools import wraps
 from typing import (
     Any,
     Callable,
@@ -9,6 +12,7 @@ from typing import (
     Literal,
     TypedDict,
     TypeVar,
+    cast,
 )
 
 from boto3.session import Session
@@ -44,6 +48,52 @@ RefreshMethod = Literal[
 
 #: Type alias for all currently registered credential refresh methods.
 RegistryKey = TypeVar("RegistryKey", bound=str)
+
+#: Type alias for a generic refreshable session type.
+BRSSessionType = TypeVar("BRSSessionType", bound="BRSSession")
+
+
+def refreshable_session(
+    cls: type[BRSSessionType],
+) -> type[BRSSessionType]:
+    """Wraps cls.__init__ so self.__post_init__ runs after init (if present).
+
+    Returns
+    -------
+    BRSSessionType
+        The decorated class.
+    """
+
+    init = getattr(cls, "__init__", None)
+
+    # synthesize __init__ if undefined in the class
+    if init in (None, object.__init__):
+
+        def __init__(self, *args, **kwargs):
+            super(cls, self).__init__(*args, **kwargs)
+            post = getattr(self, "__post_init__", None)
+            if callable(post) and not getattr(self, "_post_inited", False):
+                post()
+                setattr(self, "_post_inited", True)
+
+        cls.__init__ = __init__  # type: ignore[assignment]
+        return cls
+
+    # avoids double wrapping
+    if getattr(init, "__post_init_wrapped__", False):
+        return cls
+
+    @wraps(init)
+    def wrapper(self, *args, **kwargs):
+        init(self, *args, **kwargs)
+        post = getattr(self, "__post_init__", None)
+        if callable(post) and not getattr(self, "_post_inited", False):
+            post()
+            setattr(self, "_post_inited", True)
+
+    wrapper.__post_init_wrapped__ = True  # type: ignore[attr-defined]
+    cls.__init__ = cast(Callable[..., None], wrapper)
+    return cls
 
 
 class Registry(Generic[RegistryKey]):
@@ -107,12 +157,28 @@ class CredentialProvider(ABC):
 class BRSSession(Session):
     """Wrapper for boto3.session.Session.
 
+    Parameters
+    ----------
+    refresh_method : RefreshMethod
+        The method to use for refreshing temporary credentials.
+    defer_refresh : bool, default=True
+        If True, the initial credential refresh is deferred until the
+        credentials are first accessed. If False, the initial refresh
+
     Other Parameters
     ----------------
     kwargs : Any
-        Optional keyword arguments for initializing boto3.session.Session."""
+        Optional keyword arguments for initializing boto3.session.Session.
+    """
 
-    def __init__(self, **kwargs):
+    def __init__(
+        self,
+        refresh_method: RefreshMethod,
+        defer_refresh: bool | None = None,
+        **kwargs,
+    ):
+        self.refresh_method: RefreshMethod = refresh_method
+        self.defer_refresh: bool = defer_refresh is not False
         super().__init__(**kwargs)
 
     def __post_init__(self):

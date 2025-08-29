@@ -4,11 +4,12 @@ __all__ = ["CustomRefreshableSession"]
 
 from typing import Any, Callable
 
-from ..exceptions import BRSError
+from ..exceptions import BRSError, BRSWarning
 from ..session import BaseRefreshableSession
-from ..utils import RefreshMethod, TemporaryCredentials
+from ..utils import TemporaryCredentials, refreshable_session
 
 
+@refreshable_session
 class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
     """A :class:`boto3.session.Session` object that automatically refreshes
     temporary credentials returned by a custom credential getter provided
@@ -63,19 +64,23 @@ class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
         self,
         custom_credentials_method: Callable,
         custom_credentials_method_args: dict[str, Any] | None = None,
-        defer_refresh: bool | None = None,
         **kwargs,
     ):
-        super().__init__(**kwargs)
-        self.defer_refresh: bool = defer_refresh is not False
-        self.refresh_method: RefreshMethod = "custom"
+        if "refresh_method" in kwargs:
+            BRSWarning(
+                "'refresh_method' cannot be set manually. "
+                "Reverting to 'custom'."
+            )
+            del kwargs["refresh_method"]
+
+        # initializing BRSSession
+        super().__init__(refresh_method="custom", **kwargs)
         self._custom_get_credentials = custom_credentials_method
         self._custom_get_credentials_args = (
             custom_credentials_method_args
             if custom_credentials_method_args is not None
             else {}
         )
-        self.__post_init__()
 
     def _get_credentials(self) -> TemporaryCredentials:
         credentials: TemporaryCredentials = self._custom_get_credentials(
