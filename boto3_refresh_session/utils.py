@@ -55,6 +55,9 @@ RegistryKey = TypeVar("RegistryKey", bound=str)
 #: Type alias for a generic refreshable session type.
 BRSSessionType = TypeVar("BRSSessionType", bound="BRSSession")
 
+#: Type alias for values returned by get_identity
+Identity: TypeAlias = dict[str, Any]
+
 
 def refreshable_session(
     cls: type[BRSSessionType],

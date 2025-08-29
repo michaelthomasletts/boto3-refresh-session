@@ -9,6 +9,7 @@ from ..session import BaseRefreshableSession
 from ..utils import (
     CustomCredentialsMethod,
     CustomCredentialsMethodArgs,
+    Identity,
     TemporaryCredentials,
     refreshable_session,
 )
@@ -106,12 +107,12 @@ class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
 
         return credentials
 
-    def get_identity(self) -> dict[str, str]:
+    def get_identity(self) -> Identity:
         """Returns metadata about the custom credential getter.
 
         Returns
         -------
-        dict[str, str]
+        Identity
             Dict containing information about the custom credential getter.
         """
 

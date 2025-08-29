@@ -8,6 +8,7 @@ from ..exceptions import BRSWarning
 from ..session import BaseRefreshableSession
 from ..utils import (
     AssumeRoleParams,
+    Identity,
     STSClientParams,
     TemporaryCredentials,
     refreshable_session,
@@ -85,12 +86,12 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
             "expiry_time": temporary_credentials.get("Expiration").isoformat(),
         }
 
-    def get_identity(self) -> dict[str, Any]:
+    def get_identity(self) -> Identity:
         """Returns metadata about the identity assumed.
 
         Returns
         -------
-        dict[str, Any]
+        Identity
             Dict containing caller identity according to AWS STS.
         """
 
