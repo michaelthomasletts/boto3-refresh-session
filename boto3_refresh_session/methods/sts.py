@@ -68,6 +68,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
 
         self.__post_init__()
 
+
     def _get_credentials(self) -> TemporaryCredentials:
         temporary_credentials = self._sts_client.assume_role(
             **self.assume_role_kwargs
