@@ -8,7 +8,7 @@ import requests
 
 from ..exceptions import BRSError, BRSWarning
 from ..session import BaseRefreshableSession
-from ..utils import TemporaryCredentials, refreshable_session
+from ..utils import Identity, TemporaryCredentials, refreshable_session
 
 _ECS_CREDENTIALS_RELATIVE_URI = "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI"
 _ECS_CREDENTIALS_FULL_URI = "AWS_CONTAINER_CREDENTIALS_FULL_URI"
@@ -101,12 +101,12 @@ class ECSRefreshableSession(BaseRefreshableSession, registry_key="ecs"):
             "expiry_time": credentials.get("Expiration"),  # already ISO8601
         }
 
-    def get_identity(self) -> dict[str, str]:
+    def get_identity(self) -> Identity:
         """Returns metadata about ECS.
 
         Returns
         -------
-        dict[str, str]
+        Identity
             Dict containing metadata about ECS.
         """
 
