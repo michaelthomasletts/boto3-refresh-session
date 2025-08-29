@@ -2,10 +2,11 @@ __all__ = ["IoTCognitoRefreshableSession"]
 
 from typing import Any
 
-from ...utils import TemporaryCredentials
+from ...utils import TemporaryCredentials, mount_refreshable_credentials
 from .core import BaseIoTRefreshableSession
 
 
+@mount_refreshable_credentials
 class IoTCognitoRefreshableSession(
     BaseIoTRefreshableSession, registry_key="cognito"
 ):

@@ -8,12 +8,13 @@ from ..exceptions import BRSWarning
 from ..session import BaseRefreshableSession
 from ..utils import (
     AssumeRoleParams,
-    RefreshMethod,
     STSClientParams,
     TemporaryCredentials,
+    refreshable_session,
 )
 
 
+@refreshable_session
 class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
     """A :class:`boto3.session.Session` object that automatically refreshes
     temporary AWS credentials using an IAM role that is assumed via STS.
@@ -43,13 +44,20 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
     def __init__(
         self,
         assume_role_kwargs: AssumeRoleParams,
-        defer_refresh: bool | None = None,
         sts_client_kwargs: STSClientParams | None = None,
         **kwargs,
     ):
-        super().__init__(**kwargs)
-        self.defer_refresh: bool = defer_refresh is not False
-        self.refresh_method: RefreshMethod = "sts-assume-role"
+        if "refresh_method" in kwargs:
+            BRSWarning(
+                "'refresh_method' cannot be set manually. "
+                "Reverting to 'sts-assume-role'."
+            )
+            del kwargs["refresh_method"]
+
+        # initializing BRSSession
+        super().__init__(refresh_method="sts-assume-role", **kwargs)
+
+        # initializing various other attributes
         self.assume_role_kwargs = assume_role_kwargs
 
         if sts_client_kwargs is not None:
@@ -65,8 +73,6 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
             )
         else:
             self._sts_client = self.client(service_name="sts")
-
-        self.__post_init__()
 
     def _get_credentials(self) -> TemporaryCredentials:
         temporary_credentials = self._sts_client.assume_role(

@@ -6,9 +6,9 @@ import os
 
 import requests
 
-from ..exceptions import BRSError
+from ..exceptions import BRSError, BRSWarning
 from ..session import BaseRefreshableSession
-from ..utils import RefreshMethod, TemporaryCredentials
+from ..utils import TemporaryCredentials, refreshable_session
 
 _ECS_CREDENTIALS_RELATIVE_URI = "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI"
 _ECS_CREDENTIALS_FULL_URI = "AWS_CONTAINER_CREDENTIALS_FULL_URI"
@@ -16,6 +16,7 @@ _ECS_AUTHORIZATION_TOKEN = "AWS_CONTAINER_AUTHORIZATION_TOKEN"
 _DEFAULT_ENDPOINT_BASE = "http://169.254.170.2"
 
 
+@refreshable_session
 class ECSRefreshableSession(BaseRefreshableSession, registry_key="ecs"):
     """A boto3 session that automatically refreshes temporary AWS credentials
     from the ECS container credentials metadata endpoint.
@@ -34,14 +35,21 @@ class ECSRefreshableSession(BaseRefreshableSession, registry_key="ecs"):
         Optional keyword arguments passed to :class:`boto3.session.Session`.
     """
 
-    def __init__(self, defer_refresh: bool | None = None, **kwargs):
-        super().__init__(**kwargs)
-        self.defer_refresh: bool = defer_refresh is not False
-        self.refresh_method: RefreshMethod = "ecs-container-metadata"
+    def __init__(self, **kwargs):
+        if "refresh_method" in kwargs:
+            BRSWarning(
+                "'refresh_method' cannot be set manually. "
+                "Reverting to 'ecs-container-metadata'."
+            )
+            del kwargs["refresh_method"]
+
+        # initializing BRSSession
+        super().__init__(refresh_method="ecs-container-metadata", **kwargs)
+
+        # initializing various other attributes
         self._endpoint = self._resolve_endpoint()
         self._headers = self._build_headers()
         self._http = self._init_http_session()
-        self.__post_init__()
 
     def _resolve_endpoint(self) -> str:
         uri = os.environ.get(_ECS_CREDENTIALS_FULL_URI) or os.environ.get(

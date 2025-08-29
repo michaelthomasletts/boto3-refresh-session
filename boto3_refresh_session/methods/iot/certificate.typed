@@ -4,10 +4,11 @@ from pathlib import Path
 from typing import Any
 
 from ...exceptions import BRSError
-from ...utils import PKCS11, TemporaryCredentials
+from ...utils import PKCS11, TemporaryCredentials, mount_refreshable_credentials
 from .core import BaseIoTRefreshableSession
 
 
+@mount_refreshable_credentials
 class IoTCertificateRefreshableSession(
     BaseIoTRefreshableSession, registry_key="certificate"
 ):
