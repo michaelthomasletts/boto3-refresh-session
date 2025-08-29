@@ -136,7 +136,7 @@ class _CustomCredentialsMethod(Protocol):
 #: Type alias for custom credential retrieval methods.
 CustomCredentialsMethod: TypeAlias = _CustomCredentialsMethod
 
-#: Type alias for keyword arguments to pass to custom credential retrieval methods.
+#: Type alias for custom credential method arguments.
 CustomCredentialsMethodArgs: TypeAlias = Mapping[str, Any]
 
 
