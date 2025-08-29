@@ -35,13 +35,13 @@ class ECSRefreshableSession(BaseRefreshableSession, registry_key="ecs"):
     """
 
     def __init__(self, defer_refresh: bool | None = None, **kwargs):
+        super().__init__(**kwargs)
         self.defer_refresh: bool = defer_refresh is not False
         self.refresh_method: RefreshMethod = "ecs-container-metadata"
-        super().__init__(**kwargs)  # mounting refreshable credentials
-
         self._endpoint = self._resolve_endpoint()
         self._headers = self._build_headers()
         self._http = self._init_http_session()
+        self.__post_init__()
 
     def _resolve_endpoint(self) -> str:
         uri = os.environ.get(_ECS_CREDENTIALS_FULL_URI) or os.environ.get(
