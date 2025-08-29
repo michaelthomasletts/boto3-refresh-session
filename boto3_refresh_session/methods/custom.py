@@ -6,7 +6,12 @@ from typing import Any, Callable
 
 from ..exceptions import BRSError, BRSWarning
 from ..session import BaseRefreshableSession
-from ..utils import TemporaryCredentials, refreshable_session
+from ..utils import (
+    CustomCredentialsMethod,
+    CustomCredentialsMethodArgs,
+    TemporaryCredentials,
+    refreshable_session,
+)
 
 
 @refreshable_session
@@ -18,11 +23,11 @@ class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
 
     Parameters
     ----------
-    custom_credentials_method: Callable
+    custom_credentials_method: CustomCredentialsMethod
         Required. Accepts a callable object that returns temporary AWS
         security credentials. That object must return a dictionary containing
         'access_key', 'secret_key', 'token', and 'expiry_time' when called.
-    custom_credentials_method_args : dict[str, Any], optional
+    custom_credentials_method_args : CustomCredentialsMethodArgs, optional
         Optional keyword arguments for the function passed to the
         ``custom_credentials_method`` parameter.
     defer_refresh : bool, optional
@@ -62,8 +67,10 @@ class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
 
     def __init__(
         self,
-        custom_credentials_method: Callable,
-        custom_credentials_method_args: dict[str, Any] | None = None,
+        custom_credentials_method: CustomCredentialsMethod,
+        custom_credentials_method_args: (
+            CustomCredentialsMethodArgs | None
+        ) = None,
         **kwargs,
     ):
         if "refresh_method" in kwargs:
@@ -75,8 +82,10 @@ class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
 
         # initializing BRSSession
         super().__init__(refresh_method="custom", **kwargs)
-        self._custom_get_credentials = custom_credentials_method
-        self._custom_get_credentials_args = (
+        self._custom_get_credentials: CustomCredentialsMethod = (
+            custom_credentials_method
+        )
+        self._custom_get_credentials_args: CustomCredentialsMethodArgs = (
             custom_credentials_method_args
             if custom_credentials_method_args is not None
             else {}
