@@ -115,22 +115,16 @@ class BRSSession(Session):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def initialize(
-        self,
-        credentials_method: Callable,
-        defer_refresh: bool,
-        refresh_method: RefreshMethod,
-    ):
-        # determining how exactly to refresh expired temporary credentials
-        if not defer_refresh:
+    def __post_init__(self):
+        if not self.defer_refresh:
             self._credentials = RefreshableCredentials.create_from_metadata(
-                metadata=credentials_method(),
-                refresh_using=credentials_method,
-                method=refresh_method,
+                metadata=self._get_credentials(),
+                refresh_using=self._get_credentials,
+                method=self.refresh_method,
             )
         else:
             self._credentials = DeferredRefreshableCredentials(
-                refresh_using=credentials_method, method=refresh_method
+                refresh_using=self._get_credentials, method=self.refresh_method
             )
 
     def refreshable_credentials(self) -> RefreshableTemporaryCredentials:

@@ -6,7 +6,7 @@ from typing import Any, Callable
 
 from ..exceptions import BRSError
 from ..session import BaseRefreshableSession
-from ..utils import TemporaryCredentials
+from ..utils import RefreshMethod, TemporaryCredentials
 
 
 class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
@@ -66,6 +66,8 @@ class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
         defer_refresh: bool | None = None,
         **kwargs,
     ):
+        self.defer_refresh = defer_refresh is not False
+        self.refresh_method: RefreshMethod = "custom"
         super().__init__(**kwargs)
 
         self._custom_get_credentials = custom_credentials_method
@@ -73,12 +75,6 @@ class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
             custom_credentials_method_args
             if custom_credentials_method_args is not None
             else {}
-        )
-
-        self.initialize(
-            credentials_method=self._get_credentials,
-            defer_refresh=defer_refresh is not False,
-            refresh_method="custom",
         )
 
     def _get_credentials(self) -> TemporaryCredentials:
