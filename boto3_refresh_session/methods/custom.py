@@ -66,8 +66,6 @@ class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
         defer_refresh: bool | None = None,
         **kwargs,
     ):
-        self.defer_refresh = defer_refresh is not False
-        self.refresh_method: RefreshMethod = "custom"
         super().__init__(**kwargs)
         self.defer_refresh: bool = defer_refresh is not False
         self.refresh_method: RefreshMethod = "custom"
