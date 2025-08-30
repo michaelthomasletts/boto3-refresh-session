@@ -5,11 +5,11 @@ __all__ = ["IoTRefreshableSession"]
 from typing import get_args
 
 from ...exceptions import BRSError
-from ...session import BaseRefreshableSession
 from ...utils import (
-    IoTAuthenticationMethod,
+    BaseRefreshableSession, 
     BRSSession,
-    CredentialProvider,
+    CredentialProvider, 
+    IoTAuthenticationMethod, 
     Registry,
 )
 

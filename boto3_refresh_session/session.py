@@ -5,33 +5,7 @@ __all__ = ["RefreshableSession"]
 from typing import get_args
 
 from .exceptions import BRSError
-from .utils import BRSSession, CredentialProvider, Method, Registry
-
-
-class BaseRefreshableSession(
-    Registry[Method],
-    CredentialProvider,
-    BRSSession,
-    registry_key="__sentinel__",
-):
-    """Abstract base class for implementing refreshable AWS sessions.
-
-    Provides a common interface and factory registration mechanism
-    for subclasses that generate temporary credentials using various
-    AWS authentication methods (e.g., STS).
-
-    Subclasses must implement ``_get_credentials()`` and ``get_identity()``.
-    They should also register themselves using the ``method=...`` argument
-    to ``__init_subclass__``.
-
-    Parameters
-    ----------
-    registry : dict[str, type[BaseRefreshableSession]]
-        Class-level registry mapping method names to registered session types.
-    """
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+from .utils import BaseRefreshableSession, Method
 
 
 class RefreshableSession:

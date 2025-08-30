@@ -4,7 +4,9 @@ from pathlib import Path
 from typing import Any
 
 from ...exceptions import BRSError
-from ...utils import Identity, PKCS11, TemporaryCredentials, refreshable_session
+from ...utils import (
+    Identity, PKCS11, TemporaryCredentials, refreshable_session
+)
 from .core import BaseIoTRefreshableSession
 
 

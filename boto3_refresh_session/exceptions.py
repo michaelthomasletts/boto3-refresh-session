@@ -1,3 +1,6 @@
+__all__ = ["BRSError", "BRSWarning"]
+
+
 class BRSError(Exception):
     """The base exception for boto3-refresh-session.
 

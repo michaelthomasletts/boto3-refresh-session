@@ -1,12 +1,8 @@
-from __future__ import annotations
-
 __all__ = ["CustomRefreshableSession"]
 
-from typing import Any, Callable
-
 from ..exceptions import BRSError, BRSWarning
-from ..session import BaseRefreshableSession
 from ..utils import (
+    BaseRefreshableSession,
     CustomCredentialsMethod,
     CustomCredentialsMethodArgs,
     Identity,
