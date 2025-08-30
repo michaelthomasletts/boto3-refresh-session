@@ -138,6 +138,72 @@ pip install boto3-refresh-session
 ## 📝 Usage
 
 <details>
+  <summary><strong>Clients and Resources (click to expand)</strong></summary>
+
+  ### Clients and Resources
+
+  Most developers who use `boto3` interact primarily with `boto3.client` or `boto3.resource` instead of `boto3.session.Session`. But many developers may not realize that `boto3.session.Session` belies `boto3.client` and `boto3.resource`! In fact, that's precisely what makes `boto3-refresh-session` possible!
+
+  To use the `boto3.client` or `boto3.resource` interface, but with the benefits of `boto3-refresh-session`, you have a few options! 
+  
+  In the following examples, let's assume you want to use STS for retrieving temporary credentials for the sake of simplicity. Let's also focus specifically on `client`. Switching to `resource` follows the same exact idioms as below, except that `client` must be switched to `resource` in the pseudo-code, obviously. If you are not sure how to use `RefreshableSession` for STS (or ECS or custom auth flows) then check the usage instructions in the following sections!
+
+  ##### `RefreshableSession.client` (Recommended)
+
+  So long as you reuse the same `session` object when creating `client` and `resource` objects, this approach can be used everywhere in your code. It is very simple and straight-forward!
+
+  ```python
+  from boto3_refresh_session import RefreshableSession
+
+  assume_role_kwargs = {
+    "RoleArn": "<your-role-arn>",
+    "RoleSessionName": "<your-role-session-name>",
+    "DurationSeconds": "<your-selection>",
+    ...
+  }
+  session = RefreshableSession(assume_role_kwargs=assume_role_kwargs)
+  s3 = session.client("s3")
+  ```  
+
+  ##### `DEFAULT_SESSION`
+
+  This technique can be helpful if you want to use the same instance of `RefreshableSession` everywhere in your code without reference to `boto3_refresh_session`!
+
+  ```python
+  from boto3 import DEFAULT_SESSION, client
+  from boto3_refresh_session import RefreshableSession
+
+  assume_role_kwargs = {
+    "RoleArn": "<your-role-arn>",
+    "RoleSessionName": "<your-role-session-name>",
+    "DurationSeconds": "<your-selection>",
+    ...
+  }
+  DEFAULT_SESSION = RefreshableSession(assume_role_kwargs=assume_role_kwargs)
+  s3 = client("s3")
+  ```
+
+  ##### `botocore_session`
+
+  ```python
+  from boto3 import client
+  from boto3_refresh_session import RefreshableSession
+
+  assume_role_kwargs = {
+    "RoleArn": "<your-role-arn>",
+    "RoleSessionName": "<your-role-session-name>",
+    "DurationSeconds": "<your-selection>",
+    ...
+  }
+  s3 = client(
+    service_name="s3",
+    botocore_session=RefreshableSession(assume_role_kwargs=assume_role_kwargs)
+  )
+  ```  
+
+  </details>
+
+<details>
   <summary><strong>STS (click to expand)</strong></summary>
 
   ### STS
@@ -197,7 +263,7 @@ pip install boto3-refresh-session
 </details>
 
 <details>
-   <summary><strong>Custom authentication flows (click to expand)</strong></summary>
+   <summary><strong>Custom Authentication Flows (click to expand)</strong></summary>
 
   ### Custom
 
