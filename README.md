@@ -208,7 +208,7 @@ pip install boto3-refresh-session
 
   ### STS
 
-  Most users use AWS STS to assume an IAM role and return a set of temporary security credentials. boto3-refresh-session can be used to ensure those temporary credentials refresh automatically. 
+  Most developers use AWS STS to assume an IAM role and return a set of temporary security credentials. boto3-refresh-session can be used to ensure those temporary credentials refresh automatically. For additional information on the exact parameters that `RefreshableSession` takes for STS, [check this documentation](https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/sts.py).
 
   ```python
   import boto3_refresh_session as brs
@@ -249,7 +249,7 @@ pip install boto3-refresh-session
 
   ### ECS
 
-  You can use boto3-refresh-session in an ECS container to automatically refresh temporary security credentials.
+  You can use boto3-refresh-session in an ECS container to automatically refresh temporary security credentials. For additional information on the exact parameters that `RefreshableSession` takes for ECS, [check this documentation](https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/ecs.py).
 
   ```python
   session = RefreshableSession(
@@ -267,7 +267,7 @@ pip install boto3-refresh-session
 
   ### Custom
 
-  If you have a highly sophisticated, novel, or idiosyncratic authentication flow not included in boto3-refresh-session then you will need to provide your own custom temporary credentials callable object. `RefreshableSession` accepts custom credentials callable objects, as shown below.
+  If you have a highly sophisticated, novel, or idiosyncratic authentication flow not included in boto3-refresh-session then you will need to provide your own custom temporary credentials callable object. `RefreshableSession` accepts custom credentials callable objects, as shown below. For additional information on the exact parameters that `RefreshableSession` takes for custom authentication flows, [check this documentation](https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/custom.py).
 
   ```python
   # create (or import) your custom credential method
