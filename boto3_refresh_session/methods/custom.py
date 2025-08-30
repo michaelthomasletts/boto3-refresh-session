@@ -79,6 +79,8 @@ class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
 
         # initializing BRSSession
         super().__init__(refresh_method="custom", **kwargs)
+
+        # initializing various other attributes
         self._custom_get_credentials: CustomCredentialsMethod = (
             custom_credentials_method
         )
