@@ -1,12 +1,8 @@
-from __future__ import annotations
-
 __all__ = ["CustomRefreshableSession"]
 
-from typing import Any, Callable
-
 from ..exceptions import BRSError, BRSWarning
-from ..session import BaseRefreshableSession
 from ..utils import (
+    BaseRefreshableSession,
     CustomCredentialsMethod,
     CustomCredentialsMethodArgs,
     Identity,
@@ -83,6 +79,8 @@ class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
 
         # initializing BRSSession
         super().__init__(refresh_method="custom", **kwargs)
+
+        # initializing various other attributes
         self._custom_get_credentials: CustomCredentialsMethod = (
             custom_credentials_method
         )

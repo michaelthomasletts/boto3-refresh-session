@@ -1,13 +1,9 @@
-from __future__ import annotations
-
 __all__ = ["STSRefreshableSession"]
 
-from typing import Any
-
 from ..exceptions import BRSWarning
-from ..session import BaseRefreshableSession
 from ..utils import (
     AssumeRoleParams,
+    BaseRefreshableSession,
     Identity,
     STSClientParams,
     TemporaryCredentials,

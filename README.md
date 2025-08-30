@@ -92,17 +92,7 @@
 
 </div>
 
----
-
-## ⚠️ Important Update
-
-I am currently grappling with a serious medical condition that negatively impacts my vision. Accordingly, development of the `iot` and `ec2` modules has been delayed. Expect delayed responses to issues and pull requests until my health stabilizes. 
-
-Thank you for supporting this project. 
-
----
-
-## Features
+## :stuck_out_tongue: Features
 
 - Drop-in replacement for `boto3.session.Session`
 - Supports automatic credential refresh methods for various AWS services:
@@ -113,7 +103,21 @@ Thank you for supporting this project.
 - [Tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [documented](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/)
 - Future releases will include support for IoT (coming soon), EC2, and SSO
 
-## Recognition and Testimonials
+## ⚠️ Important Updates
+
+#### v3.0.0
+
+**The changes introdcued by v3.0.0 will not impact ~99% of users** who generally interact with `boto3-refresh-session` by only `RefreshableSession`, which is the intended usage for this package after all. 
+
+Advanced users, however, particularly those using low-level objects such as `BaseRefreshableSession | refreshable_session | BRSSession | utils.py`, may experience breaking changes. 
+
+Please review [this PR](https://github.com/michaelthomasletts/boto3-refresh-session/pull/75) for additional details.
+
+#### Delayed Responses
+
+I am currently grappling with a very serious medical condition. Accordingly, expect delayed responses to issues and requests until my health stabilizes.
+
+## :relieved: Recognition and Testimonials
 
 [Featured in TL;DR Sec.](https://tldrsec.com/p/tldr-sec-282)
 
@@ -125,13 +129,13 @@ A testimonial from a Cyber Security Engineer at a FAANG company:
 
 > _Most of my work is on tooling related to AWS security, so I'm pretty choosy about boto3 credentials-adjacent code. I often opt to just write this sort of thing myself so I at least know that I can reason about it. But I found boto3-refresh-session to be very clean and intuitive [...] We're using the RefreshableSession class as part of a client cache construct [...] We're using AWS Lambda to perform lots of operations across several regions in hundreds of accounts, over and over again, all day every day. And it turns out that there's a surprising amount of overhead to creating boto3 clients (mostly deserializing service definition json), so we can run MUCH more efficiently if we keep a cache of clients, all equipped with automatically refreshing sessions._
 
-## Installation
+## :computer: Installation
 
 ```bash
 pip install boto3-refresh-session
 ```
 
-## Usage
+## :pencil: Usage
 
 <details>
   <summary><strong>STS (click to expand)</strong></summary>
