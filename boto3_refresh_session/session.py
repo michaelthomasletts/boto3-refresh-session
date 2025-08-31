@@ -37,7 +37,6 @@ class RefreshableSession:
     --------
     boto3_refresh_session.methods.custom.CustomRefreshableSession
     boto3_refresh_session.methods.sts.STSRefreshableSession
-    boto3_refresh_session.methods.ecs.ECSRefreshableSession
     """
 
     def __new__(
@@ -60,7 +59,7 @@ class RefreshableSession:
         -------
         list[str]
             A list of all currently available credential refresh methods,
-            e.g. 'sts', 'ecs', 'custom'.
+            e.g. 'sts', 'custom'.
         """
 
         args = list(get_args(Method))
