@@ -25,7 +25,6 @@ Examples
 
 .. seealso::
     :class:`boto3_refresh_session.methods.custom.CustomRefreshableSession`
-    :class:`boto3_refresh_session.methods.ecs.ECSRefreshableSession`
     :class:`boto3_refresh_session.methods.sts.STSRefreshableSession`
 
 Factory interface

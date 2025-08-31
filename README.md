@@ -95,13 +95,11 @@
 ## 😛 Features
 
 - Drop-in replacement for `boto3.session.Session`
-- Supports automatic credential refresh methods for various AWS services:
-  - STS
-  - ECS
-- Supports custom authentication methods for complicated authentication flows
+- Supports automatic credential refresh methods for STS
+- Supports custom authentication methods with automatic refresh for complicated authentication flows
 - Natively supports all parameters supported by `boto3.session.Session`
 - [Tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [documented](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/)
-- Future releases will include support for IoT (coming soon), EC2, and SSO
+- Future releases will include support for IoT (coming soon)
 
 ## ⚠️ Important Updates
 
@@ -112,6 +110,10 @@
 Advanced users, however, particularly those using low-level objects such as `BaseRefreshableSession | refreshable_session | BRSSession | utils.py`, may experience breaking changes. 
 
 Please review [this PR](https://github.com/michaelthomasletts/boto3-refresh-session/pull/75) for additional details.
+
+#### ✂️ v4.0.0
+
+The `ecs` module has been dropped. For additional details and rationale, please review [this PR](https://github.com/michaelthomasletts/boto3-refresh-session/pull/78).
 
 #### ☎️ Delayed Responses
 
@@ -146,7 +148,7 @@ pip install boto3-refresh-session
 
   To use the `boto3.client` or `boto3.resource` interface, but with the benefits of `boto3-refresh-session`, you have a few options! 
   
-  In the following examples, let's assume you want to use STS for retrieving temporary credentials for the sake of simplicity. Let's also focus specifically on `client`. Switching to `resource` follows the same exact idioms as below, except that `client` must be switched to `resource` in the pseudo-code, obviously. If you are not sure how to use `RefreshableSession` for STS (or ECS or custom auth flows) then check the usage instructions in the following sections!
+  In the following examples, let's assume you want to use STS for retrieving temporary credentials for the sake of simplicity. Let's also focus specifically on `client`. Switching to `resource` follows the same exact idioms as below, except that `client` must be switched to `resource` in the pseudo-code, obviously. If you are not sure how to use `RefreshableSession` for STS (or custom auth flows) then check the usage instructions in the following sections!
 
   ##### `RefreshableSession.client` (Recommended)
 
@@ -237,24 +239,6 @@ pip install boto3-refresh-session
     assume_role_kwargs=assume_role_kwargs, # required
     sts_client_kwargs=sts_client_kwargs,
     region_name=region_name,
-    profile_name=profile_name,
-    ...
-  )
-  ```
-
-</details>
-
-<details>
-   <summary><strong>ECS (click to expand)</strong></summary>
-
-  ### ECS
-
-  You can use boto3-refresh-session in an ECS container to automatically refresh temporary security credentials. For additional information on the exact parameters that `RefreshableSession` takes for ECS, [check this documentation](https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/ecs.py).
-
-  ```python
-  session = RefreshableSession(
-    method="ecs", 
-    region_name=region_name, 
     profile_name=profile_name,
     ...
   )

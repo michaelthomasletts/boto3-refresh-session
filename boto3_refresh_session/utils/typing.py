@@ -38,7 +38,6 @@ IoTAuthenticationMethod = Literal["certificate", "cognito", "__iot_sentinel__"]
 #: Type alias for all currently available credential refresh methods.
 Method = Literal[
     "sts",
-    "ecs",
     "custom",
     "__sentinel__",
 ]  # TODO: Add iot when implemented
@@ -46,7 +45,6 @@ Method = Literal[
 #: Type alias for all refresh method names.
 RefreshMethod = Literal[
     "sts-assume-role",
-    "ecs-container-metadata",
     "custom",
 ]  # TODO: Add iot-certificate and iot-cognito when iot implemented
 
