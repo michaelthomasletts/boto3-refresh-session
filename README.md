@@ -111,6 +111,10 @@ Advanced users, however, particularly those using low-level objects such as `Bas
 
 Please review [this PR](https://github.com/michaelthomasletts/boto3-refresh-session/pull/75) for additional details.
 
+#### ✂️ v4.0.0
+
+The `ecs` module has been dropped. For additional details and rationale, please review [this PR](https://github.com/michaelthomasletts/boto3-refresh-session/pull/78).
+
 #### ☎️ Delayed Responses
 
 I am currently grappling with a very serious medical condition. Accordingly, expect delayed responses to issues and requests until my health stabilizes.
