@@ -95,8 +95,12 @@
 ## 😛 Features
 
 - Drop-in replacement for `boto3.session.Session`
-- Supports automatic credential refresh methods for STS
-- Supports custom authentication methods with automatic refresh for complicated authentication flows
+- Supports automatic credential refresh for the following AWS services: 
+  - **STS**
+  - **IoT Core** 
+    - X.509 certificates w/ role aliases over mTLS
+    - Supports PEM files and PKCS#11
+  - Custom authentication methods
 - Natively supports all parameters supported by `boto3.session.Session`
 - [Tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [documented](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/)
 - Future releases will include support for IoT (coming soon)
@@ -272,6 +276,59 @@ pip install boto3-refresh-session
       region_name=region_name,
       profile_name=profile_name,
       ...
+  )
+  ```
+
+</details>
+
+<details>
+  <summary><strong>IoT Core X.509 (click to expand)</strong></summary>
+
+  ### IoT Core X.509
+
+  AWS IoT Core can vend temporary AWS credentials through the **credentials provider** when you connect with an X.509 certificate and a **role alias**. `boto3-refresh-session` makes this flow seamless by automatically refreshing credentials over **mTLS**.
+
+  For additional information on the exact parameters that `IOTX509RefreshableSession` takes, [check this documentation](https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/iot/x509.py).
+
+  ### PEM file
+
+  ```python
+  import boto3_refresh_session as brs
+
+  # PEM certificate + private key example
+  session = brs.RefreshableSession(
+      method="iot",
+      endpoint="<your-credentials-endpoint>.credentials.iot.<region>.amazonaws.com",
+      role_alias="<your-role-alias>",
+      certificate="/path/to/certificate.pem",
+      private_key="/path/to/private-key.pem",
+      thing_name="<your-thing-name>",       # optional, if used in policies
+      duration_seconds=3600,                # optional, capped by role alias
+      region_name="us-east-1",
+  )
+
+  # Now you can use the session like any boto3 session
+  s3 = session.client("s3")
+  print(s3.list_buckets())
+  ```
+
+  ### PKCS#11
+
+  ```python
+  session = brs.RefreshableSession(
+      method="iot",
+      endpoint="<your-credentials-endpoint>.credentials.iot.<region>.amazonaws.com",
+      role_alias="<your-role-alias>",
+      certificate="/path/to/certificate.pem",
+      pkcs11={
+          "pkcs11_lib": "/usr/local/lib/softhsm/libsofthsm2.so",
+          "user_pin": "1234",
+          "slot_id": 0,
+          "token_label": "MyToken",
+          "private_key_label": "MyKey",
+      },
+      thing_name="<your-thing-name>",
+      region_name="us-east-1",
   )
   ```
 
