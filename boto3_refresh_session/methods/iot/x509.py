@@ -47,6 +47,10 @@ class IOTX509RefreshableSession(
         duration_seconds: int | None = None,
         **kwargs,
     ):
+        # initializing BRSSession
+        super().__init__(refresh_method="iot-x509", **kwargs)
+
+        # initializing public attributes
         self.endpoint = self._normalize_iot_credential_endpoint(
             endpoint=endpoint
         )
@@ -59,9 +63,6 @@ class IOTX509RefreshableSession(
         self.verify_peer = verify_peer
         self.timeout = 10.0 if timeout is None else timeout
         self.duration_seconds = duration_seconds
-
-        # initializing BRSSession
-        super().__init__(refresh_method="iot-x509", **kwargs)
 
         # loading X.509 certificate if presented as a string, which
         # is presumed to be the file path.
