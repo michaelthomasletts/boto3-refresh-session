@@ -118,11 +118,19 @@ class IOTX509RefreshableSession(
             if not self.pkcs11
             else self._mtls_pkcs11_client_connection(url=url, port=port)
         )
-        stream = connection.request(
-            request, response.on_response, response.on_body
-        )
-        stream.activate()
-        stream_completion_result = stream.completion_future.result(10)
+
+        try:
+            stream = connection.request(
+                request, response.on_response, response.on_body
+            )
+            stream.activate()
+            stream.completion_future.result(float(self.timeout))
+        finally:
+            try:
+                connection.close()
+            except Exception:
+                ...
+
         if response.status_code == 200:
             credentials = json.loads(response.body.decode("utf-8"))[
                 "credentials"
@@ -248,26 +256,17 @@ class IOTX509RefreshableSession(
         )
 
     @staticmethod
-    def _validate_pkcs11(pkcs11: PKCS11):
-        # verifying presence of pkcs11_lib in pkcs11
+    def _validate_pkcs11(pkcs11: PKCS11) -> PKCS11:
         if "pkcs11_lib" not in pkcs11:
             raise BRSError(
                 "PKCS#11 library path must be provided as 'pkcs11_lib' in 'pkcs11'."
             )
-
-        # verifying pkcs11_lib is a file path
         elif not Path(pkcs11["pkcs11_lib"]).expanduser().resolve().is_file():
             raise BRSError(
-                f"'{pkcs11['pkcs11_lib']}' is not a valid file path for 'pkcs11_lib' in "
-                "'pkcs11'."
+                f"'{pkcs11['pkcs11_lib']}' is not a valid file path for 'pkcs11_lib' in 'pkcs11'."
             )
-
-        # injecting None wherever a key is missing from pkcs11
-        if "user_pin" not in pkcs11:
-            pkcs11["user_pin"] = None
-        if "slot_id" not in pkcs11:
-            pkcs11["slot_id"] = None
-        if "token_label" not in pkcs11:
-            pkcs11["token_label"] = None
-        if "private_key_label" not in pkcs11:
-            pkcs11["private_key_label"] = None
+        pkcs11.setdefault("user_pin", None)
+        pkcs11.setdefault("slot_id", None)
+        pkcs11.setdefault("token_label", None)
+        pkcs11.setdefault("private_key_label", None)
+        return pkcs11
