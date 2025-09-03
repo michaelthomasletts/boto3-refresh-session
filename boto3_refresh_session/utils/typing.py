@@ -41,6 +41,7 @@ Method = Literal[
     "iot",
     "sts",
     "__sentinel__",
+    "__iot_sentinel__",
 ]
 
 #: Type alias for all refresh method names.
