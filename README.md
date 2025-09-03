@@ -99,7 +99,7 @@
   - **STS**
   - **IoT Core** 
     - X.509 certificates w/ role aliases over mTLS
-    - Supports PEM files and PKCS#11
+      - Supports PEM files and PKCS#11
   - Custom authentication methods
 - Natively supports all parameters supported by `boto3.session.Session`
 - [Tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [documented](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/)
