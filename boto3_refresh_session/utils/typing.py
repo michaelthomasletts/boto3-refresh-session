@@ -138,7 +138,7 @@ class STSClientParams(TypedDict):
 
 
 class PKCS11(TypedDict):
-    pkcs11_loc: str
+    pkcs11_lib: str
     user_pin: NotRequired[str]
     slot_id: NotRequired[int]
     token_label: NotRequired[str | None]

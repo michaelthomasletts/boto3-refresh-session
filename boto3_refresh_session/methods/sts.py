@@ -45,7 +45,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
         **kwargs,
     ):
         if "refresh_method" in kwargs:
-            BRSWarning(
+            BRSWarning.warn(
                 "'refresh_method' cannot be set manually. "
                 "Reverting to 'sts-assume-role'."
             )
@@ -60,7 +60,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
         if sts_client_kwargs is not None:
             # overwriting 'service_name' if if appears in sts_client_kwargs
             if "service_name" in sts_client_kwargs:
-                BRSWarning(
+                BRSWarning.warn(
                     "'sts_client_kwargs' cannot contain values for "
                     "'service_name'. Reverting to service_name = 'sts'."
                 )
