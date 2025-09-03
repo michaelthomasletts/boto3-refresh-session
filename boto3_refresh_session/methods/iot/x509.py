@@ -1,18 +1,20 @@
-__all__ = ["IoTCertificateRefreshableSession"]
+__all__ = ["IoTX509RefreshableSession"]
 
 from pathlib import Path
-from typing import Any
 
 from ...exceptions import BRSError
 from ...utils import (
-    Identity, PKCS11, TemporaryCredentials, refreshable_session
+    Identity,
+    PKCS11,
+    TemporaryCredentials,
+    refreshable_session,
 )
 from .core import BaseIoTRefreshableSession
 
 
 @refreshable_session
-class IoTCertificateRefreshableSession(
-    BaseIoTRefreshableSession, registry_key="certificate"
+class IoTX509RefreshableSession(
+    BaseIoTRefreshableSession, registry_key="x509"
 ):
     def __init__(
         self,

@@ -1,4 +1,5 @@
 __all__ = [
+    "BaseIoTRefreshableSession",
     "BaseRefreshableSession",
     "BRSSession",
     "CredentialProvider",
@@ -19,6 +20,7 @@ from botocore.credentials import (
 from ..exceptions import BRSWarning
 from .typing import (
     Identity,
+    IoTAuthenticationMethod,
     Method,
     RefreshableTemporaryCredentials,
     RefreshMethod,
@@ -200,5 +202,15 @@ class BaseRefreshableSession(
         Class-level registry mapping method names to registered session types.
     """
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+class BaseIoTRefreshableSession(
+    Registry[IoTAuthenticationMethod],
+    CredentialProvider,
+    BRSSession,
+    registry_key="__iot_sentinel__",
+):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
