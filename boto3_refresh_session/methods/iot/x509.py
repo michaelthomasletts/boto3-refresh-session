@@ -382,6 +382,8 @@ class IOTX509RefreshableSession(
     ) -> Connection:
         """Establishes an MQTT connection using the specified parameters.
 
+        .. versionadded:: 5.1.0
+
         Parameters
         ----------
         endpoint: str
@@ -390,30 +392,30 @@ class IOTX509RefreshableSession(
             The client ID to use for the MQTT connection.
         transport: Transport
             The transport protocol to use (e.g., "x509" or "ws").
-        certificate: str | bytes | None
+        certificate: str | bytes | None, optional
             The client certificate to use for the connection. Defaults to the
             session certificate.
-        private_key: str | bytes | None
+        private_key: str | bytes | None, optional
             The private key to use for the connection. Defaults to the
             session private key.
-        ca: str | bytes | None
+        ca: str | bytes | None, optional
             The CA certificate to use for the connection. Defaults to the
             session CA certificate.
-        pkcs11: PKCS11 | None
+        pkcs11: PKCS11 | None, optional
             PKCS#11 configuration for hardware-backed keys. Defaults to the
             session PKCS#11 configuration.
-        region: str | None
+        region: str | None, optional
             The AWS region to use for the connection. Defaults to the
             session region.
-        keep_alive_secs: int
+        keep_alive_secs: int, optional
             The keep-alive interval for the MQTT connection. Default is 60
             seconds.
-        clean_start: bool
+        clean_start: bool, optional
             Whether to start a clean session. Default is True.
-        port: int | None
+        port: int | None, optional
             The port to use for the MQTT connection. Default is 8883 if not
             using ALPN, otherwise 443.
-        use_alpn: bool
+        use_alpn: bool, optional
             Whether to use ALPN for the connection. Default is False.
 
         Returns
