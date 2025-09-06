@@ -104,28 +104,6 @@
 - [Tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [documented](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/)
 - Future releases will include support for IoT (coming soon)
 
-## ⚠️ Important Updates
-
-#### 😥 v3.0.0
-
-**The changes introduced by v3.0.0 will not impact ~99% of users** who generally interact with `boto3-refresh-session` by only `RefreshableSession`, *which is the intended usage for this package after all.* 
-
-Advanced users, however, particularly those using low-level objects such as `BaseRefreshableSession | refreshable_session | BRSSession | utils.py`, may experience breaking changes. 
-
-Please review [this PR](https://github.com/michaelthomasletts/boto3-refresh-session/pull/75) for additional details.
-
-#### ✂️ v4.0.0
-
-The `ecs` module has been dropped. For additional details and rationale, please review [this PR](https://github.com/michaelthomasletts/boto3-refresh-session/pull/78).
-
-#### 😛 v5.0.0
-
-Support for IoT Core via X.509 certificate-based authentication (over HTTPS) is now available!
-
-#### ☎️ Delayed Responses
-
-I am currently grappling with a very serious medical condition. Accordingly, expect delayed responses to issues and requests until my health stabilizes.
-
 ## 😌 Recognition and Testimonials
 
 [Featured in TL;DR Sec.](https://tldrsec.com/p/tldr-sec-282)
@@ -336,3 +314,21 @@ pip install boto3-refresh-session
   ```
 
 </details>
+
+## ⚠️ Changes
+
+#### 😥 v3.0.0
+
+**The changes introduced by v3.0.0 will not impact ~99% of users** who generally interact with `boto3-refresh-session` by only `RefreshableSession`, *which is the intended usage for this package after all.* 
+
+Advanced users, however, particularly those using low-level objects such as `BaseRefreshableSession | refreshable_session | BRSSession | utils.py`, may experience breaking changes. 
+
+Please review [this PR](https://github.com/michaelthomasletts/boto3-refresh-session/pull/75) for additional details.
+
+#### ✂️ v4.0.0
+
+The `ecs` module has been dropped. For additional details and rationale, please review [this PR](https://github.com/michaelthomasletts/boto3-refresh-session/pull/78).
+
+#### 😛 v5.0.0
+
+Support for IoT Core via X.509 certificate-based authentication (over HTTPS) is now available!
