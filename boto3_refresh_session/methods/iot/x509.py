@@ -16,9 +16,11 @@ from awscrt.io import (
     ClientTlsContext,
     DefaultHostResolver,
     EventLoopGroup,
+    LogLevel,
     Pkcs11Lib,
     TlsConnectionOptions,
     TlsContextOptions,
+    init_logging,
 )
 from awscrt.mqtt import Connection
 from awsiot import mqtt_connection_builder
@@ -79,6 +81,9 @@ class IOTX509RefreshableSession(
         The duration for which the temporary credentials are valid, in
         seconds. Cannot exceed the value declared in the IAM policy.
         Default is None.
+    awscrt_log_level : awscrt.LogLevel | None, optional
+        The logging level for the AWS CRT library, e.g.
+        ``awscrt.LogLevel.INFO``. Default is None.
 
     Notes
     -----
@@ -98,10 +103,15 @@ class IOTX509RefreshableSession(
         verify_peer: bool = True,
         timeout: float | int | None = None,
         duration_seconds: int | None = None,
+        awscrt_log_level: LogLevel | None = None,
         **kwargs,
     ):
         # initializing BRSSession
         super().__init__(refresh_method="iot-x509", **kwargs)
+
+        # logging
+        if awscrt_log_level:
+            init_logging(log_level=awscrt_log_level, file_name="stdout")
 
         # initializing public attributes
         self.endpoint = self._normalize_iot_credential_endpoint(
