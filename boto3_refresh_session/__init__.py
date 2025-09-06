@@ -3,6 +3,7 @@ __all__ = []
 from . import exceptions, session
 from .exceptions import *
 from .methods.custom import *
+from .methods.iot import *
 from .methods.sts import *
 from .session import *
 

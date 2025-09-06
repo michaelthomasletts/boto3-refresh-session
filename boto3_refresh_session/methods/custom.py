@@ -71,7 +71,7 @@ class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
         **kwargs,
     ):
         if "refresh_method" in kwargs:
-            BRSWarning(
+            BRSWarning.warn(
                 "'refresh_method' cannot be set manually. "
                 "Reverting to 'custom'."
             )

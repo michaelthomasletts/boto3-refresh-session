@@ -6,28 +6,16 @@ from typing import get_args
 
 from ...exceptions import BRSError
 from ...utils import (
-    BaseRefreshableSession, 
-    BRSSession,
-    CredentialProvider, 
-    IoTAuthenticationMethod, 
-    Registry,
+    BaseIoTRefreshableSession,
+    BaseRefreshableSession,
+    IoTAuthenticationMethod,
 )
-
-
-class BaseIoTRefreshableSession(
-    Registry[IoTAuthenticationMethod],
-    CredentialProvider,
-    BRSSession,
-    registry_key="__iot_sentinel__",
-):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
 
 
 class IoTRefreshableSession(BaseRefreshableSession, registry_key="iot"):
     def __new__(
         cls,
-        authentication_method: IoTAuthenticationMethod = "certificate",
+        authentication_method: IoTAuthenticationMethod = "x509",
         **kwargs,
     ) -> BaseIoTRefreshableSession:
         if authentication_method not in (

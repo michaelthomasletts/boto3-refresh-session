@@ -36,6 +36,7 @@ class RefreshableSession:
     See Also
     --------
     boto3_refresh_session.methods.custom.CustomRefreshableSession
+    boto3_refresh_session.methods.iot.IOTX509RefreshableSession
     boto3_refresh_session.methods.sts.STSRefreshableSession
     """
 

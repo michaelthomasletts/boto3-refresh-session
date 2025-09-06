@@ -1,10 +1,10 @@
 __all__ = []
 
-# TODO: import iot submodules when finished
-from . import custom, sts
-from .custom import CustomRefreshableSession
-from .sts import STSRefreshableSession
+from . import custom, iot, sts
+from .custom import *
+from .iot import *
+from .sts import *
 
-# TODO: add iot submodules to __all__ when finished
 __all__.extend(custom.__all__)
+__all__.extend(iot.__all__)
 __all__.extend(sts.__all__)

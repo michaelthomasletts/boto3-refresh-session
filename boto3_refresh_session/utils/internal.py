@@ -1,4 +1,6 @@
 __all__ = [
+    "AWSCRTResponse",
+    "BaseIoTRefreshableSession",
     "BaseRefreshableSession",
     "BRSSession",
     "CredentialProvider",
@@ -10,6 +12,7 @@ from abc import ABC, abstractmethod
 from functools import wraps
 from typing import Any, Callable, ClassVar, Generic, TypeVar, cast
 
+from awscrt.http import HttpHeaders
 from boto3.session import Session
 from botocore.credentials import (
     DeferredRefreshableCredentials,
@@ -19,6 +22,7 @@ from botocore.credentials import (
 from ..exceptions import BRSWarning
 from .typing import (
     Identity,
+    IoTAuthenticationMethod,
     Method,
     RefreshableTemporaryCredentials,
     RefreshMethod,
@@ -46,7 +50,9 @@ class Registry(Generic[RegistryKey]):
         super().__init_subclass__(**kwargs)
 
         if registry_key in cls.registry:
-            BRSWarning(f"{registry_key!r} already registered. Overwriting.")
+            BRSWarning.warn(
+                f"{registry_key!r} already registered. Overwriting."
+            )
 
         if "sentinel" not in registry_key:
             cls.registry[registry_key] = cls
@@ -202,3 +208,35 @@ class BaseRefreshableSession(
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+
+class BaseIoTRefreshableSession(
+    Registry[IoTAuthenticationMethod],
+    CredentialProvider,
+    BRSSession,
+    registry_key="__iot_sentinel__",
+):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+class AWSCRTResponse:
+    """Lightweight response collector for awscrt HTTP."""
+
+    def __init__(self):
+        """Initialize to default for when callbacks are called."""
+
+        self.status_code = None
+        self.headers = None
+        self.body = bytearray()
+
+    def on_response(self, http_stream, status_code, headers, **kwargs):
+        """Process awscrt.io response."""
+
+        self.status_code = status_code
+        self.headers = HttpHeaders(headers)
+
+    def on_body(self, http_stream, chunk, **kwargs):
+        """Process awscrt.io body."""
+
+        self.body.extend(chunk)
