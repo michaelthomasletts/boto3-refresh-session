@@ -318,6 +318,8 @@ pip install boto3-refresh-session
 
 ## ⚠️ Changes
 
+Browse through the various changes to `boto3-refresh-session` over time.
+
 #### 😥 v3.0.0
 
 **The changes introduced by v3.0.0 will not impact ~99% of users** who generally interact with `boto3-refresh-session` by only `RefreshableSession`, *which is the intended usage for this package after all.* 
