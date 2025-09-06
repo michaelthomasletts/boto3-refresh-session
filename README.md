@@ -99,6 +99,7 @@
   - **STS**
   - **IoT Core** 
     - X.509 certificates w/ role aliases over mTLS (PEM files and PKCS#11)
+    - MQTT actions are available!
   - Custom authentication methods
 - Natively supports all parameters supported by `boto3.session.Session`
 - [Tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [documented](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/)
