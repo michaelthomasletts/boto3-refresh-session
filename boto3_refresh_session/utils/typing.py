@@ -13,6 +13,7 @@ __all__ = [
     "STSClientParams",
     "TemporaryCredentials",
     "RefreshableTemporaryCredentials",
+    "Transport",
 ]
 
 from datetime import datetime
@@ -56,6 +57,9 @@ RegistryKey = TypeVar("RegistryKey", bound=str)
 
 #: Type alias for values returned by get_identity
 Identity: TypeAlias = dict[str, Any]
+
+#: Type alias for acceptable transports
+Transport: TypeAlias = Literal["x509", "ws"]
 
 
 class TemporaryCredentials(TypedDict):

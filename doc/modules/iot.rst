@@ -7,8 +7,8 @@ boto3_refresh_session.methods.iot
 
 This module currently only supports X.509 certificate based authentication for retrieving 
 temporary security credentials from the AWS IoT credentials provider (backed by STS). 
-In the future, this module may support additional authentication methods, like Cognito, 
-as well as additional protocols / transports like MQTT.
+In the future, this module may support additional authentication methods like Cognito.
+MQTT actions are available!
 
 .. versionadded:: 5.0.0
 
@@ -30,6 +30,18 @@ the location of those files on disk.
 >>>     ca="<CA file location>.pem",
 >>>     ...
 >>> )
+
+You may also interact with MQTT actions using this session!
+
+>>> from awscrt.mqtt.QoS import AT_LEAST_ONCE
+>>> conn = session.mqtt(
+>>>     endpoint="<your endpoint>-ats.iot.<region>.amazonaws.com",
+>>>     client_id="<your thing name or client ID>",
+>>> )
+>>> conn.connect()
+>>> conn.connect().result()
+>>> conn.publish(topic="foo/bar", payload=b"hi", qos=AT_LEAST_ONCE)
+>>> conn.disconnect().result()
 
 .. seealso::
    :class:`boto3_refresh_session.session.RefreshableSession`

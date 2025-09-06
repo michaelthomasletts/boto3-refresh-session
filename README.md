@@ -99,6 +99,7 @@
   - **STS**
   - **IoT Core** 
     - X.509 certificates w/ role aliases over mTLS (PEM files and PKCS#11)
+    - MQTT actions are available!
   - Custom authentication methods
 - Natively supports all parameters supported by `boto3.session.Session`
 - [Tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [documented](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/)
@@ -317,6 +318,8 @@ pip install boto3-refresh-session
 
 ## ⚠️ Changes
 
+Browse through the various changes to `boto3-refresh-session` over time.
+
 #### 😥 v3.0.0
 
 **The changes introduced by v3.0.0 will not impact ~99% of users** who generally interact with `boto3-refresh-session` by only `RefreshableSession`, *which is the intended usage for this package after all.* 
@@ -332,3 +335,7 @@ The `ecs` module has been dropped. For additional details and rationale, please 
 #### 😛 v5.0.0
 
 Support for IoT Core via X.509 certificate-based authentication (over HTTPS) is now available!
+
+#### ➕ v5.1.0
+
+MQTT support added for IoT Core via X.509 certificate-based authentication.
