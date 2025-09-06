@@ -333,3 +333,7 @@ The `ecs` module has been dropped. For additional details and rationale, please 
 #### 😛 v5.0.0
 
 Support for IoT Core via X.509 certificate-based authentication (over HTTPS) is now available!
+
+#### ➕ v5.1.0
+
+MQTT support added for IoT Core via X.509 certificate-based authentication.
