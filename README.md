@@ -314,6 +314,22 @@ pip install boto3-refresh-session
   )
   ```
 
+  ### MQTT
+
+  After initializing a session object, you can can begin making actions with MQTT using the [mqtt method](https://github.com/michaelthomasletts/boto3-refresh-session/blob/deb68222925bf648f26e878ed4bc24b45317c7db/boto3_refresh_session/methods/iot/x509.py#L367)! You can reuse the same certificate, private key, et al as that used to initialize `RefreshableSession`. Or, alternatively, you can provide separate PKCS#11 or certificate information, whether those be file paths or bytes values. Either way, at a minimum, you will need to provide the endpoint and client identifier (i.e. thing name).
+
+  ```python
+  from awscrt.mqtt.QoS import AT_LEAST_ONCE
+  conn = session.mqtt(
+    endpoint="<your endpoint>-ats.iot.<region>.amazonaws.com",
+    client_id="<your thing name or client ID>",
+  )
+  conn.connect()
+  conn.connect().result()
+  conn.publish(topic="foo/bar", payload=b"hi", qos=AT_LEAST_ONCE)
+  conn.disconnect().result()
+  ```
+
 </details>
 
 ## ⚠️ Changes
