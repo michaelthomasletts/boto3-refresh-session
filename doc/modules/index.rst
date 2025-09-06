@@ -17,6 +17,7 @@ boto3-refresh-session includes multiple modules, grouped into two categories:
    exceptions
    session
    custom
+   iot
    sts
 
 Core interface
@@ -47,6 +48,7 @@ There is also a highly flexible module named "custom" for users with highly soph
 Each strategy supported by boto3-refresh-session is encapsulated in its own module below.
 
 - :ref:`custom` - Refresh strategy using a custom credential refresh strategy
+- :ref:`iot` - Refresh strategies for IoT Core
 - :ref:`sts` — Refresh strategy using :class:`STS.Client`
 
 Exceptions and Warnings

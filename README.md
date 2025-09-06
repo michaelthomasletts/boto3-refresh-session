@@ -95,11 +95,10 @@
 ## 😛 Features
 
 - Drop-in replacement for `boto3.session.Session`
-- Supports automatic credential refresh for the following AWS services: 
+- Supports automatic credential refresh for: 
   - **STS**
   - **IoT Core** 
-    - X.509 certificates w/ role aliases over mTLS
-      - Supports PEM files and PKCS#11
+    - X.509 certificates w/ role aliases over mTLS (PEM files and PKCS#11)
   - Custom authentication methods
 - Natively supports all parameters supported by `boto3.session.Session`
 - [Tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [documented](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/)
@@ -118,6 +117,10 @@ Please review [this PR](https://github.com/michaelthomasletts/boto3-refresh-sess
 #### ✂️ v4.0.0
 
 The `ecs` module has been dropped. For additional details and rationale, please review [this PR](https://github.com/michaelthomasletts/boto3-refresh-session/pull/78).
+
+#### 😛 v5.0.0
+
+Support for IoT Core via X.509 certificate-based authentication (over HTTPS) is now available!
 
 #### ☎️ Delayed Responses
 

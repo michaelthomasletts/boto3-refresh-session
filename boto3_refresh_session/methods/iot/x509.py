@@ -33,6 +33,51 @@ from .core import BaseIoTRefreshableSession
 class IOTX509RefreshableSession(
     BaseIoTRefreshableSession, registry_key="x509"
 ):
+    """A :class:`boto3.session.Session` object that automatically refreshes
+    temporary credentials returned by the IoT Core credential provider.
+
+    Parameters
+    ----------
+    endpoint : str
+        The endpoint URL for the IoT Core credential provider. Must contain
+        '.credentials.iot.'.
+    role_alias : str
+        The IAM role alias to use when requesting temporary credentials.
+    certificate : str | bytes
+        The X.509 certificate to use when requesting temporary credentials.
+        ``str`` represents the file path to the certificate, while ``bytes``
+        represents the actual certificate data.
+    thing_name : str, optional
+        The name of the IoT thing to use when requesting temporary
+        credentials. Default is None.
+    private_key : str | bytes | None, optional
+        The private key to use when requesting temporary credentials. ``str``
+        represents the file path to the private key, while ``bytes``
+        represents the actual private key data. Optional only if ``pkcs11``
+        is provided. Default is None.
+    pkcs11 : PKCS11, optional
+        The PKCS#11 library to use when requesting temporary credentials. If
+        provided, ``private_key`` must be None.
+    ca : str | bytes | None, optional
+        The CA certificate to use when verifying the IoT Core endpoint. ``str``
+        represents the file path to the CA certificate, while ``bytes``
+        represents the actual CA certificate data. Default is None.
+    verify_peer : bool, optional
+        Whether to verify the CA certificate when establishing the TLS
+        connection. Default is True.
+    timeout : float | int | None, optional
+        The timeout for the TLS connection in seconds. Default is 10.0.
+    duration_seconds : int | None, optional
+        The duration for which the temporary credentials are valid, in
+        seconds. Cannot exceed the value declared in the IAM policy.
+        Default is None.
+
+    Notes
+    -----
+    Gavin Adams at AWS was a major influence on this implementation.
+    Thank you, Gavin!
+    """
+
     def __init__(
         self,
         endpoint: str,
@@ -41,7 +86,7 @@ class IOTX509RefreshableSession(
         thing_name: str | None = None,
         private_key: str | bytes | None = None,
         pkcs11: PKCS11 | None = None,
-        ca: bytes | None = None,
+        ca: str | bytes | None = None,
         verify_peer: bool = True,
         timeout: float | int | None = None,
         duration_seconds: int | None = None,
@@ -69,10 +114,9 @@ class IOTX509RefreshableSession(
         # if presented as bytes then self.certificate is presumed to be
         # the actual certificate itself
         if self.certificate and isinstance(self.certificate, str):
-            with open(
-                Path(self.certificate).expanduser().resolve(), "rb"
-            ) as cert_pem_file:
-                self.certificate = cert_pem_file.read()
+            self.certificate = (
+                Path(self.certificate).expanduser().resolve().read_bytes()
+            )
 
         # either private_key or pkcs11 must be provided
         if self.private_key is None and self.pkcs11 is None:
@@ -90,18 +134,22 @@ class IOTX509RefreshableSession(
         # the actual private key. but if it's string then it's presumed
         # to be the file path
         if self.private_key and isinstance(self.private_key, str):
-            with open(
-                Path(self.private_key).expanduser().resolve(), "rb"
-            ) as private_key_pem_file:
-                self.private_key = private_key_pem_file.read()
+            self.private_key = (
+                Path(self.private_key).expanduser().resolve().read_bytes()
+            )
 
         # verifying PKCS#11 dict
         if self.pkcs11:
             self.pkcs11 = self._validate_pkcs11(pkcs11=self.pkcs11)
 
+        # ca is like many other attributes in that str implies file location
+        if self.ca and isinstance(self.ca, str):
+            self.ca = Path(self.ca).expanduser().resolve().read_bytes()
+
     def _get_credentials(self) -> TemporaryCredentials:
         url = urlparse(
-            f"https://{self.endpoint}/role-aliases/{self.role_alias}/credentials"
+            f"https://{self.endpoint}/role-aliases/{self.role_alias}"
+            "/credentials"
         )
         request = HttpRequest("GET", url.path)
         request.headers.add("host", str(url.hostname))
@@ -144,7 +192,8 @@ class IOTX509RefreshableSession(
             }
         else:
             raise BRSError(
-                f"Error '{stream_completion_result}' getting credentials: {json.loads(response.body.decode())}"
+                "Error getting credentials: "
+                f"{json.loads(response.body.decode())}"
             )
 
     def _mtls_client_connection(
@@ -181,7 +230,8 @@ class IOTX509RefreshableSession(
             return connection_future.result(self.timeout)
         except AwsCrtError as err:
             raise BRSError(
-                f"Error completing mTLS connection to endpoint '{url.hostname}'"
+                "Error completing mTLS connection to endpoint "
+                f"'{url.hostname}'"
             ) from err
 
     def _mtls_pkcs11_client_connection(
@@ -207,17 +257,19 @@ class IOTX509RefreshableSession(
             slot_id=self.pkcs11["slot_id"],
             token_label=self.pkcs11["token_label"],
             private_key_label=self.pkcs11["private_key_label"],
-            cert_file_path=None,
             cert_file_contents=self.certificate,
         )
+
         if self.ca:
             tls_ctx_opt.override_default_trust_store(self.ca)
+
         tls_ctx_opt.verify_peer = self.verify_peer
         tls_ctx = ClientTlsContext(tls_ctx_opt)
         tls_conn_opt: TlsConnectionOptions = cast(
             TlsConnectionOptions, tls_ctx.new_connection_options()
         )
         tls_conn_opt.set_server_name(str(url.hostname))
+
         try:
             connection_future = HttpClientConnection.new(
                 host_name=str(url.hostname),
@@ -227,9 +279,18 @@ class IOTX509RefreshableSession(
             )
             return connection_future.result(self.timeout)
         except AwsCrtError as err:
-            raise BRSError(f"Error completing mTLS connection.") from err
+            raise BRSError("Error completing mTLS connection.") from err
 
-    def get_identity(self) -> Identity: ...
+    def get_identity(self) -> Identity:
+        """Returns metadata about the current caller identity.
+
+        Returns
+        -------
+        Identity
+            Dict containing information about the current calleridentity.
+        """
+
+        return self.client("sts").get_caller_identity()
 
     @staticmethod
     def _normalize_iot_credential_endpoint(endpoint: str) -> str:
@@ -246,8 +307,8 @@ class IOTX509RefreshableSession(
             BRSWarning.warn(
                 "The 'endpoint' parameter you provided represents the data "
                 "endpoint for IoT not the credentials endpoint! The endpoint "
-                f"you provided was therefore modified from '{logged_data_endpoint}' -> "
-                f"'{logged_credential_endpoint}'"
+                "you provided was therefore modified from "
+                f"'{logged_data_endpoint}' -> '{logged_credential_endpoint}'"
             )
             return endpoint
 
@@ -260,11 +321,13 @@ class IOTX509RefreshableSession(
     def _validate_pkcs11(pkcs11: PKCS11) -> PKCS11:
         if "pkcs11_lib" not in pkcs11:
             raise BRSError(
-                "PKCS#11 library path must be provided as 'pkcs11_lib' in 'pkcs11'."
+                "PKCS#11 library path must be provided as 'pkcs11_lib'"
+                " in 'pkcs11'."
             )
         elif not Path(pkcs11["pkcs11_lib"]).expanduser().resolve().is_file():
             raise BRSError(
-                f"'{pkcs11['pkcs11_lib']}' is not a valid file path for 'pkcs11_lib' in 'pkcs11'."
+                f"'{pkcs11['pkcs11_lib']}' is not a valid file path for "
+                "'pkcs11_lib' in 'pkcs11'."
             )
         pkcs11.setdefault("user_pin", None)
         pkcs11.setdefault("slot_id", None)
