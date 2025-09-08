@@ -76,10 +76,10 @@
     />
   </a>
 
-  <a href="https://medium.com/@lettsmt/you-shouldnt-have-to-think-about-refreshing-aws-credentials-214f7cbbd83b">
+  <a href="https://michaelthomasletts.github.io/blog/brs-rationale/">
     <img 
-      src="https://img.shields.io/badge/Medium%20Article-📘-FF0000?style=flat&labelColor=555&logo=readthedocs" 
-      alt="medium"
+      src="https://img.shields.io/badge/Blog%20Post-📘-FF0000?style=flat&labelColor=555&logo=readthedocs" 
+      alt="blog"
     />
   </a>
 
