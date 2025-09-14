@@ -140,6 +140,8 @@ pip install boto3-refresh-session
 
   5. Irrespective of whatever `method` you pass as a keyword parameter, `RefreshableSession` accepts a keyword parameter named `defer_refresh`. Basically, this boolean tells `boto3-refresh-session` either to refresh credentials *the moment they expire* or to *wait until credentials are explicitly needed*. If you are working in a low-latency environment then `defer_refresh = False` might be helpful. For most users, however, `defer_refresh = True` is most desirable. For that reason, `defer_refresh = True` is the default value. Most users, therefore, should not concern themselves too much with this feature.
 
+  6. Some developers struggle to imagine where `boto3-refresh-session` might be helpful. To figure out if `boto3-refresh-session` is for your use case, or whether `credential_process` satisfies your needs, check out [this blog post](https://michaelthomasletts.com/blog/brs-rationale/). `boto3-refresh-session` is not for every developer or use-case; it is a niche tool. 
+
 </details>
 
 <details>
