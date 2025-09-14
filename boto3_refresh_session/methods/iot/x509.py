@@ -85,6 +85,12 @@ class IOTX509RefreshableSession(
         The logging level for the AWS CRT library, e.g.
         ``awscrt.LogLevel.INFO``. Default is None.
 
+    Other Parameters
+    ----------------
+    kwargs : dict, optional
+        Optional keyword arguments for the :class:`boto3.session.Session`
+        object.
+
     Notes
     -----
     Gavin Adams at AWS was a major influence on this implementation.
