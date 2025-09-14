@@ -126,6 +126,23 @@ pip install boto3-refresh-session
 ## 📝 Usage
 
 <details>
+  <summary><strong>Core Concepts (click to expand)</strong></summary>
+
+  ### Core Concepts
+
+  1. `RefreshableSession` is the intended interface for using `boto3-refresh-session`. Whether you're using this package to refresh temporary credentials returned by STS, the IoT credential provider (which is really just STS, but I digress), or some custom authentication or credential provider, `RefreshableSession` is where you *ought to* be working when using `boto3-refresh-session`.
+
+  2. *You can use all of the same keyword parameters normally associated with `boto3.session.Session`!* For instance, suppose you want to pass `region_name` to `RefreshableSession` as a parameter, whereby it's passed to `boto3.session.Session`. That's perfectly fine! Just pass it like you normally would when initializing `boto3.session.Session`. These keyword parameters are *completely optional*, though. If you're confused, the main idea to remember is this: if initializing `boto3.session.Session` *requires* a particular keyword parameter then pass it to `RefreshableSession`; if not, don't worry about it.
+
+  3. To tell `RefreshableSession` which AWS service you're working with for authentication and credential retrieval purposes (STS vs. IoT vs. some custom credential provider), you'll need to pass a `method` parameter to `RefreshableSession`. Since the `service_name` namespace is already occupied by `boto3.sesssion.Session`, [`boto3-refresh-session` uses `method` instead of "service" so as to avoid confusion](https://github.com/michaelthomasletts/boto3-refresh-session/blob/04acb2adb34e505c4dc95711f6b2f97748a2a489/boto3_refresh_session/utils/typing.py#L40). If you're using `RefreshableSession` for STS, however, then `method` is set to `"sts"` by default. You don't need to pass the `method` keyword argument in that case.
+
+  4. Using `RefreshableSession` for STS, IoT, or custom flows requires different keyword parameters that are unique to those particular methods. For instance, `STSRefreshableSession`, which is the engine for STS in `boto3-refresh-session`, requires `assume_role_kwargs` and optionally allows `sts_client_kwargs` whereas `CustomRefreshableSession` and `IoTX509RefreshableSession` do not. To familiarize yourself with the keyword parameters for each method, check the documentation for each of those engines [in the Refresh Strategies section here](https://michaelthomasletts.com/boto3-refresh-session/modules/index.html).
+
+  5. Irrespective of whatever `method` you pass as a keyword parameter, `RefreshableSession` accepts a keyword parameter named `defer_refresh`. Basically, this boolean tells `boto3-refresh-session` either to refresh credentials *the moment they expire* or to *wait until credentials are explicitly needed*. If you are working in a low-latency environment then `defer_refresh = False` might be helpful. For most users, however, `defer_refresh = True` is most desirable. For that reason, `defer_refresh = True` is the default value. Most users, therefore, should not concern themselves too much with this feature.
+
+</details>
+
+<details>
   <summary><strong>Clients and Resources (click to expand)</strong></summary>
 
   ### Clients and Resources
@@ -201,12 +218,12 @@ pip install boto3-refresh-session
   ```python
   import boto3_refresh_session as brs
 
-  # you can pass all of the params normally associated with boto3.session.Session
+  # OPTIONAL - you can pass all of the params normally associated with boto3.session.Session
   profile_name = "<your-profile-name>"
   region_name = "us-east-1"
   ...
 
-  # as well as all of the params associated with STS.Client.assume_role
+  # REQUIRED - as well as all of the params associated with STS.Client.assume_role
   assume_role_kwargs = {
     "RoleArn": "<your-role-arn>",
     "RoleSessionName": "<your-role-session-name>",
@@ -214,7 +231,7 @@ pip install boto3-refresh-session
     ...
   }
 
-  # as well as all of the params associated with STS.Client, except for 'service_name'
+  # OPTIONAL - as well as all of the params associated with STS.Client, except for 'service_name'
   sts_client_kwargs = {
     "region_name": region_name,
     ...
@@ -223,10 +240,10 @@ pip install boto3-refresh-session
   # basic initialization of boto3.session.Session
   session = brs.RefreshableSession(
     assume_role_kwargs=assume_role_kwargs, # required
-    sts_client_kwargs=sts_client_kwargs,
-    region_name=region_name,
-    profile_name=profile_name,
-    ...
+    sts_client_kwargs=sts_client_kwargs,   # optional
+    region_name=region_name,               # optional
+    profile_name=profile_name,             # optional
+    ...                                    # misc. params for boto3.session.Session
   )
   ```
 
@@ -252,12 +269,12 @@ pip install boto3-refresh-session
 
   # and pass it to RefreshableSession
   session = RefreshableSession(
-      method="custom",
-      custom_credentials_method=your_custom_credential_getter,
-      custom_credentials_method_args=...,
-      region_name=region_name,
-      profile_name=profile_name,
-      ...
+      method="custom",                                         # required
+      custom_credentials_method=your_custom_credential_getter, # required
+      custom_credentials_method_args=...,                      # optional
+      region_name=region_name,                                 # optional
+      profile_name=profile_name,                               # optional
+      ...                                                      # misc. params for boto3.session.Session
   )
   ```
 
