@@ -215,7 +215,7 @@ pip install boto3-refresh-session
 
   ### STS
 
-  Most developers use AWS STS to assume an IAM role and return a set of temporary security credentials. boto3-refresh-session can be used to ensure those temporary credentials refresh automatically. For additional information on the exact parameters that `RefreshableSession` takes for STS, [check this documentation](https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/sts.py).
+  Most developers use AWS STS to assume an IAM role and return a set of temporary security credentials. boto3-refresh-session can be used to ensure those temporary credentials refresh automatically. For additional information on the exact parameters that `RefreshableSession` takes for STS, [check this documentation](https://michaelthomasletts.com/boto3-refresh-session/modules/generated/boto3_refresh_session.methods.sts.STSRefreshableSession.html).
 
   ```python
   import boto3_refresh_session as brs
@@ -256,7 +256,7 @@ pip install boto3-refresh-session
 
   ### Custom
 
-  If you have a highly sophisticated, novel, or idiosyncratic authentication flow not included in boto3-refresh-session then you will need to provide your own custom temporary credentials callable object. `RefreshableSession` accepts custom credentials callable objects, as shown below. For additional information on the exact parameters that `RefreshableSession` takes for custom authentication flows, [check this documentation](https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/custom.py).
+  If you have a highly sophisticated, novel, or idiosyncratic authentication flow not included in boto3-refresh-session then you will need to provide your own custom temporary credentials callable object. `RefreshableSession` accepts custom credentials callable objects, as shown below. For additional information on the exact parameters that `RefreshableSession` takes for custom authentication flows, [check this documentation](https://michaelthomasletts.com/boto3-refresh-session/modules/generated/boto3_refresh_session.methods.custom.CustomRefreshableSession.html#boto3_refresh_session.methods.custom.CustomRefreshableSession).
 
   ```python
   # create (or import) your custom credential method
@@ -289,7 +289,7 @@ pip install boto3-refresh-session
 
   AWS IoT Core can vend temporary AWS credentials through the **credentials provider** when you connect with an X.509 certificate and a **role alias**. `boto3-refresh-session` makes this flow seamless by automatically refreshing credentials over **mTLS**.
 
-  For additional information on the exact parameters that `IOTX509RefreshableSession` takes, [check this documentation](https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/iot/x509.py).
+  For additional information on the exact parameters that `IOTX509RefreshableSession` takes, [check this documentation](https://michaelthomasletts.com/boto3-refresh-session/modules/generated/boto3_refresh_session.methods.iot.IOTX509RefreshableSession.html).
 
   ### PEM file
 
