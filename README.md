@@ -104,6 +104,11 @@
 - Natively supports all parameters supported by `boto3.session.Session`
 - [Tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [documented](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/)
 
+## 😥 Limitations
+
+- **MFA is not robustly supported for STS currently.** 
+    - While `STSRefreshableSession` accepts MFA parameters via `assume_role_kwargs` (specifically `SerialNumber` and `TokenCode`), there is presently no mechanism for dynamically updating the MFA token between credential refreshes. Since MFA tokens typically expire every 30 seconds, this means the first credential refresh will succeed but _subsequent_ refreshes will fail with stale tokens. For workflows requiring MFA, in the meantime, developers must use `method="custom"` and implement their own credential retrieval logic that prompts for fresh MFA tokens on each refresh. This workaround is functional but cumbersome. A more elegant solution involving an MFA token provider callback is planned for a future release!
+
 ## 😌 Recognition and Testimonials
 
 [Featured in TL;DR Sec.](https://tldrsec.com/p/tldr-sec-282)
@@ -288,7 +293,7 @@ pip install boto3-refresh-session
 
   AWS IoT Core can vend temporary AWS credentials through the **credentials provider** when you connect with an X.509 certificate and a **role alias**. `boto3-refresh-session` makes this flow seamless by automatically refreshing credentials over **mTLS**.
 
-  For additional information on the exact parameters that `IOTX509RefreshableSession` takes, [check this documentation](https://michaelthomasletts.com/boto3-refresh-session/modules/generated/boto3_refresh_session.methods.iot.IOTX509RefreshableSession.html).
+  For additional information on the exact parameters that `IOTX509RefreshableSession` takes, [check this documentation](https://michaelthomasletts.com/boto3-refresh-session/modules/generated/boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession.html).
 
   ### PEM file
 

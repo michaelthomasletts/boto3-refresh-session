@@ -53,4 +53,4 @@ IoT
    :toctree: generated/
    :nosignatures:
 
-   IOTX509RefreshableSession
+   x509.IOTX509RefreshableSession
