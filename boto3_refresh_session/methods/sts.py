@@ -59,7 +59,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
                 "'RoleArn' must be provided in 'assume_role_kwargs'!"
             )
 
-        # setting default 'RoleSessionName' if not provided in 'assume_role_kwargs'
+        # setting default 'RoleSessionName' if not provided
         if "RoleSessionName" not in assume_role_kwargs:
             BRSWarning.warn(
                 "'RoleSessionName' not provided in "
