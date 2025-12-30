@@ -1,6 +1,6 @@
 __all__ = ["STSRefreshableSession"]
 
-from ..exceptions import BRSWarning
+from ..exceptions import BRSError, BRSWarning
 from ..utils import (
     AssumeRoleParams,
     BaseRefreshableSession,
@@ -20,7 +20,8 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
     ----------
     assume_role_kwargs : AssumeRoleParams
         Required keyword arguments for :meth:`STS.Client.assume_role` (i.e.
-        boto3 STS client).
+        boto3 STS client). ``RoleArn`` is required. ``RoleSessionName`` will
+        default to 'boto3-refresh-session' if not provided.
     defer_refresh : bool, optional
         If ``True`` then temporary credentials are not automatically refreshed
         until they are explicitly needed. If ``False`` then temporary
@@ -44,12 +45,28 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
         sts_client_kwargs: STSClientParams | None = None,
         **kwargs,
     ):
+        # ensuring 'refresh_method' is not set manually
         if "refresh_method" in kwargs:
             BRSWarning.warn(
                 "'refresh_method' cannot be set manually. "
                 "Reverting to 'sts-assume-role'."
             )
             del kwargs["refresh_method"]
+
+        # verifying 'RoleArn' is provided in 'assume_role_kwargs'
+        if "RoleArn" not in assume_role_kwargs:
+            raise BRSError(
+                "'RoleArn' must be provided in 'assume_role_kwargs'!"
+            )
+
+        # setting default 'RoleSessionName' if not provided in 'assume_role_kwargs'
+        if "RoleSessionName" not in assume_role_kwargs:
+            BRSWarning.warn(
+                "'RoleSessionName' not provided in "
+                "'assume_role_kwargs'! Defaulting to "
+                "'boto3-refresh-session'."
+            )
+            assume_role_kwargs["RoleSessionName"] = "boto3-refresh-session"
 
         # initializing BRSSession
         super().__init__(refresh_method="sts-assume-role", **kwargs)

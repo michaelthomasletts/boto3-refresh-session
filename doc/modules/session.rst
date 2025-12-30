@@ -25,7 +25,7 @@ Examples
 
 .. seealso::
     :class:`boto3_refresh_session.methods.custom.CustomRefreshableSession`
-    :class:`boto3_refresh_session.methods.iot.IOTX509RefreshableSession`
+    :class:`boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession`
     :class:`boto3_refresh_session.methods.sts.STSRefreshableSession`
 
 Factory interface
