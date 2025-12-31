@@ -104,11 +104,6 @@
 - Natively supports all parameters supported by `boto3.session.Session`
 - [Tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [documented](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/)
 
-## 😥 Limitations
-
-- **MFA is not robustly supported for STS currently.** 
-    - While `STSRefreshableSession` accepts MFA parameters via `assume_role_kwargs` (specifically `SerialNumber` and `TokenCode`), there is presently no mechanism for dynamically updating the MFA token between credential refreshes. Since MFA tokens typically expire every 30 seconds, this means the first credential refresh will succeed but _subsequent_ refreshes will fail with stale tokens. For workflows requiring MFA, in the meantime, developers must use `method="custom"` and implement their own credential retrieval logic that prompts for fresh MFA tokens on each refresh. This workaround is functional but cumbersome. A more elegant solution involving an MFA token provider callback is planned for a future release!
-
 ## 😌 Recognition and Testimonials
 
 [Featured in TL;DR Sec.](https://tldrsec.com/p/tldr-sec-282)
@@ -256,7 +251,61 @@ pip install boto3-refresh-session
 </details>
 
 <details>
-   <summary><strong>Custom Authentication Flows (click to expand)</strong></summary>
+  <summary><strong>MFA (click to expand)</strong></summary>
+
+  ### MFA Support
+
+  When assuming a role that requires MFA, `boto3-refresh-session` supports automatic token provisioning through the `mfa_token_provider` parameter. This parameter accepts a callable that returns a fresh MFA token code (string) whenever credentials need to be refreshed.
+
+  The `mfa_token_provider` approach is **strongly recommended** over manually providing `TokenCode` in `assume_role_kwargs`, as MFA tokens expire after 30 seconds while AWS temporary credentials can last for hours. By using a callable, your application can automatically fetch fresh tokens on each refresh without manual intervention. There is nothing preventing you from manually providing `TokenCode` *without* `mfa_token_provider`; however, *you* will be responsible for updating `TokenCode` *before* automatic temporary credential refresh occurs, which is likely to be a fragile and complicated approach.
+
+  When using `mfa_token_provider`, you must also provide `SerialNumber` (your MFA device ARN) in `assume_role_kwargs`. For additional information on the exact parameters that `RefreshableSession` takes for MFA, [check this documentation](https://michaelthomasletts.com/boto3-refresh-session/modules/generated/boto3_refresh_session.methods.sts.STSRefreshableSession.html).
+
+  ```python
+  import boto3_refresh_session as brs
+
+  # Example 1: Interactive prompt for MFA token
+  def get_mfa_token():
+      return input("Enter MFA token: ")
+
+  assume_role_kwargs = {
+      "RoleArn": "<your-role-arn>",
+      "RoleSessionName": "<your-role-session-name>",
+      "SerialNumber": "arn:aws:iam::123456789012:mfa/your-user",  # required with mfa_token_provider
+  }
+
+  session = brs.RefreshableSession(
+      assume_role_kwargs=assume_role_kwargs,
+      mfa_token_provider=get_mfa_token,  # callable that returns MFA token
+  )
+
+  # Example 2: Using pyotp for TOTP-based MFA
+  import pyotp
+
+  def get_totp_token():
+      totp = pyotp.TOTP("<your-secret-key>")
+      return totp.now()
+
+  session = brs.RefreshableSession(
+      assume_role_kwargs=assume_role_kwargs,
+      mfa_token_provider=get_totp_token,
+  )
+
+  # Example 3: Retrieving token from environment variable or external service
+  import os
+
+  def get_env_token():
+      return os.environ.get("AWS_MFA_TOKEN", "")
+
+  session = brs.RefreshableSession(
+      assume_role_kwargs=assume_role_kwargs,
+      mfa_token_provider=get_env_token,
+  )
+  ```
+</details>
+
+<details>
+  <summary><strong>Custom (click to expand)</strong></summary>
 
   ### Custom
 
@@ -378,3 +427,7 @@ Support for IoT Core via X.509 certificate-based authentication (over HTTPS) is 
 #### ➕ v5.1.0
 
 MQTT support added for IoT Core via X.509 certificate-based authentication.
+
+#### ➕ v6.0.0
+
+MFA support for STS added!
