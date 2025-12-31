@@ -34,7 +34,8 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
 
         2. **Static/injectable tokens**: Provide both ``SerialNumber`` and
            ``TokenCode`` in ``assume_role_kwargs``. You are responsible for
-           updating ``assume_role_kwargs["TokenCode"]`` before the token expires.
+           updating ``assume_role_kwargs["TokenCode"]`` before the token
+           expires.
     defer_refresh : bool, optional
         If ``True`` then temporary credentials are not automatically refreshed
         until they are explicitly needed. If ``False`` then temporary
@@ -114,15 +115,16 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
             )
         ):
             raise BRSError(
-                "'SerialNumber' and 'TokenCode' must be provided in 'assume_role_kwargs' when "
-                "'mfa_token_provider' is not set!"
+                "'SerialNumber' and 'TokenCode' must be provided in "
+                "'assume_role_kwargs' when 'mfa_token_provider' is not set!"
             )
 
-        # warn if TokenCode provided with mfa_token_provider (will be overridden)
+        # warn if TokenCode provided with mfa_token_provider
         if self.mfa_token_provider and "TokenCode" in assume_role_kwargs:
             BRSWarning.warn(
                 "'TokenCode' provided in 'assume_role_kwargs' will be "
-                "ignored and overridden by 'mfa_token_provider' on each refresh."
+                "ignored and overridden by 'mfa_token_provider' on each "
+                "refresh."
             )
 
         # initializing assume role kwargs attribute
