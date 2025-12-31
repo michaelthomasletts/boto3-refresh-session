@@ -127,6 +127,42 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
                 "refresh."
             )
 
+
+        # ensure SerialNumber is set appropriately with mfa_token_provider
+        if (
+            self.mfa_token_provider
+            and "SerialNumber" not in assume_role_kwargs
+        ):
+            raise BRSError(
+                "'SerialNumber' must be provided in 'assume_role_kwargs' "
+                "when using 'mfa_token_provider'!"
+            )
+
+        # ensure SerialNumber and TokenCode are set without mfa_token_provider
+        if (
+            self.mfa_token_provider is None
+            and (
+                "SerialNumber" in assume_role_kwargs
+                and "TokenCode" not in assume_role_kwargs
+            )
+            or (
+                "SerialNumber" not in assume_role_kwargs
+                and "TokenCode" in assume_role_kwargs
+            )
+        ):
+            raise BRSError(
+                "'SerialNumber' and 'TokenCode' must be provided in "
+                "'assume_role_kwargs' when 'mfa_token_provider' is not set!"
+            )
+
+        # warn if TokenCode provided with mfa_token_provider
+        if self.mfa_token_provider and "TokenCode" in assume_role_kwargs:
+            BRSWarning.warn(
+                "'TokenCode' provided in 'assume_role_kwargs' will be "
+                "ignored and overridden by 'mfa_token_provider' on each "
+                "refresh."
+            )
+
         # initializing assume role kwargs attribute
         self.assume_role_kwargs = assume_role_kwargs
 
