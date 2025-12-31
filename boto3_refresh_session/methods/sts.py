@@ -154,6 +154,20 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
         if self.mfa_token_provider:
             params["TokenCode"] = self.mfa_token_provider()
 
+        # validating TokenCode format
+        if "TokenCode" in params:
+            token_code = params["TokenCode"]
+
+            if (
+                not isinstance(token_code, str)
+                or len(token_code) != 6
+                or not token_code.isdigit()
+            ):
+                raise BRSError(
+                    "'TokenCode' must be a 6-digit string per AWS MFA "
+                    "token specifications!"
+                )
+
         temporary_credentials = self._sts_client.assume_role(**params)[
             "Credentials"
         ]
