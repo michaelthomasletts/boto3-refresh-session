@@ -95,7 +95,8 @@
 ## 😛 Features
 
 - Drop-in replacement for `boto3.session.Session`
-- Supports automatic credential refresh for: 
+- MFA support included for STS
+- Supports automatic temporary credential refresh for: 
   - **STS**
   - **IoT Core** 
     - X.509 certificates w/ role aliases over mTLS (PEM files and PKCS#11)
@@ -110,7 +111,7 @@
 
 [Featured in CloudSecList.](https://cloudseclist.com/issues/issue-290)
 
-Recognized during AWS Community Day Midwest on June 5th, 2025.
+Recognized during AWS Community Day Midwest on June 5th, 2025 (the founder's birthday!).
 
 A testimonial from a Cyber Security Engineer at a FAANG company:
 
