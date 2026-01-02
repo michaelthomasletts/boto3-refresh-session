@@ -126,6 +126,18 @@ class BRSSession(Session):
     defer_refresh : bool, default=True
         If True, the initial credential refresh is deferred until the
         credentials are first accessed. If False, the initial refresh
+    advisory_timeout : int, optional
+        USE THIS ARGUMENT WITH CAUTION!!!
+
+        Botocore will attempt to refresh credentials early according to
+        this value (in seconds), but will continue using the existing
+        credentials if refresh fails. Default is 15 minutes (900 seconds).
+    mandatory_timeout : int, optional
+        USE THIS ARGUMENT WITH CAUTION!!!
+
+        Botocore requires a successful refresh before continuing. If
+        refresh fails in this window (in seconds), API calls may fail.
+        Default is 10 minutes (600 seconds).
 
     Other Parameters
     ----------------
@@ -137,10 +149,14 @@ class BRSSession(Session):
         self,
         refresh_method: RefreshMethod,
         defer_refresh: bool | None = None,
+        advisory_timeout: int | None = None,
+        mandatory_timeout: int | None = None,
         **kwargs,
     ):
         self.refresh_method: RefreshMethod = refresh_method
         self.defer_refresh: bool = defer_refresh is not False
+        self.advisory_timeout: int | None = advisory_timeout
+        self.mandatory_timeout: int | None = mandatory_timeout
         super().__init__(**kwargs)
 
     def __post_init__(self):
@@ -149,6 +165,8 @@ class BRSSession(Session):
                 metadata=self._get_credentials(),
                 refresh_using=self._get_credentials,
                 method=self.refresh_method,
+                advisory_timeout=self.advisory_timeout,
+                mandatory_timeout=self.mandatory_timeout,
             )
         else:
             self._credentials = DeferredRefreshableCredentials(
