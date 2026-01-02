@@ -261,6 +261,10 @@ pip install boto3-refresh-session
 
   When using `mfa_token_provider`, you must also provide `SerialNumber` (your MFA device ARN) in `assume_role_kwargs`. For additional information on the exact parameters that `RefreshableSession` takes for MFA, [check this documentation](https://michaelthomasletts.com/boto3-refresh-session/modules/generated/boto3_refresh_session.methods.sts.STSRefreshableSession.html).
 
+  ⚠️ Most developers will probably find example number four most helpful.
+
+  #### Examples
+
   ```python
   import boto3_refresh_session as brs
 
@@ -300,6 +304,38 @@ pip install boto3-refresh-session
   session = brs.RefreshableSession(
       assume_role_kwargs=assume_role_kwargs,
       mfa_token_provider=get_env_token,
+  )
+
+  # Example 4: Using Yubikey (or any token provider CLI)
+  from typing import Sequence
+  import subprocess
+
+  def mfa_token_provider(cmd: Sequence[str], timeout: float):
+    p = subprocess.run(
+      list(cmd),
+      check=False,
+      capture_output=True,
+      text=True,
+      timeout=timeout,
+    )
+    return (p.stdout or "").strip()
+
+  assume_role_kwargs = {
+    "RoleArn": "arn:aws:iam::123456789012:role/MyRole",
+    "RoleSessionName": "brs-demo",
+    "SerialNumber": "arn:aws:iam::111111111111:mfa/myname",
+    # TokenCode is NOT provided; it will be supplied by the provider at refresh time
+  }
+
+  mfa_token_provider_args = {
+      "cmd": ["ykman", "oath", "code", "--single", "AWS-prod"],  # example token source
+      "timeout": 3.0,
+  }
+
+  session = RefreshableSession(
+      assume_role_kwargs=assume_role_kwargs,
+      mfa_token_provider=mfa_token_provider,
+      mfa_token_provider_args=mfa_token_provider_args,
   )
   ```
 </details>

@@ -51,6 +51,9 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
         refresh to obtain a new token, which overrides any ``TokenCode`` in
         ``assume_role_kwargs``. When using this parameter, ``SerialNumber``
         must be provided in ``assume_role_kwargs``. Default is None.
+    mfa_token_provider_kwargs : dict, optional
+        Optional keyword arguments to pass to the ``mfa_token_provider``
+        callable. Default is None.
 
     Other Parameters
     ----------------
@@ -64,6 +67,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
         assume_role_kwargs: AssumeRoleParams,
         sts_client_kwargs: STSClientParams | None = None,
         mfa_token_provider: Callable[[], str] | None = None,
+        mfa_token_provider_kwargs: dict | None = None,
         **kwargs,
     ):
         # ensuring 'refresh_method' is not set manually
@@ -91,6 +95,9 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
 
         # store MFA token provider
         self.mfa_token_provider = mfa_token_provider
+        self.mfa_token_provider_kwargs = (
+            mfa_token_provider_kwargs if mfa_token_provider_kwargs else {}
+        )
 
         # ensure SerialNumber is set appropriately with mfa_token_provider
         if (
@@ -152,7 +159,9 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
 
         # override TokenCode with fresh token from provider if configured
         if self.mfa_token_provider:
-            params["TokenCode"] = self.mfa_token_provider()
+            params["TokenCode"] = self.mfa_token_provider(
+                **self.mfa_token_provider_kwargs
+            )
 
         # validating TokenCode format
         if "TokenCode" in params:
