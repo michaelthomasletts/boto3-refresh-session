@@ -272,6 +272,7 @@ pip install boto3-refresh-session
   def get_mfa_token():
       return input("Enter MFA token: ")
 
+  # we'll reuse this object in each example for simplicity :)
   assume_role_kwargs = {
       "RoleArn": "<your-role-arn>",
       "RoleSessionName": "<your-role-session-name>",
@@ -319,13 +320,6 @@ pip install boto3-refresh-session
       timeout=timeout,
     )
     return (p.stdout or "").strip()
-
-  assume_role_kwargs = {
-    "RoleArn": "arn:aws:iam::123456789012:role/MyRole",
-    "RoleSessionName": "brs-demo",
-    "SerialNumber": "arn:aws:iam::111111111111:mfa/myname",
-    # TokenCode is NOT provided; it will be supplied by the provider at refresh time
-  }
 
   mfa_token_provider_args = {
       "cmd": ["ykman", "oath", "code", "--single", "AWS-prod"],  # example token source
