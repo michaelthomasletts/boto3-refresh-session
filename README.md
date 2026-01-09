@@ -96,12 +96,12 @@
 
 - Drop-in replacement for `boto3.session.Session`
 - MFA support included for STS
+- SSO support via AWS profiles
 - Supports automatic temporary credential refresh for: 
   - **STS**
   - **IoT Core** 
     - X.509 certificates w/ role aliases over mTLS (PEM files and PKCS#11)
     - MQTT actions are available!
-  - Custom authentication methods
 - [Tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [documented](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/)
 
 ## 😌 Recognition and Testimonials
@@ -219,32 +219,17 @@ pip install boto3-refresh-session
   ```python
   import boto3_refresh_session as brs
 
-  # OPTIONAL - you can pass all of the params normally associated with boto3.session.Session
-  profile_name = "<your-profile-name>"
-  region_name = "us-east-1"
-  ...
 
-  # REQUIRED - as well as all of the params associated with STS.Client.assume_role
   assume_role_kwargs = {
-    "RoleArn": "<your-role-arn>",
-    "RoleSessionName": "<your-role-session-name>",
-    "DurationSeconds": "<your-selection>",
+    "RoleArn": "<your IAM role arn>",  # required
+    "RoleSessionName": "<your role session name>",  # required
     ...
   }
 
-  # OPTIONAL - as well as all of the params associated with STS.Client, except for 'service_name'
-  sts_client_kwargs = {
-    "region_name": region_name,
-    ...
-  }
-
-  # basic initialization of boto3.session.Session
   session = brs.RefreshableSession(
-    assume_role_kwargs=assume_role_kwargs, # required
-    sts_client_kwargs=sts_client_kwargs,   # optional
-    region_name=region_name,               # optional
-    profile_name=profile_name,             # optional
-    ...                                    # misc. params for boto3.session.Session
+    assume_role_kwargs=assume_role_kwargs,  # required
+    sts_client_kwargs={...},  # optional
+    ...  # misc. params for boto3.session.Session
   )
   ```
 
@@ -335,6 +320,32 @@ pip install boto3-refresh-session
 </details>
 
 <details>
+  <summary><strong>SSO (click to expand)</strong></summary>
+  
+  ### SSO
+
+  `boto3-refresh-session` supports SSO by virtue of AWS profiles.
+
+  The below pseudo-code illustrates how to assume an IAM role using an AWS profile with SSO. Not shown, however, is running `sso login` manually, which `boto3-refresh-session` does not perform automatically for you. Therefore, you must manually run `sso login` as necessary.
+  
+  If you wish to automate `sso login` (not recommended) then you will need to write your own custom callable function and pass it to `RefreshableSession(method="custom", ...)`. In that event, please refer to the `Custom` documentation found in a separate section below.
+
+  ```python
+  from boto3_refresh_session import RefreshableSession
+
+  session = RefreshableSession(
+    assume_role_kwargs={
+      "RoleArn": "<your IAM role arn>",
+      "RoleSessionName": "<your role session name>",
+    },
+    profile_name="<your AWS profile name>",
+    ...
+  )
+  s3 = session.client("s3")
+  ```  
+</details>
+
+<details>
   <summary><strong>Custom (click to expand)</strong></summary>
 
   ### Custom
@@ -359,7 +370,7 @@ pip install boto3-refresh-session
       custom_credentials_method_args=...,                      # optional
       region_name=region_name,                                 # optional
       profile_name=profile_name,                               # optional
-      ...                                                      # misc. params for boto3.session.Session
+      ...                                                      # misc. boto3.session.Session params
   )
   ```
 
