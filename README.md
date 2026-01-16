@@ -123,6 +123,46 @@ A testimonial from a Cyber Security Engineer at a FAANG company:
 pip install boto3-refresh-session
 ```
 
+## 🏃 Quick Start Guide
+
+The following example shows how to initialize `RefreshableSession` using an AWS profile, enable MFA support, initialize an S3 client with some configurations, and list some buckets in S3.
+
+```python
+from boto3_refresh_session import RefreshableSession
+from botocore.config import Config
+import subprocess
+
+
+def mfa_token_provider(cmd: list[str], timeout: float = 10.0):
+  """Returns an MFA code. This is completely optional, unless you want MFA enabled."""
+
+  p = subprocess.run(
+    cmd,
+    check=False,
+    capture_output=True,
+    text=True,
+    timeout=timeout,
+  )
+  return (p.stdout or "").strip()
+
+
+session = RefreshableSession(
+  assume_role_kwargs={
+    "RoleArn": "arn:aws:iam::123456789012:role/CoolGuy", # required
+    "RoleSessionName": "just-goofin-around", # defaults to 'boto3-refresh-session'
+    "SerialNumber": "arn:aws:iam::123456789012:mfa/test-user", # required if using MFA
+  },
+  mfa_token_provider=mfa_token_provider, # required if using MFA
+  mfa_token_provider_kwargs={ # depends on if mfa_token_provider needs args
+    "cmd": ["ykman", "oath", "code", "--single", "AWS-prod"],
+    "timeout": 3.0
+  },
+  profile_name="test-aws-profile",
+)
+s3 = session.client("s3", config=Config(retries={"max_attempts": 2}))
+s3.list_buckets()
+```
+
 ## 📝 Usage
 
 <details>
