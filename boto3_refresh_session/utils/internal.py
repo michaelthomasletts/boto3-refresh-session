@@ -234,6 +234,9 @@ class BRSSession(Session):
             self._credentials = DeferredRefreshableCredentials(
                 refresh_using=self._get_credentials, method=self.refresh_method
             )
+
+        # without this, boto3 won't use the refreshed credentials properly in
+        # clients and resources, depending on how they were created
         self._session._credentials = self._credentials
 
     def client(self, *args, **kwargs) -> BaseClient:
