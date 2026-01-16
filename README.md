@@ -125,7 +125,11 @@ pip install boto3-refresh-session
 
 ## 🏃 Quick Start Guide
 
-The following example shows how to initialize `RefreshableSession` using an AWS profile, enable MFA support, initialize an S3 client with some configurations, and list some buckets in S3.
+The following example shows how to:
+
+- Initialize `RefreshableSession` _using an AWS profile_
+- Enable MFA support
+- Initialize an S3 client with some configurations
 
 ```python
 from boto3_refresh_session import RefreshableSession
@@ -134,7 +138,7 @@ import subprocess
 
 
 def mfa_token_provider(cmd: list[str], timeout: float = 10.0):
-  """Returns an MFA code. This is completely optional, unless you want MFA enabled."""
+  """Returns an MFA code."""
 
   p = subprocess.run(
     cmd,
