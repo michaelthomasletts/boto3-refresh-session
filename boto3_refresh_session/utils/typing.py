@@ -1,3 +1,5 @@
+"""Shared type definitions used across refreshable session modules."""
+
 from __future__ import annotations
 
 __all__ = [

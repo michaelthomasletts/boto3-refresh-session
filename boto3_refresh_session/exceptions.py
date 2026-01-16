@@ -1,3 +1,5 @@
+"""Custom exception and warning types for boto3-refresh-session."""
+
 __all__ = ["BRSError", "BRSWarning"]
 
 import warnings

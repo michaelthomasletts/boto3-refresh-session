@@ -1,3 +1,5 @@
+"""IoT Core X.509 refreshable session implementation."""
+
 __all__ = ["IOTX509RefreshableSession"]
 
 import json

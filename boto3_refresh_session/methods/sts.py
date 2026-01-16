@@ -1,3 +1,5 @@
+"""STS assume-role refreshable session implementation."""
+
 __all__ = ["STSRefreshableSession"]
 
 from typing import Callable

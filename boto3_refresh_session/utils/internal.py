@@ -1,3 +1,35 @@
+"""This module defines the core building blocks used by `RefreshableSession`
+and method-specific session classes. The intent is to separate registry
+mechanics, credential refresh contracts, and boto3 session behavior so each
+concern is clear and testable.
+
+`Registry` is a lightweight class-level registry. Subclasses register
+themselves by key at import time, enabling factory-style lookup without
+hard-coded class references. This is how `RefreshableSession` discovers method
+implementations.
+
+`refreshable_session` is a decorator that wraps `__init__` and guarantees a
+`__post_init__` hook runs after `boto3.Session` initialization. This allows
+`BRSSession` to create refreshable credentials only after the boto3 Session is
+set up, avoiding circular and ordering issues. It also prevents double
+wrapping on repeated decoration.
+
+`CredentialProvider` is a small abstract class that defines the contract for
+refreshable sessions: implement `_get_credentials` (returns temporary creds)
+and `get_identity` (describes the caller identity). The concrete refresh
+methods (STS, IoT, custom) only need to satisfy this interface.
+
+`BRSSession` is the concrete wrapper over `boto3.Session`. It owns refreshable
+credential construction, wiring the botocore session to those credentials, and
+client caching with normalized cache keys. It acts as the base implementation
+for session mechanics.
+
+`BaseRefreshableSession` and `BaseIoTRefreshableSession` combine `Registry`,
+`CredentialProvider`, and `BRSSession` to create abstract roots for method
+families. They do not implement credential retrieval themselves, but provide a
+common surface and registration behavior for subclasses like STS or IoT X.509.
+"""
+
 __all__ = [
     "AWSCRTResponse",
     "BaseIoTRefreshableSession",
