@@ -490,5 +490,5 @@ MFA support for STS added!
 
 #### ✂️ v6.2.3
 
-- The `RefreshableTemporaryCredentials` type hint was deprecated in favor of `TemporaryCredentials`, thus standardizing parameters to match `botocore` naming conventions.
+- The `RefreshableTemporaryCredentials` type hint was deprecated in favor of `TemporaryCredentials`.
 - `expiry_time` was added as a parameter returned by the `refreshable_credentials` method and `credentials` attribute.
