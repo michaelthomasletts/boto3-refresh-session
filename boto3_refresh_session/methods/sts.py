@@ -36,11 +36,6 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
            ``TokenCode`` in ``assume_role_kwargs``. You are responsible for
            updating ``assume_role_kwargs["TokenCode"]`` before the token
            expires.
-    defer_refresh : bool, optional
-        If ``True`` then temporary credentials are not automatically refreshed
-        until they are explicitly needed. If ``False`` then temporary
-        credentials refresh immediately upon expiration. It is highly
-        recommended that you use ``True``. Default is ``True``.
     sts_client_kwargs : STSClientParams, optional
         Optional keyword arguments for the :class:`STS.Client` object. Do not
         provide values for ``service_name`` as they are unnecessary. Default
@@ -54,6 +49,28 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
     mfa_token_provider_kwargs : dict, optional
         Optional keyword arguments to pass to the ``mfa_token_provider``
         callable. Default is None.
+    defer_refresh : bool, optional
+        If ``True`` then temporary credentials are not automatically refreshed
+        until they are explicitly needed. If ``False`` then temporary
+        credentials refresh immediately upon expiration. It is highly
+        recommended that you use ``True``. Default is ``True``.
+    advisory_timeout : int, optional
+        USE THIS ARGUMENT WITH CAUTION!!!
+
+        Botocore will attempt to refresh credentials early according to
+        this value (in seconds), but will continue using the existing
+        credentials if refresh fails. Default is 15 minutes (900 seconds).
+    mandatory_timeout : int, optional
+        USE THIS ARGUMENT WITH CAUTION!!!
+
+        Botocore requires a successful refresh before continuing. If
+        refresh fails in this window (in seconds), API calls may fail.
+        Default is 10 minutes (600 seconds).
+    cache_clients : bool, optional
+        If ``True`` then clients created by this session will be cached and
+        reused for subsequent calls to :meth:`client()` with the same
+        parameter signatures. Due to the memory overhead of clients, the
+        default is ``True`` in order to protect system resources.
 
     Other Parameters
     ----------------

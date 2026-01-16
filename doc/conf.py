@@ -45,7 +45,6 @@ html_sidebars = {
     "usage": [],
     "authorization": [],
     "contributing": [],
-    "raison": [],
     "qanda": [],
     "installation": [],
     "modules/**": ["sidebar-nav-bs.html", "search-field.html"],

@@ -1,3 +1,10 @@
+"""These tests use actual AWS resources and credentials. They require valid
+AWS credentials with permissions to assume the role specified in the ROLE_ARN
+environment variable. They are intended for integration testing and may incur
+costs on your AWS account. Ensure that you understand the implications of
+running these tests before executing them.
+"""
+
 import logging
 from os import getenv
 

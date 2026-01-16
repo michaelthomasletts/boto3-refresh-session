@@ -97,6 +97,7 @@
 - Drop-in replacement for `boto3.session.Session`
 - MFA support included for STS
 - SSO support via AWS profiles
+- Optionally caches boto3 clients
 - Supports automatic temporary credential refresh for: 
   - **STS**
   - **IoT Core** 
@@ -472,3 +473,9 @@ MQTT support added for IoT Core via X.509 certificate-based authentication.
 #### ➕ v6.0.0
 
 MFA support for STS added!
+
+#### 🔒😥 v6.2.0
+
+- Client caching introduced to `RefreshableSession` in order to minimize memory footprint! Available via `cache_clients` parameter.
+- Testing suite expanded to include IOT, MFA, caching, and much more!
+- A subtle bug was uncovered where `RefreshableSession` created refreshable credentials but boto3's underlying session continued to resolve credentials via the default provider chain (i.e. env vars, shared config, etc) unless explicitly wired. `get_credentials()` and clients could, in certain setups, use base session credentials instead of the refreshable STS/IoT/custom credentials via assumed role. To fix this, I updated the implementation in `BRSSession.__post_init__` to set `self._session._credentials = self._credentials`, ensuring all boto3 clients created from `RefreshableSession` use the refreshable credentials source of truth provided to `RefreshableCredentials | DeferredRefreshableCredentials`. After this change, refreshable credentials are used consistently everywhere, irrespective of setup.
