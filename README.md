@@ -487,3 +487,8 @@ MFA support for STS added!
 - Client caching introduced to `RefreshableSession` in order to minimize memory footprint! Available via `cache_clients` parameter.
 - Testing suite expanded to include IOT, MFA, caching, and much more!
 - A subtle bug was uncovered where `RefreshableSession` created refreshable credentials but boto3's underlying session continued to resolve credentials via the default provider chain (i.e. env vars, shared config, etc) unless explicitly wired. `get_credentials()` and clients could, in certain setups, use base session credentials instead of the refreshable STS/IoT/custom credentials via assumed role. To fix this, I updated the implementation in `BRSSession.__post_init__` to set `self._session._credentials = self._credentials`, ensuring all boto3 clients created from `RefreshableSession` use the refreshable credentials source of truth provided to `RefreshableCredentials | DeferredRefreshableCredentials`. After this change, refreshable credentials are used consistently everywhere, irrespective of setup.
+
+#### ✂️ v6.2.3
+
+- The `RefreshableTemporaryCredentials` type hint was deprecated in favor of `TemporaryCredentials`, thus standardizing parameters to match `botocore` naming conventions.
+- `expiry_time` was added as a parameter returned by the `refreshable_credentials` method and `credentials` attribute.

@@ -27,7 +27,6 @@ from .typing import (
     Identity,
     IoTAuthenticationMethod,
     Method,
-    RefreshableTemporaryCredentials,
     RefreshMethod,
     RegistryKey,
     TemporaryCredentials,
@@ -311,12 +310,12 @@ class BRSSession(Session):
         else:
             return super().client(*args, **kwargs)
 
-    def refreshable_credentials(self) -> RefreshableTemporaryCredentials:
+    def refreshable_credentials(self) -> TemporaryCredentials:
         """The current temporary AWS security credentials.
 
         Returns
         -------
-        RefreshableTemporaryCredentials
+        TemporaryCredentials
             Temporary AWS security credentials containing:
                 access_key : str
                     AWS access key identifier.
@@ -342,7 +341,7 @@ class BRSSession(Session):
         }
 
     @property
-    def credentials(self) -> RefreshableTemporaryCredentials:
+    def credentials(self) -> TemporaryCredentials:
         """The current temporary AWS security credentials."""
 
         return self.refreshable_credentials()

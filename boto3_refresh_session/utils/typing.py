@@ -12,7 +12,6 @@ __all__ = [
     "RegistryKey",
     "STSClientParams",
     "TemporaryCredentials",
-    "RefreshableTemporaryCredentials",
     "Transport",
 ]
 
@@ -80,27 +79,6 @@ CustomCredentialsMethod: TypeAlias = _CustomCredentialsMethod
 
 #: Type alias for custom credential method arguments.
 CustomCredentialsMethodArgs: TypeAlias = Mapping[str, Any]
-
-
-class RefreshableTemporaryCredentials(TypedDict):
-    """Refreshable IAM credentials.
-
-    Parameters
-    ----------
-    access_key : str
-        AWS access key identifier.
-    secret_key : str
-        AWS secret access key.
-    token : str
-        AWS session token.
-    expiry_time : str
-        Expiration timestamp in ISO 8601 format.
-    """
-
-    access_key: str
-    secret_key: str
-    token: str
-    expiry_time: str
 
 
 class Tag(TypedDict):
