@@ -1,3 +1,9 @@
+"""Cache primitives for memoizing boto3 client instances.
+
+`ClientCache` provides a thread-safe mapping for cached clients and raises
+`BRSError` when lookups or mutations violate the expected cache contract.
+"""
+
 __all__ = ["ClientCache"]
 
 from threading import Lock

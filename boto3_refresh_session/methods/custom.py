@@ -1,3 +1,5 @@
+"""Custom refreshable session using a user-provided credential getter."""
+
 __all__ = ["CustomRefreshableSession"]
 
 from ..exceptions import BRSError, BRSWarning

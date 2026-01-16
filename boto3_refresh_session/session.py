@@ -1,3 +1,5 @@
+"""Public factory for constructing refreshable boto3 sessions."""
+
 from __future__ import annotations
 
 __all__ = ["RefreshableSession"]

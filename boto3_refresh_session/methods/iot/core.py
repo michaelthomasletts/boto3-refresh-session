@@ -1,3 +1,5 @@
+"""IoT refreshable session factory for selecting auth methods."""
+
 from __future__ import annotations
 
 __all__ = ["IoTRefreshableSession"]
