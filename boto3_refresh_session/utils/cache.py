@@ -9,6 +9,9 @@ from ..exceptions import BRSError
 
 
 class ClientCache:
+    """A thread-safe cache for storing boto3 clients which can be used like a
+    dictionary."""
+
     def __init__(self):
         self._cache: dict[Hashable, BaseClient] = {}
         self._lock = Lock()
