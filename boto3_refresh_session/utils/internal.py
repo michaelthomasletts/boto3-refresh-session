@@ -14,12 +14,15 @@ from typing import Any, Callable, ClassVar, Generic, TypeVar, cast
 
 from awscrt.http import HttpHeaders
 from boto3.session import Session
+from botocore.client import BaseClient
+from botocore.config import Config
 from botocore.credentials import (
     DeferredRefreshableCredentials,
     RefreshableCredentials,
 )
 
-from ..exceptions import BRSWarning
+from ..exceptions import BRSError, BRSWarning
+from .cache import ClientCache
 from .typing import (
     Identity,
     IoTAuthenticationMethod,
@@ -29,6 +32,46 @@ from .typing import (
     RegistryKey,
     TemporaryCredentials,
 )
+
+
+def _freeze_value(value: Any) -> Any:
+    """Recursively freezes a value for use in cache keys.
+
+    Parameters
+    ----------
+    value : Any
+        The value to freeze.
+    """
+
+    if isinstance(value, dict):
+        return tuple(
+            sorted((key, _freeze_value(val)) for key, val in value.items())
+        )
+
+    # checking for list, tuple, or set just to be safe
+    if isinstance(value, (list, tuple, set)):
+        return tuple(sorted(_freeze_value(item) for item in value))
+    return value
+
+
+def _config_cache_key(config: Config | None) -> Any:
+    """Generates a cache key for a botocore.config.Config object.
+
+    Parameters
+    ----------
+    config : Config | None
+        The Config object to generate a cache key for.
+    """
+
+    if config is None:
+        return None
+
+    # checking for user-provided options first
+    options = getattr(config, "_user_provided_options", None)
+    if options is None:
+        # __dict__ is pedantic but stable
+        return _freeze_value(getattr(config, "__dict__", {}))
+    return _freeze_value(options)
 
 
 class CredentialProvider(ABC):
@@ -123,9 +166,11 @@ class BRSSession(Session):
     ----------
     refresh_method : RefreshMethod
         The method to use for refreshing temporary credentials.
-    defer_refresh : bool, default=True
-        If True, the initial credential refresh is deferred until the
-        credentials are first accessed. If False, the initial refresh
+    defer_refresh : bool, optional
+        If ``True`` then temporary credentials are not automatically refreshed
+        until they are explicitly needed. If ``False`` then temporary
+        credentials refresh immediately upon expiration. It is highly
+        recommended that you use ``True``. Default is ``True``.
     advisory_timeout : int, optional
         USE THIS ARGUMENT WITH CAUTION!!!
 
@@ -138,6 +183,11 @@ class BRSSession(Session):
         Botocore requires a successful refresh before continuing. If
         refresh fails in this window (in seconds), API calls may fail.
         Default is 10 minutes (600 seconds).
+    cache_clients : bool, optional
+        If ``True`` then clients created by this session will be cached and
+        reused for subsequent calls to :meth:`client()` with the same
+        parameter signatures. Due to the memory overhead of clients, the
+        default is ``True`` in order to protect system resources.
 
     Other Parameters
     ----------------
@@ -151,13 +201,25 @@ class BRSSession(Session):
         defer_refresh: bool | None = None,
         advisory_timeout: int | None = None,
         mandatory_timeout: int | None = None,
+        cache_clients: bool | None = None,
         **kwargs,
     ):
+        # initializing parameters
         self.refresh_method: RefreshMethod = refresh_method
         self.defer_refresh: bool = defer_refresh is not False
         self.advisory_timeout: int | None = advisory_timeout
         self.mandatory_timeout: int | None = mandatory_timeout
+        self.cache_clients: bool | None = cache_clients is not False
+
+        # initializing Session
         super().__init__(**kwargs)
+
+        # because the "client" namespace is already taken,
+        # we must preserve the O.G.
+        self._client: Callable = super().client
+
+        # initializing client cache
+        self._client_cache: ClientCache = ClientCache()
 
     def __post_init__(self):
         if not self.defer_refresh:
@@ -172,6 +234,83 @@ class BRSSession(Session):
             self._credentials = DeferredRefreshableCredentials(
                 refresh_using=self._get_credentials, method=self.refresh_method
             )
+        self._session._credentials = self._credentials
+
+    def client(self, *args, **kwargs) -> BaseClient:
+        """Creates a low-level service client by name.
+
+        Parameters
+        ----------
+        *args : Any
+            Positional arguments for :class:`boto3.session.Session.client`.
+        **kwargs : Any
+            Keyword arguments for :class:`boto3.session.Session.client`.
+
+        Returns
+        -------
+        BaseClient
+            A low-level service client.
+
+        Notes
+        -----
+        This method overrides the default
+        :meth:`boto3.session.Session.client` method. If client caching is
+        enabled, it will return a cached client instance for the given
+        service and parameters. Else, it will create and return a new client
+        instance.
+        """
+
+        # check if caching is enabled
+        if self.cache_clients:
+            # checking if Config was passed as a positional arg
+            _args = [
+                _config_cache_key(arg) if isinstance(arg, Config) else arg
+                for arg in args
+            ]
+
+            # popping trailing None values from args, preserving None in middle
+            while _args and _args[-1] is None:
+                _args.pop()
+            _args = tuple(_args)
+
+            # checking if Config was passed as a keyword arg
+            _kwargs = kwargs.copy()
+            if _kwargs.get("config") is not None:
+                _kwargs["config"] = _config_cache_key(_kwargs["config"])
+
+            # preemptively removing None values from kwargs
+            _kwargs = {
+                key: value
+                for key, value in _kwargs.items()
+                if value is not None
+            }
+
+            # creating a unique key for the client cache
+            key = (_args, tuple(sorted(_kwargs.items())))
+
+            # if client exists in cache, return it
+            if (_cached_client := self._client_cache.get(key)) is not None:
+                return _cached_client
+
+            # else -- initialize, cache, and return it
+            client = self._client(*args, **kwargs)
+
+            # attempting to cache and return the client
+            try:
+                self._client_cache[key] = client
+                return client
+
+            # if caching fails, return cached client if possible
+            except BRSError:
+                return (
+                    cached
+                    if (cached := self._client_cache.get(key)) is not None
+                    else client
+                )
+
+        # return a new client if caching is disabled
+        else:
+            return self._client(*args, **kwargs)
 
     def refreshable_credentials(self) -> RefreshableTemporaryCredentials:
         """The current temporary AWS security credentials.
@@ -188,7 +327,11 @@ class BRSSession(Session):
                     AWS session token.
         """
 
-        creds = self.get_credentials().get_frozen_credentials()
+        creds = (
+            self._credentials
+            if self._credentials is not None
+            else self.get_credentials()
+        ).get_frozen_credentials()
         return {
             "AWS_ACCESS_KEY_ID": creds.access_key,
             "AWS_SECRET_ACCESS_KEY": creds.secret_key,

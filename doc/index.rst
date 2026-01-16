@@ -7,7 +7,6 @@
    :maxdepth: 1
    :hidden:
 
-   Raison d'Être <raison>
    Q&A <qanda>
    Installation <installation>   
    Usage <usage>
@@ -21,7 +20,7 @@ boto3-refresh-session
 **Version:** |release|
 
 **Useful Links:**
-:ref:`Raison d'Être <raison>` |
+
 :ref:`Q&A <qanda>` |
 :ref:`Installation <installation>` |
 :ref:`Usage <usage>` |
