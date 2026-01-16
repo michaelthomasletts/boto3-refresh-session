@@ -142,22 +142,30 @@ pip install boto3-refresh-session
 
   6. Some developers struggle to imagine where `boto3-refresh-session` might be helpful. To figure out if `boto3-refresh-session` is for your use case, or whether `credential_process` satisfies your needs, check out [this blog post](https://michaelthomasletts.com/blog/brs-rationale/). `boto3-refresh-session` is not for every developer or use-case; it is a niche tool. 
 
+  7. `boto3-refresh-session` supports client caching in order to minimize the massive memory footprint associated with duplicative clients. By default, `RefreshableSession` caches clients. To deactivate this feature, set `cache_clients=False`.
+
+  8. `boto3-refresh-session` supports MFA. Refer to the MFA section further below for more details.
+
+  9. `boto3-refresh-session` supports SSO; however, it _does not_ and _will never_ automatically handle `sso login` for you -- that is, not unless you write your own hacky custom credential getter and pass that to `RefreshableSession(method="custom", ...)`, which I do not recommend (but cannot prevent you from doing). 
+
 </details>
 
 <details>
-  <summary><strong>Clients and Resources (click to expand)</strong></summary>
+  <summary><strong>Clients (click to expand)</strong></summary>
 
-  ### Clients and Resources
+  ### Clients
 
-  Most developers who use `boto3` interact primarily with `boto3.client` or `boto3.resource` instead of `boto3.session.Session`. But many developers may not realize that `boto3.session.Session` belies `boto3.client` and `boto3.resource`! In fact, that's precisely what makes `boto3-refresh-session` possible!
+  Most developers who use `boto3` interact primarily with `boto3.client` instead of `boto3.session.Session`. But many developers may not realize that `boto3.session.Session` belies `boto3.client`! In fact, that's precisely what makes `boto3-refresh-session` possible!
 
-  To use the `boto3.client` or `boto3.resource` interface, but with the benefits of `boto3-refresh-session`, you have a few options! 
+  Before we get to initializing clients via `RefreshableSession`, however, let's briefly talk about `boto3` clients and memory . . . 
   
-  In the following examples, let's assume you want to use STS for retrieving temporary credentials for the sake of simplicity. Let's also focus specifically on `client`. Switching to `resource` follows the same exact idioms as below, except that `client` must be switched to `resource` in the pseudo-code, obviously. If you are not sure how to use `RefreshableSession` for STS (or custom auth flows) then check the usage instructions in the following sections!
+  Clients consume a shocking amount of memory. So much so that many developers create their own bespoke client cache. To minimize the memory footprint associated with duplicative clients, as well as make the lives of developers a little easier, `boto3-refresh-session` includes a `cache_clients` parameter which, by default, caches clients according to the parameters passed to the `client` method!
+  
+  With client caching out of the way, in order to use the `boto3.client` interface, but with the benefits of `boto3-refresh-session`, you have a few options! In the following examples, let's assume you want to use STS for retrieving temporary credentials for the sake of simplicity. Let's also focus specifically on `client`. Switching to `resource` follows the same exact idioms as below, except that `client` must be switched to `resource` in the pseudo-code, obviously. If you are not sure how to use `RefreshableSession` for STS (or custom auth flows) then check the usage instructions in the following sections!
 
   ##### `RefreshableSession.client` (Recommended)
 
-  So long as you reuse the same `session` object when creating `client` and `resource` objects, this approach can be used everywhere in your code. It is very simple and straight-forward!
+  So long as you reuse the same `session` object when creating `client` objects, this approach can be used everywhere in your code.
 
   ```python
   from boto3_refresh_session import RefreshableSession
