@@ -15,9 +15,9 @@ from boto3_refresh_session.methods.iot.x509 import IOTX509RefreshableSession
 def _set_dummy_env(monkeypatch) -> None:
     """Dummy AWS env vars for tests."""
 
-    monkeypatch.setenv("AWS_ACCESS_KEY_ID", "test-access-key")
-    monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", "test-secret-key")
-    monkeypatch.setenv("AWS_SESSION_TOKEN", "test-session-token")
+    monkeypatch.setenv("access_key", "test-access-key")
+    monkeypatch.setenv("secret_key", "test-secret-key")
+    monkeypatch.setenv("token", "test-session-token")
     monkeypatch.setenv("AWS_DEFAULT_REGION", "us-east-1")
 
 
@@ -75,9 +75,10 @@ def test_sts_refreshable_credentials_stubbed(monkeypatch):
 
     try:
         creds = session.refreshable_credentials()
-        assert creds["AWS_ACCESS_KEY_ID"] == "AKIAEXAMPLE123456"
-        assert creds["AWS_SECRET_ACCESS_KEY"] == "secret"
-        assert creds["AWS_SESSION_TOKEN"] == "token"
+        assert creds["access_key"] == "AKIAEXAMPLE123456"
+        assert creds["secret_key"] == "secret"
+        assert creds["token"] == "token"
+        assert "expiry_time" in creds
     finally:
         stubber.deactivate()
 
@@ -200,9 +201,10 @@ def test_sts_refreshable_credentials_with_mfa_stubbed(monkeypatch):
 
     try:
         creds = session.refreshable_credentials()
-        assert creds["AWS_ACCESS_KEY_ID"] == "AKIAEXAMPLE123456"
-        assert creds["AWS_SECRET_ACCESS_KEY"] == "secret"
-        assert creds["AWS_SESSION_TOKEN"] == "token"
+        assert creds["access_key"] == "AKIAEXAMPLE123456"
+        assert creds["secret_key"] == "secret"
+        assert creds["token"] == "token"
+        assert "expiry_time" in creds
     finally:
         stubber.deactivate()
 
@@ -238,9 +240,10 @@ def test_iot_refreshable_credentials_stubbed(monkeypatch):
     )
 
     creds = session.refreshable_credentials()
-    assert creds["AWS_ACCESS_KEY_ID"] == "AKIAEXAMPLE123456"
-    assert creds["AWS_SECRET_ACCESS_KEY"] == "secret"
-    assert creds["AWS_SESSION_TOKEN"] == "token"
+    assert creds["access_key"] == "AKIAEXAMPLE123456"
+    assert creds["secret_key"] == "secret"
+    assert creds["token"] == "token"
+    assert "expiry_time" in creds
 
 
 def test_custom_refreshable_credentials_stubbed(monkeypatch):
@@ -266,9 +269,10 @@ def test_custom_refreshable_credentials_stubbed(monkeypatch):
     )
 
     creds = session.refreshable_credentials()
-    assert creds["AWS_ACCESS_KEY_ID"] == "AKIAEXAMPLE123456"
-    assert creds["AWS_SECRET_ACCESS_KEY"] == "secret"
-    assert creds["AWS_SESSION_TOKEN"] == "token"
+    assert creds["access_key"] == "AKIAEXAMPLE123456"
+    assert creds["secret_key"] == "secret"
+    assert creds["token"] == "token"
+    assert "expiry_time" in creds
 
 
 def test_client_cache_reuses_client(monkeypatch):
@@ -390,7 +394,7 @@ def test_custom_refreshes_expired_credentials(monkeypatch):
     )
 
     creds = session.refreshable_credentials()
-    assert creds["AWS_ACCESS_KEY_ID"] == "NEWKEY0000000000"
+    assert creds["access_key"] == "NEWKEY0000000000"
     assert call_count["count"] >= 2
 
 

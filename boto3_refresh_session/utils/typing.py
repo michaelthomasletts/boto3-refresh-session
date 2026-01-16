@@ -87,17 +87,20 @@ class RefreshableTemporaryCredentials(TypedDict):
 
     Parameters
     ----------
-    AWS_ACCESS_KEY_ID : str
+    access_key : str
         AWS access key identifier.
-    AWS_SECRET_ACCESS_KEY : str
+    secret_key : str
         AWS secret access key.
-    AWS_SESSION_TOKEN : str
+    token : str
         AWS session token.
+    expiry_time : str
+        Expiration timestamp in ISO 8601 format.
     """
 
-    AWS_ACCESS_KEY_ID: str
-    AWS_SECRET_ACCESS_KEY: str
-    AWS_SESSION_TOKEN: str
+    access_key: str
+    secret_key: str
+    token: str
+    expiry_time: str
 
 
 class Tag(TypedDict):

@@ -318,23 +318,27 @@ class BRSSession(Session):
         -------
         RefreshableTemporaryCredentials
             Temporary AWS security credentials containing:
-                AWS_ACCESS_KEY_ID : str
+                access_key : str
                     AWS access key identifier.
-                AWS_SECRET_ACCESS_KEY : str
+                secret_key : str
                     AWS secret access key.
-                AWS_SESSION_TOKEN : str
+                token : str
                     AWS session token.
+                expiry_time : str
+                    Expiration timestamp in ISO 8601 format.
         """
 
         creds = (
             self._credentials
             if self._credentials is not None
             else self.get_credentials()
-        ).get_frozen_credentials()
+        )
+        frozen_creds = creds.get_frozen_credentials()
         return {
-            "AWS_ACCESS_KEY_ID": creds.access_key,
-            "AWS_SECRET_ACCESS_KEY": creds.secret_key,
-            "AWS_SESSION_TOKEN": creds.token,
+            "access_key": frozen_creds.access_key,
+            "secret_key": frozen_creds.secret_key,
+            "token": frozen_creds.token,
+            "expiry_time": creds._expiry_time.isoformat(),
         }
 
     @property
