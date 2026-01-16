@@ -27,7 +27,13 @@ from awscrt.io import (
 from awscrt.mqtt import Connection
 from awsiot import mqtt_connection_builder
 
-from ...exceptions import BRSError, BRSWarning
+from ...exceptions import (
+    BRSConfigurationError,
+    BRSConnectionError,
+    BRSRequestError,
+    BRSValidationError,
+    BRSWarning,
+)
 from ...utils import (
     PKCS11,
     AWSCRTResponse,
@@ -163,14 +169,16 @@ class IOTX509RefreshableSession(
 
         # either private_key or pkcs11 must be provided
         if self.private_key is None and self.pkcs11 is None:
-            raise BRSError(
-                "Either 'private_key' or 'pkcs11' must be provided."
+            raise BRSConfigurationError(
+                "Either 'private_key' or 'pkcs11' must be provided.",
+                param="private_key/pkcs11",
             )
 
         # . . . but both cannot be provided!
         if self.private_key is not None and self.pkcs11 is not None:
-            raise BRSError(
-                "Only one of 'private_key' or 'pkcs11' can be provided."
+            raise BRSConfigurationError(
+                "Only one of 'private_key' or 'pkcs11' can be provided.",
+                param="private_key/pkcs11",
             )
 
     def _get_credentials(self) -> TemporaryCredentials:
@@ -218,9 +226,11 @@ class IOTX509RefreshableSession(
                 "expiry_time": credentials["expiration"],
             }
         else:
-            raise BRSError(
-                "Error getting credentials: "
-                f"{json.loads(response.body.decode())}"
+            response_body = json.loads(response.body.decode())
+            raise BRSRequestError(
+                "Error getting credentials from IoT credential provider.",
+                status_code=response.status_code,
+                details=response_body,
             )
 
     def _mtls_client_connection(
@@ -256,9 +266,11 @@ class IOTX509RefreshableSession(
             )
             return connection_future.result(self.timeout)
         except AwsCrtError as err:
-            raise BRSError(
+            raise BRSConnectionError(
                 "Error completing mTLS connection to endpoint "
-                f"'{url.hostname}'"
+                f"'{url.hostname}'",
+                param="endpoint",
+                value=str(url.hostname),
             ) from err
 
     def _mtls_pkcs11_client_connection(
@@ -273,9 +285,10 @@ class IOTX509RefreshableSession(
         )
 
         if not self.pkcs11:
-            raise BRSError(
-                "Attempting to establish mTLS connection using PKCS#11"
-                "but 'pkcs11' parameter is 'None'!"
+            raise BRSConfigurationError(
+                "Attempting to establish mTLS connection using PKCS#11 "
+                "but 'pkcs11' parameter is 'None'!",
+                param="pkcs11",
             )
 
         tls_ctx_opt = TlsContextOptions.create_client_with_mtls_pkcs11(
@@ -306,7 +319,11 @@ class IOTX509RefreshableSession(
             )
             return connection_future.result(self.timeout)
         except AwsCrtError as err:
-            raise BRSError("Error completing mTLS connection.") from err
+            raise BRSConnectionError(
+                "Error completing mTLS connection.",
+                param="endpoint",
+                value=str(url.hostname),
+            ) from err
 
     def get_identity(self) -> Identity:
         """Returns metadata about the current caller identity.
@@ -339,22 +356,27 @@ class IOTX509RefreshableSession(
             )
             return endpoint
 
-        raise BRSError(
+        raise BRSValidationError(
             "Invalid IoT endpoint provided for credentials provider. "
-            "Expected '<id>.credentials.iot.<region>.amazonaws.com'"
+            "Expected '<id>.credentials.iot.<region>.amazonaws.com'",
+            param="endpoint",
+            value=endpoint,
         )
 
     @staticmethod
     def _validate_pkcs11(pkcs11: PKCS11) -> PKCS11:
         if "pkcs11_lib" not in pkcs11:
-            raise BRSError(
+            raise BRSConfigurationError(
                 "PKCS#11 library path must be provided as 'pkcs11_lib'"
-                " in 'pkcs11'."
+                " in 'pkcs11'.",
+                param="pkcs11_lib",
             )
         elif not Path(pkcs11["pkcs11_lib"]).expanduser().resolve().is_file():
-            raise BRSError(
+            raise BRSValidationError(
                 f"'{pkcs11['pkcs11_lib']}' is not a valid file path for "
-                "'pkcs11_lib' in 'pkcs11'."
+                "'pkcs11_lib' in 'pkcs11'.",
+                param="pkcs11_lib",
+                value=pkcs11.get("pkcs11_lib"),
             )
         pkcs11.setdefault("user_pin", None)
         pkcs11.setdefault("slot_id", None)
@@ -374,7 +396,12 @@ class IOTX509RefreshableSession(
             case str() as p if Path(p).expanduser().resolve().is_file():
                 return Path(p).expanduser().resolve().read_bytes()
             case _:
-                raise BRSError(f"Invalid {name} provided.")
+                value = type(v).__name__
+                raise BRSValidationError(
+                    f"Invalid {name} provided.",
+                    param=name,
+                    value=value,
+                )
 
     @staticmethod
     def _bytes_to_tempfile(b: bytes, suffix: str = ".pem") -> str:
@@ -456,7 +483,11 @@ class IOTX509RefreshableSession(
 
         # Validate transport
         if transport not in list(get_args(Transport)):
-            raise BRSError("Transport must be 'x509' or 'ws'")
+            raise BRSValidationError(
+                "Transport must be 'x509' or 'ws'",
+                param="transport",
+                value=transport,
+            )
 
         # Region default (WS only)
         if region is None:
@@ -480,24 +511,33 @@ class IOTX509RefreshableSession(
             case dict():
                 pkcs11 = self._validate_pkcs11(pkcs11)
             case _:
-                raise BRSError("Invalid PKCS#11 configuration provided.")
+                raise BRSValidationError(
+                    "Invalid PKCS#11 configuration provided.",
+                    param="pkcs11",
+                    value=type(pkcs11).__name__,
+                )
 
         # X.509 invariants
         if transport == "x509":
             has_key = key_bytes is not None
             has_hsm = pkcs11 is not None
             if not has_key and not has_hsm:
-                raise BRSError(
+                raise BRSConfigurationError(
                     "For transport='x509', provide either 'private_key' "
-                    "(bytes/path) or 'pkcs11'."
+                    "(bytes/path) or 'pkcs11'.",
+                    param="private_key/pkcs11",
                 )
             if has_key and has_hsm:
-                raise BRSError(
+                raise BRSConfigurationError(
                     "Provide only one of 'private_key' or 'pkcs11' for "
-                    "transport='x509'."
+                    "transport='x509'.",
+                    param="private_key/pkcs11",
                 )
             if cert_bytes is None:
-                raise BRSError("Certificate is required for transport='x509'")
+                raise BRSConfigurationError(
+                    "Certificate is required for transport='x509'",
+                    param="certificate",
+                )
 
         # CRT bootstrap
         event_loop = io.EventLoopGroup(1)

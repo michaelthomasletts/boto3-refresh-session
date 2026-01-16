@@ -6,7 +6,7 @@ __all__ = ["IoTRefreshableSession"]
 
 from typing import get_args
 
-from ...exceptions import BRSError
+from ...exceptions import BRSValidationError
 from ...utils import (
     BaseIoTRefreshableSession,
     BaseRefreshableSession,
@@ -23,10 +23,12 @@ class IoTRefreshableSession(BaseRefreshableSession, registry_key="iot"):
         if authentication_method not in (
             methods := cls.get_available_authentication_methods()
         ):
-            raise BRSError(
+            raise BRSValidationError(
                 f"{authentication_method!r} is an invalid authentication "
                 "method parameter. Available authentication methods are "
-                f"{', '.join(repr(meth) for meth in methods)}."
+                f"{', '.join(repr(meth) for meth in methods)}.",
+                param="authentication_method",
+                value=authentication_method,
             )
 
         return BaseIoTRefreshableSession.registry[authentication_method](

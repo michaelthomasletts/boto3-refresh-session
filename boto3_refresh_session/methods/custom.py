@@ -2,7 +2,7 @@
 
 __all__ = ["CustomRefreshableSession"]
 
-from ..exceptions import BRSError, BRSWarning
+from ..exceptions import BRSCredentialError, BRSWarning
 from ..utils import (
     BaseRefreshableSession,
     CustomCredentialsMethod,
@@ -116,10 +116,10 @@ class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
         required_keys = {"access_key", "secret_key", "token", "expiry_time"}
 
         if missing := required_keys - credentials.keys():
-            raise BRSError(
-                f"The dict returned by custom_credentials_method is missing "
-                "these key-value pairs: "
-                f"{', '.join(repr(param) for param in missing)}. "
+            raise BRSCredentialError(
+                "The dict returned by custom_credentials_method is missing "
+                "required key-value pairs.",
+                details={"missing": sorted(missing)},
             )
 
         return credentials

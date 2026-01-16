@@ -8,7 +8,11 @@ from botocore.config import Config
 from botocore.stub import Stubber
 
 from boto3_refresh_session import RefreshableSession
-from boto3_refresh_session.exceptions import BRSError
+from boto3_refresh_session.exceptions import (
+    BRSConfigurationError,
+    BRSCredentialError,
+    BRSValidationError,
+)
 from boto3_refresh_session.methods.iot.x509 import IOTX509RefreshableSession
 
 
@@ -399,7 +403,7 @@ def test_custom_refreshes_expired_credentials(monkeypatch):
 
 
 def test_sts_invalid_token_code_raises(monkeypatch):
-    """Raises BRSError when MFA TokenCode is invalid."""
+    """Raises BRSValidationError when MFA TokenCode is invalid."""
 
     _set_dummy_env(monkeypatch)
     assume_role_kwargs = {
@@ -414,7 +418,7 @@ def test_sts_invalid_token_code_raises(monkeypatch):
         region_name="us-east-1",
         defer_refresh=True,
     )
-    with pytest.raises(BRSError):
+    with pytest.raises(BRSValidationError):
         session.refreshable_credentials()
 
 
@@ -422,7 +426,7 @@ def test_iot_invalid_endpoint_raises(monkeypatch):
     """Rejects invalid IoT credential endpoint format."""
 
     _set_dummy_env(monkeypatch)
-    with pytest.raises(BRSError):
+    with pytest.raises(BRSValidationError):
         RefreshableSession(
             method="iot",
             authentication_method="x509",
@@ -439,7 +443,7 @@ def test_iot_missing_private_key_raises(monkeypatch):
     """Requires either private_key or pkcs11 for IoT x509."""
 
     _set_dummy_env(monkeypatch)
-    with pytest.raises(BRSError):
+    with pytest.raises(BRSConfigurationError):
         RefreshableSession(
             method="iot",
             authentication_method="x509",
@@ -456,7 +460,7 @@ def test_iot_invalid_certificate_path_raises(monkeypatch):
     """Rejects invalid certificate file paths."""
 
     _set_dummy_env(monkeypatch)
-    with pytest.raises(BRSError):
+    with pytest.raises(BRSValidationError):
         RefreshableSession(
             method="iot",
             authentication_method="x509",
@@ -486,7 +490,7 @@ def test_custom_missing_keys_raises(monkeypatch):
         region_name="us-east-1",
         defer_refresh=True,
     )
-    with pytest.raises(BRSError):
+    with pytest.raises(BRSCredentialError):
         session.refreshable_credentials()
 
 

@@ -6,7 +6,7 @@ __all__ = ["RefreshableSession"]
 
 from typing import get_args
 
-from .exceptions import BRSError
+from .exceptions import BRSValidationError
 from .utils import BaseRefreshableSession, Method
 
 
@@ -68,10 +68,12 @@ class RefreshableSession:
         cls, method: Method = "sts", **kwargs
     ) -> BaseRefreshableSession:
         if method not in (methods := cls.get_available_methods()):
-            raise BRSError(
+            raise BRSValidationError(
                 f"{method!r} is an invalid method parameter. "
                 "Available methods are "
-                f"{', '.join(repr(meth) for meth in methods)}."
+                f"{', '.join(repr(meth) for meth in methods)}.",
+                param="method",
+                value=method,
             )
 
         return BaseRefreshableSession.registry[method](**kwargs)

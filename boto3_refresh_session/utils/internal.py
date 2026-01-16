@@ -53,7 +53,7 @@ from botocore.credentials import (
     RefreshableCredentials,
 )
 
-from ..exceptions import BRSError, BRSWarning
+from ..exceptions import BRSCacheError, BRSWarning
 from .cache import ClientCache
 from .typing import (
     Identity,
@@ -331,7 +331,7 @@ class BRSSession(Session):
                 return client
 
             # if caching fails, return cached client if possible
-            except BRSError:
+            except BRSCacheError:
                 return (
                     cached
                     if (cached := self._client_cache.get(key)) is not None

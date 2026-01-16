@@ -1,7 +1,7 @@
 """Cache primitives for memoizing boto3 client instances.
 
 `ClientCache` provides a thread-safe mapping for cached clients and raises
-`BRSError` when lookups or mutations violate the expected cache contract.
+`BRSCacheError` when lookups or mutations violate the expected cache contract.
 """
 
 __all__ = ["ClientCache"]
@@ -11,7 +11,7 @@ from typing import Hashable, Optional
 
 from botocore.client import BaseClient
 
-from ..exceptions import BRSError
+from ..exceptions import BRSCacheExistsError, BRSCacheNotFoundError
 
 
 class ClientCache:
@@ -39,21 +39,21 @@ class ClientCache:
             try:
                 return self._cache[hash]
             except KeyError as err:
-                raise BRSError(
+                raise BRSCacheNotFoundError(
                     "The client you requested has not been cached."
                 ) from err
 
     def __setitem__(self, hash: Hashable, client: BaseClient) -> None:
         with self._lock:
             if hash in self._cache:
-                raise BRSError("Client already exists in cache.")
+                raise BRSCacheExistsError("Client already exists in cache.")
 
             self._cache[hash] = client
 
     def __delitem__(self, hash: Hashable) -> None:
         with self._lock:
             if hash not in self._cache:
-                raise BRSError("Client not found in cache.")
+                raise BRSCacheNotFoundError("Client not found in cache.")
             del self._cache[hash]
 
     def keys(self) -> tuple[Hashable, ...]:
@@ -89,6 +89,6 @@ class ClientCache:
 
         with self._lock:
             if (client := self._cache.get(hash)) is None:
-                raise BRSError("Client not found in cache.")
+                raise BRSCacheNotFoundError("Client not found in cache.")
             del self._cache[hash]
             return client
