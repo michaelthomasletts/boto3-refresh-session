@@ -556,3 +556,7 @@ MFA support for STS added!
 
 - The `RefreshableTemporaryCredentials` type hint was deprecated in favor of `TemporaryCredentials`.
 - `expiry_time` was added as a parameter returned by the `refreshable_credentials` method and `credentials` attribute.
+
+#### 😛 v6.3.0
+
+The exception suite was expanded to include new exceptions which are more precise than `BRSError`. Additionally, new parameters were added to `BRSError` in order to make error handling more robust. Since these new exceptions inherit from `BRSError`, developers catching exceptions raised by `BRSError` will not experience breaking changes; however, code that checks `type(err) is BRSError` (instead of `isinstance`), exact `str(err) / repr(err)` comparisons, and parsing messages instead of using the new attributes (e.g. `details|code|status_code|param|value`, etc.) may experience breaking changes.
