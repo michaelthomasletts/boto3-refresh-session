@@ -214,10 +214,6 @@ class BRSSession(Session):
         # initializing Session
         super().__init__(**kwargs)
 
-        # because the "client" namespace is already taken,
-        # we must preserve the O.G.
-        self._client: Callable = super().client
-
         # initializing client cache
         self._client_cache: ClientCache = ClientCache()
 
@@ -296,7 +292,7 @@ class BRSSession(Session):
                 return _cached_client
 
             # else -- initialize, cache, and return it
-            client = self._client(*args, **kwargs)
+            client = super().client(*args, **kwargs)
 
             # attempting to cache and return the client
             try:
@@ -313,7 +309,7 @@ class BRSSession(Session):
 
         # return a new client if caching is disabled
         else:
-            return self._client(*args, **kwargs)
+            return super().client(*args, **kwargs)
 
     def refreshable_credentials(self) -> RefreshableTemporaryCredentials:
         """The current temporary AWS security credentials.
