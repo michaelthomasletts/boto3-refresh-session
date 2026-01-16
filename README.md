@@ -125,9 +125,29 @@ pip install boto3-refresh-session
 
 ## 🏃 Quick Start Guide
 
+Follow these guides for getting started with `boto3-refresh-session`.
+
+#### Basic
+
+The following example shows the initialization of `RefreshableSession` _using AWS env vars, `~/.aws/credentials`, or default AWS profile_ and how to initialize an S3 client.
+
+```python
+from boto3_refresh_session import RefreshableSession
+
+session = RefreshableSession(
+  assume_role_kwargs={
+    "RoleArn": "arn:aws:iam::123456789012:role/CoolGuy", # required
+  },
+  region_name="us-east-1",
+)
+s3 = session.client("s3")
+```
+
+#### Advanced
+
 The following example shows how to:
 
-- Initialize `RefreshableSession` _using an AWS profile_
+- Initialize `RefreshableSession` _using a non-default AWS profile_
 - Enable MFA support
 - Initialize an S3 client with some configurations
 
@@ -165,7 +185,6 @@ session = RefreshableSession(
   region_name="us-east-1",
 )
 s3 = session.client("s3", config=Config(retries={"max_attempts": 2}))
-s3.list_buckets()
 ```
 
 ## 📝 Usage
