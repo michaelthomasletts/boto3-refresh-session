@@ -4,7 +4,7 @@ __all__ = ["STSRefreshableSession"]
 
 from typing import Callable
 
-from ..exceptions import BRSValidationError, BRSWarning
+from ..exceptions import BRSConfigurationError, BRSValidationError, BRSWarning
 from ..utils import (
     MFA_SERIAL_PATTERN,
     ROLE_ARN_PATTERN,
@@ -102,7 +102,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
 
         # verifying 'RoleArn' is provided in 'assume_role_kwargs'
         if "RoleArn" not in assume_role_kwargs:
-            raise BRSValidationError(
+            raise BRSConfigurationError(
                 "'RoleArn' must be provided in 'assume_role_kwargs'!",
                 param="RoleArn",
             )
@@ -175,7 +175,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
             self.mfa_token_provider
             and "SerialNumber" not in assume_role_kwargs
         ):
-            raise BRSValidationError(
+            raise BRSConfigurationError(
                 "'SerialNumber' must be provided in 'assume_role_kwargs' "
                 "when using 'mfa_token_provider'!",
                 param="SerialNumber",
@@ -193,7 +193,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
                 and "TokenCode" in assume_role_kwargs
             )
         ):
-            raise BRSValidationError(
+            raise BRSConfigurationError(
                 "'SerialNumber' and 'TokenCode' must be provided in "
                 "'assume_role_kwargs' when 'mfa_token_provider' is not set!",
                 param="SerialNumber/TokenCode",

@@ -426,7 +426,7 @@ def test_iot_invalid_endpoint_raises(monkeypatch):
     """Rejects invalid IoT credential endpoint format."""
 
     _set_dummy_env(monkeypatch)
-    with pytest.raises(BRSConfigurationError):
+    with pytest.raises(BRSValidationError):
         RefreshableSession(
             method="iot",
             authentication_method="x509",

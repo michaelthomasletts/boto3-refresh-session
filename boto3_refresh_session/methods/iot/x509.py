@@ -356,7 +356,7 @@ class IOTX509RefreshableSession(
             )
             return endpoint
 
-        raise BRSConfigurationError(
+        raise BRSValidationError(
             "Invalid IoT endpoint provided for credentials provider. "
             "Expected '<id>.credentials.iot.<region>.amazonaws.com'",
             param="endpoint",
@@ -372,7 +372,7 @@ class IOTX509RefreshableSession(
                 param="pkcs11_lib",
             )
         elif not Path(pkcs11["pkcs11_lib"]).expanduser().resolve().is_file():
-            raise BRSConfigurationError(
+            raise BRSValidationError(
                 f"'{pkcs11['pkcs11_lib']}' is not a valid file path for "
                 "'pkcs11_lib' in 'pkcs11'.",
                 param="pkcs11_lib",
@@ -511,7 +511,7 @@ class IOTX509RefreshableSession(
             case dict():
                 pkcs11 = self._validate_pkcs11(pkcs11)
             case _:
-                raise BRSConfigurationError(
+                raise BRSValidationError(
                     "Invalid PKCS#11 configuration provided.",
                     param="pkcs11",
                     value=type(pkcs11).__name__,
