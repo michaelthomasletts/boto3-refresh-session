@@ -138,7 +138,7 @@ import subprocess
 
 
 def mfa_token_provider(cmd: list[str], timeout: float = 10.0):
-  """Returns an MFA code."""
+  """Returns an MFA code. Accepts commands which emit tokens."""
 
   p = subprocess.run(
     cmd,
@@ -162,6 +162,7 @@ session = RefreshableSession(
     "timeout": 3.0
   },
   profile_name="test-aws-profile",
+  region_name="us-east-1",
 )
 s3 = session.client("s3", config=Config(retries={"max_attempts": 2}))
 s3.list_buckets()
