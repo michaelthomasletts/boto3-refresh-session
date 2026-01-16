@@ -111,7 +111,20 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
             assume_role_kwargs["RoleSessionName"] = "boto3-refresh-session"
 
         # store MFA token provider
-        self.mfa_token_provider = mfa_token_provider
+        try:
+            # verifying type of mfa_token_provider
+            assert (
+                isinstance(mfa_token_provider, Callable)
+                or mfa_token_provider is None
+            )
+            self.mfa_token_provider = mfa_token_provider
+        except AssertionError as err:
+            raise BRSError(
+                "'mfa_token_provider' must be a callable that returns a "
+                "string representing an MFA token code!"
+            ) from err
+
+        # storing mfa_token_provider_kwargs
         self.mfa_token_provider_kwargs = (
             mfa_token_provider_kwargs if mfa_token_provider_kwargs else {}
         )
@@ -181,9 +194,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
             )
 
         # validating TokenCode format
-        if "TokenCode" in params:
-            token_code = params["TokenCode"]
-
+        if (token_code := params.get("TokenCode")) is not None:
             if (
                 not isinstance(token_code, str)
                 or len(token_code) != 6
