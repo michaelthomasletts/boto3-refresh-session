@@ -71,7 +71,7 @@
 
   <a href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/LICENSE">
     <img 
-      src="https://img.shields.io/github/license/michaelthomasletts/boto3-refresh-session?style=flat&labelColor=555&color=FF0000&label=📜%20License" 
+      src="https://img.shields.io/static/v1?label=License&message=MPL-2.0&color=FF0000&labelColor=555&logo=github&style=flat"
       alt="license"
     />
   </a>
