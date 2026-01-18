@@ -69,6 +69,13 @@
     />
   </a>
 
+  <a href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/LICENSE">
+    <img 
+      src="https://img.shields.io/github/license/michaelthomasletts/boto3-refresh-session?style=flat&labelColor=555&color=FF0000&label=📜%20License" 
+      alt="license"
+    />
+  </a>
+
 <a href="https://github.com/sponsors/michaelthomasletts">
   <img 
     src="https://img.shields.io/badge/Sponsor%20this%20Project-💙-FF0000?style=flat&labelColor=555&logo=githubsponsors" 
