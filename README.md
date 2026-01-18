@@ -124,6 +124,6 @@ Refer to the [official documentation](https://michaelthomasletts.com/boto3-refre
 
 Refer to the [changelog](https://michaelthomasletts.com/boto3-refresh-session/changelog.html).
 
-## License
+## 📜 License
 
 Beginning v7.0.0, `boto3-refresh-session` is licensed under [Mozilla Public License 2.0 (MPL-2.0)](https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/LICENSE). Earlier versions remain licensed under the MIT License.
