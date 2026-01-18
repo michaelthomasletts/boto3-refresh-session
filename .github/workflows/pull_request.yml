@@ -14,10 +14,6 @@ jobs:
   test:
     name: Run tests, linting, and formatting
     runs-on: ubuntu-latest
-    env:
-      ROLE_ARN: ${{ secrets.ROLE_ARN }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}      
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
