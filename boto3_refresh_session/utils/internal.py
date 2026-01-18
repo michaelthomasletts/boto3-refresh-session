@@ -276,9 +276,9 @@ class BRSSession(Session):
         Parameters
         ----------
         *args : Any
-            Positional arguments for :class:`boto3.session.Session.client`.
+            Positional arguments for :meth:`boto3.session.Session.client`.
         **kwargs : Any
-            Keyword arguments for :class:`boto3.session.Session.client`.
+            Keyword arguments for :meth:`boto3.session.Session.client`.
 
         Returns
         -------
