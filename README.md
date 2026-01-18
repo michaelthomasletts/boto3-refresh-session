@@ -85,7 +85,7 @@
 
 </div>
 
-## 😛 Features
+## Features
 
 - Drop-in replacement for `boto3.session.Session`
 - MFA support included for STS
@@ -98,7 +98,7 @@
     - MQTT actions are available!
 - [Tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [documented](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/)
 
-## 😌 Recognition and Testimonials
+## Recognition and Testimonials
 
 [Featured in TL;DR Sec.](https://tldrsec.com/p/tldr-sec-282)
 
@@ -110,20 +110,22 @@ A testimonial from a Cyber Security Engineer at a FAANG company:
 
 > _Most of my work is on tooling related to AWS security, so I'm pretty choosy about boto3 credentials-adjacent code. I often opt to just write this sort of thing myself so I at least know that I can reason about it. But I found boto3-refresh-session to be very clean and intuitive [...] We're using the RefreshableSession class as part of a client cache construct [...] We're using AWS Lambda to perform lots of operations across several regions in hundreds of accounts, over and over again, all day every day. And it turns out that there's a surprising amount of overhead to creating boto3 clients (mostly deserializing service definition json), so we can run MUCH more efficiently if we keep a cache of clients, all equipped with automatically refreshing sessions._
 
-## 💻 Installation
+## Installation
 
 ```bash
 pip install boto3-refresh-session
 ```
 
-## 📝 Usage
+## Usage
 
-Refer to the [official documentation](https://michaelthomasletts.com/boto3-refresh-session/usage.html) for guidance.
+Refer to the [official usage documentation](https://michaelthomasletts.com/boto3-refresh-session/usage.html) for guidance on general usage.
 
-## ⚠️ Changes
+Refer to the [official API documentation](https://michaelthomasletts.com/boto3-refresh-session/modules/index.html) for technical information.
 
-Refer to the [changelog](https://michaelthomasletts.com/boto3-refresh-session/changelog.html).
+## Versions
 
-## 📜 License
+Refer to the [changelog](https://michaelthomasletts.com/boto3-refresh-session/changelog.html) for additional information on specific versions and releases.
+
+## License
 
 Beginning v7.0.0, `boto3-refresh-session` is licensed under [Mozilla Public License 2.0 (MPL-2.0)](https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/LICENSE). Earlier versions remain licensed under the MIT License.
