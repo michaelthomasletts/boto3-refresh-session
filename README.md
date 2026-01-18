@@ -69,13 +69,6 @@
     />
   </a>
 
-  <a href="https://michaelthomasletts.github.io/blog/brs-rationale/">
-    <img 
-      src="https://img.shields.io/badge/Blog%20Post-📘-FF0000?style=flat&labelColor=555&logo=readthedocs" 
-      alt="blog"
-    />
-  </a>
-
 <a href="https://github.com/sponsors/michaelthomasletts">
   <img 
     src="https://img.shields.io/badge/Sponsor%20this%20Project-💙-FF0000?style=flat&labelColor=555&logo=githubsponsors" 
