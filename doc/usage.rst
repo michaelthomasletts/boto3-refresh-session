@@ -243,3 +243,44 @@ For MQTT operations:
     conn.connect().result()
     conn.publish(topic="foo/bar", payload=b"hi", qos=AT_LEAST_ONCE)
     conn.disconnect().result()
+
+Miscellaneous
+-------------
+
+To see which identity the session is currently using, call the ``get_caller_identity`` method:
+
+.. code-block:: python
+
+    print(session.get_caller_identity())
+
+.. tip::
+
+    The value returned by ``get_caller_identity`` when ``method="custom"`` is not especially informative. 
+    This is because custom credential providers vary widely, which this library cannot infer or anticipate in advance.
+    Users employing ``method="custom"`` should implement their own identity verification logic as needed.
+
+To return the currently active temporary security credentials, call the ``refreshable_credentials`` method or ``credentials`` property:
+
+.. code-block:: python
+
+    # refreshable_credentials method
+    print(session.refreshable_credentials())
+
+    # credentials property
+    print(session.credentials)
+
+If you wish to make ``RefreshableSession`` globally available in your application without needing to pass it around explicitly, cleverly update the default session in boto3 like so:
+
+.. code-block:: python
+
+    from boto3 import DEFAULT_SESSION, client
+    from boto3_refresh_session import RefreshableSession
+
+    DEFAULT_SESSION = RefreshableSession(
+        assume_role_kwargs={
+            "RoleArn": "<your-role-arn>",
+            "RoleSessionName": "<your-role-session-name>",
+        },
+        ...
+    )
+    s3 = client("s3")  # uses DEFAULT_SESSION under the hood
