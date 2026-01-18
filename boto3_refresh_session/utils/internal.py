@@ -1,3 +1,7 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 """This module defines the core building blocks used by `RefreshableSession`
 and method-specific session classes. The intent is to separate registry
 mechanics, credential refresh contracts, and boto3 session behavior so each

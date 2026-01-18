@@ -16,6 +16,8 @@ boto3-refresh-session
 
 **Version:** |release|
 
+**License:** Mozilla Public License 2.0 (MPL-2.0)
+
 **Useful Links:**
 
 :ref:`Usage <usage>` |
