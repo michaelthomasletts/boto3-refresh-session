@@ -1,7 +1,6 @@
-"""This Source Code Form is subject to the terms of the Mozilla Public
-License, v. 2.0. If a copy of the MPL was not distributed with this
-file, you can obtain one at https://mozilla.org/MPL/2.0/.
-"""
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 __all__ = []
 
@@ -18,5 +17,5 @@ __version__ = "6.3.1"
 __title__ = "boto3-refresh-session"
 __author__ = "Mike Letts"
 __maintainer__ = "Mike Letts"
-__license__ = "MIT"
+__license__ = "MPL-2.0"
 __email__ = "lettsmt@gmail.com"
