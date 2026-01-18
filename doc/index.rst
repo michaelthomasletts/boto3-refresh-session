@@ -7,12 +7,9 @@
    :maxdepth: 1
    :hidden:
 
-   Q&A <qanda>
-   Installation <installation>   
    Usage <usage>
    Modules <modules/index>
-   Authorization <authorization>
-   Contributing <contributing>
+   Changelog <changelog>
 
 boto3-refresh-session
 ---------------------
@@ -21,11 +18,9 @@ boto3-refresh-session
 
 **Useful Links:**
 
-:ref:`Q&A <qanda>` |
-:ref:`Installation <installation>` |
 :ref:`Usage <usage>` |
 :ref:`Modules <modules>` |
-:ref:`Authorization <authorization>`
+:ref:`Changelog <changelog>`
 
 **Authors:** `Mike Letts <https://michaelthomasletts.github.io/>`_
 

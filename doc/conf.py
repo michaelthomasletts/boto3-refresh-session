@@ -43,11 +43,8 @@ html_file_suffix = ".html"
 html_sidebars = {
     "index": [],
     "usage": [],
-    "authorization": [],
-    "contributing": [],
-    "qanda": [],
-    "installation": [],
     "modules/**": ["sidebar-nav-bs.html", "search-field.html"],
+    "changelog": [],
 }
 html_context = {
     "default_mode": "dark",
