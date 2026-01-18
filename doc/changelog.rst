@@ -53,5 +53,5 @@ The exception suite was expanded to include new exceptions which are more precis
 v7.0.0
 ------
 
-Beginning v7.0.0, `boto3-refresh-session` is licensed under `Mozilla Public License 2.0 (MPL-2.0) <https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/LICENSE>`_. 
+Beginning v7.0.0, boto3-refresh-session is licensed under `Mozilla Public License 2.0 (MPL-2.0) <https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/LICENSE>`_. 
 Earlier versions remain licensed under the MIT License.
