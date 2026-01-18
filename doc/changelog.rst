@@ -49,3 +49,9 @@ v6.3.0
 ------
 
 The exception suite was expanded to include new exceptions which are more precise than ``BRSError``. Additionally, new parameters were added to ``BRSError`` in order to make error handling more robust. Since these new exceptions inherit from ``BRSError``, developers catching exceptions raised by ``BRSError`` will not experience breaking changes; however, code that checks ``type(err) is BRSError`` (instead of ``isinstance``), exact ``str(err) / repr(err)`` comparisons, and parsing messages instead of using the new attributes (e.g. ``details|code|status_code|param|value``, etc.) may experience breaking changes.
+
+v7.0.0
+------
+
+Beginning v7.0.0, `boto3-refresh-session` is licensed under `Mozilla Public License 2.0 (MPL-2.0) <https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/LICENSE>`_. 
+Earlier versions remain licensed under the MIT License.
