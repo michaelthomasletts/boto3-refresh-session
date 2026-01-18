@@ -13,7 +13,7 @@ from .session import *
 
 __all__.extend(session.__all__)
 __all__.extend(exceptions.__all__)
-__version__ = "7.0.5"
+__version__ = "7.0.6"
 __title__ = "boto3-refresh-session"
 __author__ = "Mike Letts"
 __maintainer__ = "Mike Letts"
