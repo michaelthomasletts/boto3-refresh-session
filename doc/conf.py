@@ -48,6 +48,7 @@ html_sidebars = {
 }
 html_context = {
     "default_mode": "dark",
+    "license": str(pyproject["project"]["license"]["text"]),
 }
 htmlhelp_basename = project
 html_css_files = ["custom.css"]
