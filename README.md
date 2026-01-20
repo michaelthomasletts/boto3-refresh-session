@@ -122,7 +122,7 @@ pip install boto3-refresh-session
 
 Refer to the [official usage documentation](https://michaelthomasletts.com/boto3-refresh-session/usage.html) for guidance on how to use boto3-refresh-session.
 
-Refer to the [official API documentation](https://michaelthomasletts.com/boto3-refresh-session/modules/index.html) for technical information about boto3-refresh-session.
+Refer to the [official API documentation](https://michaelthomasletts.com/boto3-refresh-session/api/index.html) for technical information about boto3-refresh-session.
 
 ## Versions
 
