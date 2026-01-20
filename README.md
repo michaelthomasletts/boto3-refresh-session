@@ -184,7 +184,7 @@ session = RefreshableSession(
 
 Refer to the [official usage documentation](https://michaelthomasletts.com/boto3-refresh-session/usage.html) for guidance on general usage.
 
-Refer to the [official API documentation](https://michaelthomasletts.com/boto3-refresh-session/modules/index.html) (named "Modules") for technical information.
+Refer to the [official API documentation](https://michaelthomasletts.com/boto3-refresh-session/modules/index.html) for technical information.
 
 ## Versions
 

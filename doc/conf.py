@@ -43,7 +43,7 @@ html_file_suffix = ".html"
 html_sidebars = {
     "index": [],
     "usage": [],
-    "modules/**": ["sidebar-nav-bs.html", "search-field.html"],
+    "api/**": ["sidebar-nav-bs.html", "search-field.html"],
     "changelog": [],
 }
 html_context = {

@@ -8,7 +8,7 @@
    :hidden:
 
    Usage <usage>
-   Modules <modules/index>
+   API <api/index>
    Changelog <changelog>
 
 boto3-refresh-session
@@ -21,7 +21,7 @@ boto3-refresh-session
 **Useful Links:**
 
 :ref:`Usage <usage>` |
-:ref:`Modules <modules>` |
+:ref:`API <api>` |
 :ref:`Changelog <changelog>`
 
 **Authors:** `Mike Letts <https://michaelthomasletts.github.io/>`_

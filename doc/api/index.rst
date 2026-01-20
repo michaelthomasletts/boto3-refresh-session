@@ -1,9 +1,9 @@
-.. _modules:
+.. _api:
 
 .. currentmodule:: boto3_refresh_session
 
-Modules
-=======
+API
+===
 
 boto3-refresh-session includes multiple modules, grouped into two categories:
 
@@ -14,12 +14,12 @@ boto3-refresh-session includes multiple modules, grouped into two categories:
    :maxdepth: 1
    :hidden:
 
-   config
-   exceptions
    session
    custom
    iot
    sts
+   config
+   exceptions   
 
 Core interface
 --------------
@@ -38,7 +38,7 @@ Refresh strategies
 ------------------
 
 boto3-refresh-session supports multiple AWS services.
-There is also a highly flexible module named "custom" for users with highly sophisticated, novel, or idiosyncratic authentication flows.
+There is also a highly flexible module named "custom" for users with highly sophisticated, novel, or idiosyncratic credential flows.
 
 .. tip::
    
