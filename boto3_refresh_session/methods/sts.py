@@ -88,8 +88,8 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
 
     See Also
     --------
-    boto3_refresh_session.configs.AssumeRoleConfig
-    boto3_refresh_session.configs.STSClientConfig
+    boto3_refresh_session.utils.config.AssumeRoleConfig
+    boto3_refresh_session.utils.config.STSClientConfig
     """
 
     def __init__(

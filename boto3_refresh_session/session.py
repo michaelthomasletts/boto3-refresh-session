@@ -67,8 +67,8 @@ class RefreshableSession:
     boto3_refresh_session.methods.custom.CustomRefreshableSession
     boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession
     boto3_refresh_session.methods.sts.STSRefreshableSession
-    boto3_refresh_session.configs.AssumeRoleConfig
-    boto3_refresh_session.configs.STSClientConfig
+    boto3_refresh_session.utils.config.AssumeRoleConfig
+    boto3_refresh_session.utils.config.STSClientConfig
 
     Examples
     --------
