@@ -112,8 +112,72 @@ A testimonial from a Cyber Security Engineer at a FAANG company:
 
 ## Installation
 
+boto3-refresh-session is available on PyPI:
+
 ```bash
 pip install boto3-refresh-session
+```
+
+## Quick Start Guide
+
+Basic, bare-bones initialization:
+
+```python
+from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
+
+session = RefreshableSession(
+  AssumeRoleConfig(
+    RoleArn="<your role arn>"
+  )
+)
+```
+
+Basic initilization including some additional session parameters:
+
+```python
+from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
+
+session = RefreshableSession(
+  AssumeRoleConfig(
+    RoleArn="<your role arn>"
+  ),
+  region_name="<your region name>",
+  profile_name="<your aws profile name>",
+)
+```
+
+Slightly advanced initialization using an MFA token provider (Yubikey):
+
+```python
+from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
+import subprocess
+from typing import Sequence
+
+
+def mfa_token_provider(cmd: Sequence[str], timeout: float):
+  p = subprocess.run(
+    list(cmd),
+    check=False,
+    capture_output=True,
+    text=True,
+    timeout=timeout,
+  )
+  return (p.stdout or "").strip()
+
+
+mfa_token_provider_kwargs = {
+  "cmd": ["ykman", "oath", "code", "--single", "AWS-prod"],  # example token source
+  "timeout": 3.0,
+}
+
+session = RefreshableSession(
+  AssumeRoleConfig(
+    RoleArn="<your role arn>",
+    SerialNumber="<your MFA device arn>",
+  ),
+  mfa_token_provider=mfa_token_provider,
+  mfa_token_provider_kwargs=mfa_token_provider_kwargs,
+)
 ```
 
 ## Usage
