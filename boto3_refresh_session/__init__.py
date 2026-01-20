@@ -16,7 +16,7 @@ from .utils.config import *
 __all__.extend(config.__all__)
 __all__.extend(session.__all__)
 __all__.extend(exceptions.__all__)
-__version__ = "7.1.10"
+__version__ = "7.1.11"
 __title__ = "boto3-refresh-session"
 __author__ = "Mike Letts"
 __maintainer__ = "Mike Letts"
