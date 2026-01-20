@@ -1,12 +1,12 @@
 from datetime import datetime, timedelta, timezone
 from threading import Barrier, Lock, Thread
 from time import sleep
+from typing import get_args
 
 import boto3
 import pytest
 from botocore.config import Config
 from botocore.stub import Stubber
-from typing import get_args
 
 from boto3_refresh_session import RefreshableSession
 from boto3_refresh_session.exceptions import (

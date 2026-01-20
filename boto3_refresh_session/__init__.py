@@ -10,7 +10,10 @@ from .methods.custom import *
 from .methods.iot import *
 from .methods.sts import *
 from .session import *
+from .utils import config
+from .utils.config import *
 
+__all__.extend(config.__all__)
 __all__.extend(session.__all__)
 __all__.extend(exceptions.__all__)
 __version__ = "7.1.9"
