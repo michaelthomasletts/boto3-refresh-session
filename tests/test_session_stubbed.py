@@ -13,6 +13,7 @@ from boto3_refresh_session.exceptions import (
     BRSCredentialError,
     BRSValidationError,
 )
+from boto3_refresh_session.utils import AssumeRoleConfig
 from boto3_refresh_session.methods.iot.x509 import IOTX509RefreshableSession
 
 
@@ -118,6 +119,30 @@ def test_sts_get_identity_stubbed(monkeypatch):
         assert identity["Account"] == "123456789012"
     finally:
         stubber.deactivate()
+
+
+def test_refreshable_session_positional_assume_role_config_rejected():
+    """Ensure positional AssumeRoleConfig is not accepted."""
+
+    config = AssumeRoleConfig(
+        RoleArn="arn:aws:iam::123456789012:role/TestRole",
+        RoleSessionName="unit-test",
+    )
+
+    with pytest.raises(TypeError):
+        RefreshableSession("sts", config)
+
+
+def test_refreshable_session_positional_assume_role_config_without_method():
+    """Ensure positional AssumeRoleConfig without method is not accepted."""
+
+    config = AssumeRoleConfig(
+        RoleArn="arn:aws:iam::123456789012:role/TestRole",
+        RoleSessionName="unit-test",
+    )
+
+    with pytest.raises(BRSValidationError):
+        RefreshableSession(config)
 
 
 def test_session_get_credentials_uses_refreshable(monkeypatch):
@@ -412,14 +437,13 @@ def test_sts_invalid_token_code_raises(monkeypatch):
         "SerialNumber": "arn:aws:iam::123456789012:mfa/test-user",
         "TokenCode": "bad",
     }
-    session = RefreshableSession(
-        method="sts",
-        assume_role_kwargs=assume_role_kwargs,
-        region_name="us-east-1",
-        defer_refresh=True,
-    )
     with pytest.raises(BRSValidationError):
-        session.refreshable_credentials()
+        RefreshableSession(
+            method="sts",
+            assume_role_kwargs=assume_role_kwargs,
+            region_name="us-east-1",
+            defer_refresh=True,
+        )
 
 
 def test_iot_invalid_endpoint_raises(monkeypatch):

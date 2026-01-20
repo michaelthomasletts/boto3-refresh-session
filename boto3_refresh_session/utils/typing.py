@@ -117,6 +117,7 @@ class AssumeRoleParams(TypedDict):
 
 
 class STSClientParams(TypedDict):
+    service_name: NotRequired[str]
     region_name: NotRequired[str]
     api_version: NotRequired[str]
     use_ssl: NotRequired[bool]

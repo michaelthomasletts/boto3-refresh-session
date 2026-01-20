@@ -55,3 +55,13 @@ v7.0.0
 
 Beginning v7.0.0, boto3-refresh-session is licensed under `Mozilla Public License 2.0 (MPL-2.0) <https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/LICENSE>`_. 
 Earlier versions remain licensed under the MIT License.
+
+v7.1.0
+------
+
+``AssumeRoleConfig`` and ``STSClientConfig`` objects were added to ``boto3_refresh_session.utils``.
+These objects encapsulate configuration parameters for assuming roles via STS, enhancing code readability and maintainability.
+Users should find it easier to manage and pass around STS-related configurations using these.
+Dictionaries are still supported for backward compatibility on ``sts_client_kwargs`` and ``assume_role_kwargs``.
+However, using these new objects is now the recommended approach.
+Refer to the `PR <https://github.com/michaelthomasletts/boto3-refresh-session/pull/102>`_ for more details.

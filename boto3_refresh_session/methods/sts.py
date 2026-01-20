@@ -10,12 +10,11 @@ from typing import Callable
 
 from ..exceptions import BRSConfigurationError, BRSValidationError, BRSWarning
 from ..utils import (
-    MFA_SERIAL_PATTERN,
-    ROLE_ARN_PATTERN,
-    ROLE_SESSION_NAME_PATTERN,
+    AssumeRoleConfig,
     AssumeRoleParams,
     BaseRefreshableSession,
     Identity,
+    STSClientConfig,
     STSClientParams,
     TemporaryCredentials,
     refreshable_session,
@@ -29,7 +28,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
 
     Parameters
     ----------
-    assume_role_kwargs : AssumeRoleParams
+    assume_role_kwargs : AssumeRoleParams | AssumeRoleConfig
         Required keyword arguments for :meth:`STS.Client.assume_role` (i.e.
         boto3 STS client). ``RoleArn`` is required. ``RoleSessionName`` will
         default to 'boto3-refresh-session' if not provided.
@@ -45,7 +44,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
            ``TokenCode`` in ``assume_role_kwargs``. You are responsible for
            updating ``assume_role_kwargs["TokenCode"]`` before the token
            expires.
-    sts_client_kwargs : STSClientParams, optional
+    sts_client_kwargs : STSClientParams | STSClientConfig, optional
         Optional keyword arguments for the :class:`STS.Client` object. Do not
         provide values for ``service_name`` as they are unnecessary. Default
         is None.
@@ -86,16 +85,39 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
     kwargs : dict
         Optional keyword arguments for the :class:`boto3.session.Session`
         object.
+
+    See Also
+    --------
+    boto3_refresh_session.utils.config.config.AssumeRoleConfig
+    boto3_refresh_session.utils.config.config.STSClientConfig
     """
 
     def __init__(
         self,
-        assume_role_kwargs: AssumeRoleParams,
-        sts_client_kwargs: STSClientParams | None = None,
+        assume_role_kwargs: AssumeRoleParams | AssumeRoleConfig,
+        sts_client_kwargs: STSClientParams | STSClientConfig | None = None,
         mfa_token_provider: Callable[[], str] | None = None,
         mfa_token_provider_kwargs: dict | None = None,
         **kwargs,
     ):
+        # initializing asssume_role_kwargs attribute
+        match assume_role_kwargs:
+            case AssumeRoleConfig():
+                self.assume_role_kwargs = assume_role_kwargs
+            case _:
+                self.assume_role_kwargs = AssumeRoleConfig(
+                    **assume_role_kwargs
+                )
+
+        # initializing sts_client_kwargs attribute
+        match sts_client_kwargs:
+            case STSClientConfig():
+                self.sts_client_kwargs = sts_client_kwargs
+            case None:
+                self.sts_client_kwargs = STSClientConfig()
+            case _:
+                self.sts_client_kwargs = STSClientConfig(**sts_client_kwargs)
+
         # ensuring 'refresh_method' is not set manually
         if "refresh_method" in kwargs:
             BRSWarning.warn(
@@ -104,43 +126,10 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
             )
             del kwargs["refresh_method"]
 
-        # verifying 'RoleArn' is provided in 'assume_role_kwargs'
-        if "RoleArn" not in assume_role_kwargs:
-            raise BRSConfigurationError(
-                "'RoleArn' must be provided in 'assume_role_kwargs'!",
-                param="RoleArn",
-            )
-
-        # verifying 'RoleArn' format
-        if not ROLE_ARN_PATTERN.match(assume_role_kwargs["RoleArn"]):
-            raise BRSValidationError(
-                "'RoleArn' in 'assume_role_kwargs' is not a valid AWS "
-                "Role ARN!",
-                param="RoleArn",
-                value=assume_role_kwargs.get("RoleArn"),
-            )
-
-        # setting default 'RoleSessionName' if not provided
-        if "RoleSessionName" not in assume_role_kwargs:
-            BRSWarning.warn(
-                "'RoleSessionName' not provided in "
-                "'assume_role_kwargs'! Defaulting to "
-                "'boto3-refresh-session'."
-            )
-            assume_role_kwargs["RoleSessionName"] = "boto3-refresh-session"
-
-        # verifying 'RoleSessionName' format
-        if not ROLE_SESSION_NAME_PATTERN.match(
-            assume_role_kwargs["RoleSessionName"]
-        ):
-            raise BRSValidationError(
-                "'RoleSessionName' in 'assume_role_kwargs' is not valid! "
-                "It must be 2-64 characters long and can contain only "
-                "alphanumeric characters and the following symbols: "
-                "'+=,.@-'.",
-                param="RoleSessionName",
-                value=assume_role_kwargs.get("RoleSessionName"),
-            )
+        # setting 'RoleSessionName' if not provided
+        self.assume_role_kwargs.RoleSessionName = self.assume_role_kwargs.get(
+            "RoleSessionName", "boto3-refresh-session"
+        )
 
         # store MFA token provider
         try:
@@ -158,26 +147,12 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
             ) from err
 
         # storing mfa_token_provider_kwargs
-        self.mfa_token_provider_kwargs = (
-            mfa_token_provider_kwargs if mfa_token_provider_kwargs else {}
-        )
-
-        # verifying 'SerialNumber' format if provided
-        if "SerialNumber" in assume_role_kwargs:
-            if not MFA_SERIAL_PATTERN.match(
-                assume_role_kwargs["SerialNumber"]
-            ):
-                raise BRSValidationError(
-                    "'SerialNumber' in 'assume_role_kwargs' is not a valid "
-                    "AWS MFA device ARN!",
-                    param="SerialNumber",
-                    value=assume_role_kwargs.get("SerialNumber"),
-                )
+        self.mfa_token_provider_kwargs = mfa_token_provider_kwargs or {}
 
         # ensure SerialNumber is set appropriately with mfa_token_provider
         if (
             self.mfa_token_provider
-            and "SerialNumber" not in assume_role_kwargs
+            and self.assume_role_kwargs.SerialNumber is None
         ):
             raise BRSConfigurationError(
                 "'SerialNumber' must be provided in 'assume_role_kwargs' "
@@ -185,77 +160,53 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
                 param="SerialNumber",
             )
 
-        # ensure SerialNumber and TokenCode are set without mfa_token_provider
+        # ensure SerialNumber and TokenCode are set in the absence of
+        # mfa_token_provider
         if (
             self.mfa_token_provider is None
             and (
-                "SerialNumber" in assume_role_kwargs
-                and "TokenCode" not in assume_role_kwargs
+                self.assume_role_kwargs.SerialNumber is not None
+                and self.assume_role_kwargs.TokenCode is None
             )
             or (
-                "SerialNumber" not in assume_role_kwargs
-                and "TokenCode" in assume_role_kwargs
+                self.assume_role_kwargs.SerialNumber is None
+                and self.assume_role_kwargs.TokenCode is not None
             )
         ):
             raise BRSConfigurationError(
                 "'SerialNumber' and 'TokenCode' must be provided in "
-                "'assume_role_kwargs' when 'mfa_token_provider' is not set!",
+                "'assume_role_kwargs' when 'mfa_token_provider' is not set "
+                "and 'SerialNumber' or 'TokenCode' is missing!",
                 param="SerialNumber/TokenCode",
             )
 
         # warn if TokenCode provided with mfa_token_provider
-        if self.mfa_token_provider and "TokenCode" in assume_role_kwargs:
+        if (
+            self.mfa_token_provider
+            and self.assume_role_kwargs.TokenCode is not None
+        ):
             BRSWarning.warn(
                 "'TokenCode' provided in 'assume_role_kwargs' will be "
                 "ignored and overridden by 'mfa_token_provider' on each "
                 "refresh."
             )
 
-        # initializing assume role kwargs attribute
-        self.assume_role_kwargs = assume_role_kwargs
-
         # initializing BRSSession
         super().__init__(refresh_method="sts-assume-role", **kwargs)
 
-        if sts_client_kwargs is not None:
-            # overwriting 'service_name' if if appears in sts_client_kwargs
-            if "service_name" in sts_client_kwargs:
-                BRSWarning.warn(
-                    "'sts_client_kwargs' cannot contain values for "
-                    "'service_name'. Reverting to service_name = 'sts'."
-                )
-                del sts_client_kwargs["service_name"]
-            self._sts_client = self.client(
-                service_name="sts", **sts_client_kwargs
-            )
-        else:
-            self._sts_client = self.client(service_name="sts")
+        # initializing STS client attribute
+        self._sts_client = self.client(**self.sts_client_kwargs)
 
     def _get_credentials(self) -> TemporaryCredentials:
-        params = dict(self.assume_role_kwargs)
-
         # override TokenCode with fresh token from provider if configured
-        if self.mfa_token_provider:
-            params["TokenCode"] = self.mfa_token_provider(
+        if self.mfa_token_provider is not None:
+            self.assume_role_kwargs.TokenCode = self.mfa_token_provider(
                 **self.mfa_token_provider_kwargs
             )
 
-        # validating TokenCode format
-        if (token_code := params.get("TokenCode")) is not None:
-            if (
-                not isinstance(token_code, str)
-                or len(token_code) != 6
-                or not token_code.isdigit()
-            ):
-                raise BRSValidationError(
-                    "'TokenCode' must be a 6-digit string per AWS MFA "
-                    "token specifications!",
-                    param="TokenCode",
-                )
-
-        temporary_credentials = self._sts_client.assume_role(**params)[
-            "Credentials"
-        ]
+        temporary_credentials = self._sts_client.assume_role(
+            **self.assume_role_kwargs
+        )["Credentials"]
 
         return {
             "access_key": temporary_credentials.get("AccessKeyId"),

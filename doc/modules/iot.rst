@@ -2,8 +2,8 @@
 
 .. currentmodule:: boto3_refresh_session.methods.iot
 
-boto3_refresh_session.methods.iot
-=================================
+IOT Refresh Methods
+===================
 
 This module currently only supports X.509 certificate based authentication for retrieving 
 temporary security credentials from the AWS IoT credentials provider (backed by STS). 

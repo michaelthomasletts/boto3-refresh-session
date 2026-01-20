@@ -2,8 +2,8 @@
 
 .. currentmodule:: boto3_refresh_session.methods.custom
 
-boto3_refresh_session.methods.custom
-====================================
+Custom Refresh Methods
+======================
 
 Implements a custom credential refresh strategy for use with
 :class:`boto3_refresh_session.session.RefreshableSession`.
@@ -34,7 +34,7 @@ Write (or import) the callable object for obtaining temporary AWS security crede
 Pass that callable object to ``RefreshableSession``.
 
 >>> sess = RefreshableSession(
->>>     method='custom',
+>>>     'custom',
 >>>     custom_credentials_method=your_custom_credential_getter,
 >>>     custom_credentials_method_args=...,
 >>> )

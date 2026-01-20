@@ -60,6 +60,7 @@ target-version = ["py310"]
 quiet = true
 
 [tool.isort]
+profile = "black"
 line_length = 79
 ensure_newline_before_comments = true
 use_parentheses = true

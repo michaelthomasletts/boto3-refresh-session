@@ -5,15 +5,15 @@
 """Custom exception and warning types for boto3-refresh-session."""
 
 __all__ = [
-    "BRSError",
-    "BRSValidationError",
-    "BRSConfigurationError",
-    "BRSCredentialError",
-    "BRSConnectionError",
-    "BRSRequestError",
     "BRSCacheError",
-    "BRSCacheNotFoundError",
     "BRSCacheExistsError",
+    "BRSCacheNotFoundError",
+    "BRSConfigurationError",
+    "BRSConnectionError",
+    "BRSCredentialError",
+    "BRSError",
+    "BRSRequestError",
+    "BRSValidationError",
     "BRSWarning",
 ]
 

@@ -46,17 +46,20 @@ Below is a basic example of creating a ``Client`` via STS role assumption.
     You can leave ``RoleSessionName`` in ``assume_role_kwargs`` blank if you like.
     boto3-refresh-session will default to "boto3-refresh-session" for you.
 
+.. tip::
+    
+    You can also provide ``assume_role_kwargs`` as a simple dictionary instead of an ``AssumeRoleConfig`` object if you prefer.
+    Both approaches are functionally equivalent!
+
 .. code-block:: python
 
-    from boto3_refresh_session import RefreshableSession
-
-    assume_role_kwargs = {
-        "RoleArn": "<your-role-arn>",
-        "RoleSessionName": "<your-role-session-name>",
-    }
+    from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
 
     session = RefreshableSession(
-        assume_role_kwargs=assume_role_kwargs
+        AssumeRoleConfig(
+            RoleArn="<your-role-arn>",
+            RoleSessionName="<your-role-session-name>",
+        )
     )
 
     s3 = session.client('s3')
@@ -68,24 +71,25 @@ To illustrate, below is an example of creating a ``Client`` via STS role assumpt
 .. tip::
 
     ``RefreshableSession`` also accepts a ``sts_client_kwargs`` parameter, which allows you to pass custom parameters to the internal STS client used for role assumption.
+    Like ``assume_role_kwargs``, ``sts_client_kwargs`` can be provided as either a dictionary or a ``STSClientConfig`` object.
     Check the :class:`STS.Client` documentation for available parameters.
 
 .. code-block:: python
 
     from botocore.config import Config
-    from boto3_refresh_session import RefreshableSession
-
-    assume_role_kwargs = {
-        "RoleArn": "<your-role-arn>",
-        "RoleSessionName": "<your-role-session-name>",
-    }
+    from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
 
     session = RefreshableSession(
-        assume_role_kwargs=assume_role_kwargs,
+        AssumeRoleConfig(RoleArn="<your-role-arn>"),
         region_name="us-east-1",
     )
 
     s3 = session.client('s3', config=Config(retries={"max_attempts": 10}))
+
+.. tip::
+
+    Attributes in ``assume_role_kwargs`` and ``sts_client_kwargs`` can be accessed using dot-notation *or* dictionary-style access.
+    Same goes for ``AssumeRoleConfig`` and ``STSClientConfig`` objects.
 
 Credential Provider Methods
 ---------------------------
@@ -107,9 +111,11 @@ Set ``defer_refresh`` to False to enable eager refresh:
 
 .. code-block:: python
 
+    from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
+
     session = RefreshableSession(
+        AssumeRoleConfig(RoleArn="<your-role-arn>"),
         defer_refresh=False,
-        assume_role_kwargs=assume_role_kwargs
     )
 
 Eager Refresh Behavior
@@ -141,7 +147,7 @@ Below is an example of using an MFA token provider which calls Yubikey.
 
 .. code-block:: python
 
-    from boto3_refresh_session import RefreshableSession
+    from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
     import subprocess
     from typing import Sequence
 
@@ -156,22 +162,32 @@ Below is an example of using an MFA token provider which calls Yubikey.
         )
         return (p.stdout or "").strip()
     
-    
-    assume_role_kwargs = {
-        "RoleArn": "<your-role-arn>",
-        "RoleSessionName": "<your-role-session-name>",
-        "SerialNumber": "arn:aws:iam::<your-aws-account-id>:mfa/<your-mfa-device-name>",
-    }
+
     mfa_token_provider_kwargs = {
         "cmd": ["ykman", "oath", "code", "--single", "AWS-prod"],  # example token source
         "timeout": 3.0,
     }
 
     session = RefreshableSession(
-        assume_role_kwargs=assume_role_kwargs,
+        AssumeRoleConfig(
+            RoleArn="<your-role-arn>",
+            RoleSessionName="<your-role-session-name>",
+            SerialNumber="arn:aws:iam::<your-aws-account-id>:mfa/<your-mfa-device-name>",            
+        ),
         mfa_token_provider=mfa_token_provider,
         mfa_token_provider_kwargs=mfa_token_provider_kwargs,
     )
+
+.. warning::
+
+    It is highly recommended to use the ``mfa_token_provider`` callable instead of passing ``TokenCode`` and ``SerialNumber`` directly.
+    Without ``mfa_token_provider``, you will be responsible for updating ``TokenCode`` yourself. 
+    It is extremely difficult to imagine a scenario where that is easy or practical.
+
+.. warning::
+
+    Erroneous ``TokenCode`` values (i.e. non 6-digit numeric strings) will raise errors during construction of the ``TokenCode`` attribute in ``assume_role_kwargs``.
+    While this is advantageous for catching mistakes early, be sure your ``mfa_token_provider`` callable always returns valid values and adjust your implementation accordingly.
 
 Client Caching
 --------------
