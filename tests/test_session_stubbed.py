@@ -13,6 +13,7 @@ from boto3_refresh_session.exceptions import (
     BRSCredentialError,
     BRSValidationError,
 )
+from boto3_refresh_session.utils import AssumeRoleConfig
 from boto3_refresh_session.methods.iot.x509 import IOTX509RefreshableSession
 
 
@@ -118,6 +119,30 @@ def test_sts_get_identity_stubbed(monkeypatch):
         assert identity["Account"] == "123456789012"
     finally:
         stubber.deactivate()
+
+
+def test_refreshable_session_positional_assume_role_config_rejected():
+    """Ensure positional AssumeRoleConfig is not accepted."""
+
+    config = AssumeRoleConfig(
+        RoleArn="arn:aws:iam::123456789012:role/TestRole",
+        RoleSessionName="unit-test",
+    )
+
+    with pytest.raises(TypeError):
+        RefreshableSession("sts", config)
+
+
+def test_refreshable_session_positional_assume_role_config_without_method():
+    """Ensure positional AssumeRoleConfig without method is not accepted."""
+
+    config = AssumeRoleConfig(
+        RoleArn="arn:aws:iam::123456789012:role/TestRole",
+        RoleSessionName="unit-test",
+    )
+
+    with pytest.raises(BRSValidationError):
+        RefreshableSession(config)
 
 
 def test_session_get_credentials_uses_refreshable(monkeypatch):

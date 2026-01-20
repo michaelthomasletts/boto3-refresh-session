@@ -15,9 +15,9 @@ with the added benefit of automatic credential refreshing.
 
 Examples
 --------
->>> from boto3_refresh_session import RefreshableSession
+>>> from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
 >>> session = RefreshableSession(
-...     assume_role_kwargs={"RoleArn": "...", "RoleSessionName": "..."},
+...     AssumeRoleConfig(RoleArn="<your-role-arn>"),
 ...     region_name="us-east-1"
 ... )
 >>> s3 = session.client("s3")

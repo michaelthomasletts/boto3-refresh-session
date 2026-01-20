@@ -66,6 +66,18 @@ class RefreshableSession:
     boto3_refresh_session.methods.custom.CustomRefreshableSession
     boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession
     boto3_refresh_session.methods.sts.STSRefreshableSession
+
+    Examples
+    --------
+
+    Basic initialization using STS AssumeRole (i.e. ``method="sts"``):
+
+    >>> from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
+    >>> session = RefreshableSession(
+    ...     AssumeRoleConfig(RoleArn="<your-role-arn>"),
+    ...     region_name="us-east-1"
+    ... )
+    >>> s3 = session.client("s3")
     """
 
     def __new__(

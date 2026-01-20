@@ -34,7 +34,7 @@ Write (or import) the callable object for obtaining temporary AWS security crede
 Pass that callable object to ``RefreshableSession``.
 
 >>> sess = RefreshableSession(
->>>     method='custom',
+>>>     'custom',
 >>>     custom_credentials_method=your_custom_credential_getter,
 >>>     custom_credentials_method_args=...,
 >>> )

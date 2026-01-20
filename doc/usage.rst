@@ -56,7 +56,7 @@ Below is a basic example of creating a ``Client`` via STS role assumption.
     from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
 
     session = RefreshableSession(
-        assume_role_kwargs=AssumeRoleConfig(
+        AssumeRoleConfig(
             RoleArn="<your-role-arn>",
             RoleSessionName="<your-role-session-name>",
         )
@@ -80,8 +80,7 @@ To illustrate, below is an example of creating a ``Client`` via STS role assumpt
     from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
 
     session = RefreshableSession(
-        assume_role_kwargs=AssumeRoleConfig(RoleArn="<your-role-arn>")
-        ),
+        AssumeRoleConfig(RoleArn="<your-role-arn>"),
         region_name="us-east-1",
     )
 
@@ -115,8 +114,8 @@ Set ``defer_refresh`` to False to enable eager refresh:
     from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
 
     session = RefreshableSession(
+        AssumeRoleConfig(RoleArn="<your-role-arn>"),
         defer_refresh=False,
-        assume_role_kwargs=AssumeRoleConfig(RoleArn="<your-role-arn>")
     )
 
 Eager Refresh Behavior
@@ -170,7 +169,7 @@ Below is an example of using an MFA token provider which calls Yubikey.
     }
 
     session = RefreshableSession(
-        assume_role_kwargs=AssumeRoleConfig(
+        AssumeRoleConfig(
             RoleArn="<your-role-arn>",
             RoleSessionName="<your-role-session-name>",
             SerialNumber="arn:aws:iam::<your-aws-account-id>:mfa/<your-mfa-device-name>",            
