@@ -6,6 +6,7 @@ import boto3
 import pytest
 from botocore.config import Config
 from botocore.stub import Stubber
+from typing import get_args
 
 from boto3_refresh_session import RefreshableSession
 from boto3_refresh_session.exceptions import (
@@ -14,7 +15,15 @@ from boto3_refresh_session.exceptions import (
     BRSValidationError,
 )
 from boto3_refresh_session.methods.iot.x509 import IOTX509RefreshableSession
-from boto3_refresh_session.utils import AssumeRoleConfig
+from boto3_refresh_session.utils import (
+    AssumeRoleConfig,
+    BaseIoTRefreshableSession,
+    BaseRefreshableSession,
+)
+from boto3_refresh_session.utils.typing import (
+    IoTAuthenticationMethod,
+    Method,
+)
 
 
 def _set_dummy_env(monkeypatch) -> None:
@@ -143,6 +152,65 @@ def test_refreshable_session_positional_assume_role_config_without_method():
 
     with pytest.raises(BRSValidationError):
         RefreshableSession(config)
+
+
+def test_registry_tracks_method_and_refresh_method(monkeypatch):
+    _set_dummy_env(monkeypatch)
+
+    assert set(RefreshableSession.get_available_methods()) == {
+        "custom",
+        "iot",
+        "sts",
+    }
+    assert {"custom", "iot", "sts"}.issubset(
+        BaseRefreshableSession.registry.keys()
+    )
+    assert "__sentinel__" not in BaseRefreshableSession.registry
+    assert "x509" in BaseIoTRefreshableSession.registry
+    assert "__iot_sentinel__" not in BaseIoTRefreshableSession.registry
+    assert "__sentinel__" in get_args(Method)
+    assert "__iot_sentinel__" in get_args(IoTAuthenticationMethod)
+
+    sts_session = RefreshableSession(
+        method="sts",
+        assume_role_kwargs={
+            "RoleArn": "arn:aws:iam::123456789012:role/TestRole",
+            "RoleSessionName": "unit-test",
+        },
+        region_name="us-east-1",
+        defer_refresh=True,
+    )
+    assert sts_session.refresh_method == "sts-assume-role"
+
+    def custom_credentials_method():
+        return {
+            "access_key": "AKIAEXAMPLE123456",
+            "secret_key": "secret",
+            "token": "token",
+            "expiry_time": (
+                datetime.now(timezone.utc) + timedelta(hours=1)
+            ).isoformat(),
+        }
+
+    custom_session = RefreshableSession(
+        method="custom",
+        custom_credentials_method=custom_credentials_method,
+        region_name="us-east-1",
+        defer_refresh=True,
+    )
+    assert custom_session.refresh_method == "custom"
+
+    iot_session = RefreshableSession(
+        method="iot",
+        authentication_method="x509",
+        endpoint="abc.credentials.iot.us-east-1.amazonaws.com",
+        role_alias="TestRoleAlias",
+        certificate=b"dummy-cert",
+        private_key=b"dummy-key",
+        region_name="us-east-1",
+        defer_refresh=True,
+    )
+    assert iot_session.refresh_method == "iot-x509"
 
 
 def test_session_get_credentials_uses_refreshable(monkeypatch):
