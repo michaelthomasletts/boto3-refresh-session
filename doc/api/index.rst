@@ -5,10 +5,14 @@
 API
 ===
 
-boto3-refresh-session includes multiple modules, grouped into two categories:
+boto3-refresh-session includes multiple modules, grouped into four broad categories:
 
 - The core interface (session)
 - Individual modules for each supported refresh strategy (e.g., STS)
+- Configuration objects
+- Exceptions and warnings
+
+Learn more about each of these categories below.
 
 .. toctree::
    :maxdepth: 1
