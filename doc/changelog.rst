@@ -64,3 +64,4 @@ These objects encapsulate configuration parameters for assuming roles via STS, e
 Users should find it easier to manage and pass around STS-related configurations using these.
 Dictionaries are still supported for backward compatibility on ``sts_client_kwargs`` and ``assume_role_kwargs``.
 However, using these new objects is now the recommended approach.
+Refer to the `PR <https://github.com/michaelthomasletts/boto3-refresh-session/pull/102>`_ for more details.
