@@ -230,8 +230,8 @@ class STSClientConfig(BaseConfig):
                     value = "sts"
                 case str() if value != "sts":
                     BRSWarning.warn(
-                        "The 'service_name' for STSClientConfig should be 'sts'. "
-                        "Overriding to 'sts'."
+                        "The 'service_name' for STSClientConfig should be "
+                        "'sts'. Overriding to 'sts'."
                     )
                     value = "sts"
                 case str():
