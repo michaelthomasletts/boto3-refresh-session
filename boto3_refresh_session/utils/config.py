@@ -21,12 +21,12 @@ from typing import Any
 
 from botocore.config import Config
 
-from ...exceptions import BRSValidationError, BRSWarning
-from ..constants import (
+from ..exceptions import BRSValidationError, BRSWarning
+from .constants import (
     ASSUME_ROLE_CONFIG_PARAMETERS,
     STS_CLIENT_CONFIG_PARAMETERS,
 )
-from ..typing import PolicyDescriptorType, ProvidedContext, Tag
+from .typing import PolicyDescriptorType, ProvidedContext, Tag
 
 
 class BaseConfig(dict, ABC):

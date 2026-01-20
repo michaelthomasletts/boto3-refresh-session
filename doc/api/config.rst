@@ -1,6 +1,6 @@
 .. _config:
 
-.. currentmodule:: boto3_refresh_session.utils.config.config
+.. currentmodule:: boto3_refresh_session.utils.config
 
 Configs
 =======

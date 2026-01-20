@@ -1,5 +1,5 @@
-boto3\_refresh\_session.session.RefreshableSession
-==================================================
+RefreshableSession
+==================
 
 .. currentmodule:: boto3_refresh_session.session
 
