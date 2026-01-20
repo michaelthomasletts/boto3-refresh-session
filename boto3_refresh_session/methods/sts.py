@@ -95,7 +95,6 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
     def __init__(
         self,
         assume_role_kwargs: AssumeRoleParams | AssumeRoleConfig,
-        *,  # enforce keyword-only arguments
         sts_client_kwargs: STSClientParams | STSClientConfig | None = None,
         mfa_token_provider: Callable[[], str] | None = None,
         mfa_token_provider_kwargs: dict | None = None,
