@@ -2,8 +2,8 @@
 
 .. currentmodule:: boto3_refresh_session.session
 
-boto3_refresh_session.session
-=============================
+RefreshableSession
+==================
 
 This module provides the main interface for constructing refreshable boto3 sessions.
 

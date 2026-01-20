@@ -14,6 +14,7 @@ boto3-refresh-session includes multiple modules, grouped into two categories:
    :maxdepth: 1
    :hidden:
 
+   config
    exceptions
    session
    custom
@@ -50,6 +51,13 @@ Each strategy supported by boto3-refresh-session is encapsulated in its own modu
 - :ref:`custom` - Refresh strategy using a custom credential refresh strategy
 - :ref:`iot` - Refresh strategies for IoT Core
 - :ref:`sts` — Refresh strategy using :class:`STS.Client`
+
+Configs
+-------
+
+boto3-refresh-session provides configuration objects to encapsulate configuration for STS and role assumption.
+
+- :ref:`config` - Configuration objects for boto3-refresh-session
 
 Exceptions and Warnings
 -----------------------

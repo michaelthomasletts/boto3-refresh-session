@@ -1,7 +1,7 @@
 .. _exceptions:
 
-boto3_refresh_session.exceptions
-================================
+Exceptions
+==========
 
 .. currentmodule:: boto3_refresh_session.exceptions
 

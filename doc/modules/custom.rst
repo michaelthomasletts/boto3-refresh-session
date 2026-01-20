@@ -2,8 +2,8 @@
 
 .. currentmodule:: boto3_refresh_session.methods.custom
 
-boto3_refresh_session.methods.custom
-====================================
+Custom Refresh Methods
+======================
 
 Implements a custom credential refresh strategy for use with
 :class:`boto3_refresh_session.session.RefreshableSession`.

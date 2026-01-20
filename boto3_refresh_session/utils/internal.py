@@ -36,9 +36,9 @@ common surface and registration behavior for subclasses like STS or IoT X.509.
 
 __all__ = [
     "AWSCRTResponse",
+    "BRSSession",
     "BaseIoTRefreshableSession",
     "BaseRefreshableSession",
-    "BRSSession",
     "CredentialProvider",
     "Registry",
     "refreshable_session",

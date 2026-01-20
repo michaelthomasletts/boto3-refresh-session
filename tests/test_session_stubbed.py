@@ -412,14 +412,13 @@ def test_sts_invalid_token_code_raises(monkeypatch):
         "SerialNumber": "arn:aws:iam::123456789012:mfa/test-user",
         "TokenCode": "bad",
     }
-    session = RefreshableSession(
-        method="sts",
-        assume_role_kwargs=assume_role_kwargs,
-        region_name="us-east-1",
-        defer_refresh=True,
-    )
     with pytest.raises(BRSValidationError):
-        session.refreshable_credentials()
+        RefreshableSession(
+            method="sts",
+            assume_role_kwargs=assume_role_kwargs,
+            region_name="us-east-1",
+            defer_refresh=True,
+        )
 
 
 def test_iot_invalid_endpoint_raises(monkeypatch):
