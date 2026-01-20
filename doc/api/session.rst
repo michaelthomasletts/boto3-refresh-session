@@ -2,8 +2,8 @@
 
 .. currentmodule:: boto3_refresh_session.session
 
-RefreshableSession
-==================
+Core Interface
+==============
 
 This module provides the main interface for constructing refreshable boto3 sessions.
 
@@ -28,8 +28,8 @@ Examples
     :class:`boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession`
     :class:`boto3_refresh_session.methods.sts.STSRefreshableSession`
 
-Factory interface
------------------
+Factory
+-------
 .. autosummary::
    :toctree: generated/
    :nosignatures:
