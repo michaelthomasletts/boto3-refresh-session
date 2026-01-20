@@ -13,6 +13,8 @@ __all__ = [
     "Identity",
     "IoTAuthenticationMethod",
     "Method",
+    "PublicIoTAuthenticationMethod",
+    "PublicMethod",
     "PKCS11",
     "RefreshMethod",
     "RegistryKey",
@@ -39,10 +41,13 @@ except ImportError:
     from typing_extensions import NotRequired
 
 #: Type alias for all currently available IoT authentication methods.
-IoTAuthenticationMethod = Literal["x509", "__iot_sentinel__"]
+IoTAuthenticationMethod: TypeAlias = Literal["x509", "__iot_sentinel__"]
+
+#: Public type alias for all currently available IoT authentication methods.
+PublicIoTAuthenticationMethod: TypeAlias = Literal["x509"]
 
 #: Type alias for all currently available credential refresh methods.
-Method = Literal[
+Method: TypeAlias = Literal[
     "custom",
     "iot",
     "sts",
@@ -50,8 +55,11 @@ Method = Literal[
     "__iot_sentinel__",
 ]
 
+#: Public type alias for all currently available credential refresh methods.
+PublicMethod: TypeAlias = Literal["custom", "iot", "sts"]
+
 #: Type alias for all refresh method names.
-RefreshMethod = Literal[
+RefreshMethod: TypeAlias = Literal[
     "custom",
     "iot-x509",
     "sts-assume-role",

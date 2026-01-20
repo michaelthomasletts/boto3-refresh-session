@@ -14,14 +14,14 @@ from ...exceptions import BRSValidationError
 from ...utils import (
     BaseIoTRefreshableSession,
     BaseRefreshableSession,
-    IoTAuthenticationMethod,
+    PublicIoTAuthenticationMethod,
 )
 
 
 class IoTRefreshableSession(BaseRefreshableSession, registry_key="iot"):
     def __new__(
         cls,
-        authentication_method: IoTAuthenticationMethod = "x509",
+        authentication_method: PublicIoTAuthenticationMethod = "x509",
         **kwargs,
     ) -> BaseIoTRefreshableSession:
         if authentication_method not in (
@@ -41,6 +41,4 @@ class IoTRefreshableSession(BaseRefreshableSession, registry_key="iot"):
 
     @classmethod
     def get_available_authentication_methods(cls) -> list[str]:
-        args = list(get_args(IoTAuthenticationMethod))
-        args.remove("__iot_sentinel__")
-        return args
+        return list(get_args(PublicIoTAuthenticationMethod))

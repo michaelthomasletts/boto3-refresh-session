@@ -11,7 +11,7 @@ __all__ = ["RefreshableSession"]
 from typing import get_args
 
 from .exceptions import BRSValidationError
-from .utils import BaseRefreshableSession, Method
+from .utils import BaseRefreshableSession, PublicMethod
 
 
 class RefreshableSession:
@@ -29,9 +29,10 @@ class RefreshableSession:
 
     Parameters
     ----------
-    method : Method
+    method : PublicMethod
         The authentication and refresh method to use for the session. Must
-        match a registered method name. Default is "sts".
+        match a registered method name. Options include "sts", "custom", and
+        "iot". Default is "sts".
     defer_refresh : bool, optional
         If ``True`` then temporary credentials are not automatically refreshed
         until they are explicitly needed. If ``False`` then temporary
@@ -66,6 +67,8 @@ class RefreshableSession:
     boto3_refresh_session.methods.custom.CustomRefreshableSession
     boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession
     boto3_refresh_session.methods.sts.STSRefreshableSession
+    boto3_refresh_session.configs.AssumeRoleConfig
+    boto3_refresh_session.configs.STSClientConfig
 
     Examples
     --------
@@ -81,7 +84,7 @@ class RefreshableSession:
     """
 
     def __new__(
-        cls, method: Method = "sts", **kwargs
+        cls, method: PublicMethod = "sts", **kwargs
     ) -> BaseRefreshableSession:
         if method not in (methods := cls.get_available_methods()):
             raise BRSValidationError(
@@ -105,6 +108,4 @@ class RefreshableSession:
             e.g. 'sts', 'custom'.
         """
 
-        args = list(get_args(Method))
-        args.remove("__sentinel__")
-        return args
+        return list(get_args(PublicMethod))
