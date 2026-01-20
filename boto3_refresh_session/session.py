@@ -77,7 +77,7 @@ class RefreshableSession:
 
     >>> from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
     >>> session = RefreshableSession(
-    ...     AssumeRoleConfig(RoleArn="<your-role-arn>"),
+    ...     assume_role_kwargs=AssumeRoleConfig(RoleArn="<your-role-arn>"),
     ...     region_name="us-east-1"
     ... )
     >>> s3 = session.client("s3")

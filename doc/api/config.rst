@@ -57,7 +57,7 @@ But this is now preferred:
     )
 
     refreshable_session = RefreshableSession(
-        AssumeRoleConfig(
+        assume_role_kwargs=AssumeRoleConfig(
             RoleArn="arn:aws:iam::123456789012:role/MyRole",
             RoleSessionName="MySession",
             DurationSeconds=3600,

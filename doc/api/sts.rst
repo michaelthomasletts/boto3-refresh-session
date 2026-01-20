@@ -18,7 +18,7 @@ Examples
 --------
 >>> from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
 >>> session = RefreshableSession(
-...     AssumeRoleConfig(
+...     assume_role_kwargs=AssumeRoleConfig(
 ...         RoleArn="arn:aws:iam::123456789012:role/MyRole",
 ...         RoleSessionName="my-session",
 ...     ),
