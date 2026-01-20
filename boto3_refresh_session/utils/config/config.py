@@ -109,6 +109,14 @@ class AssumeRoleConfig(BaseConfig):
 
     Notes
     -----
+    Values can be accessed via dot-notation (e.g., ``config.RoleArn``)
+    or dictionary-style access (e.g., ``config['RoleArn']``).
+
+    Accessing a valid but unset attribute (e.g., ``SerialNumber``) via
+    dot-notation returns ``None`` instead of raising an error. While this
+    behavior is convenient, it may surprise users accustomed to seeing
+    ``AttributeError`` exceptions in similar contexts.
+
     For additional information on AWS specifications, refer to the
     `API Reference for AssumeRole <https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html>`_.
     """
@@ -190,6 +198,19 @@ class STSClientConfig(BaseConfig):
         Advanced client configuration options.
     aws_account_id : str, optional
         The AWS account ID associated with the credentials.
+
+    Notes
+    -----
+    Values can be accessed via dot-notation (e.g., ``config.RoleArn``)
+    or dictionary-style access (e.g., ``config['RoleArn']``).
+
+    Accessing a valid but unset attribute (e.g., ``SerialNumber``) via
+    dot-notation returns ``None`` instead of raising an error. While this
+    behavior is convenient, it may surprise users accustomed to seeing
+    ``AttributeError`` exceptions in similar contexts.
+
+    ``service_name`` is enforced to be 'sts'. If a different value is
+    provided, it will be overridden to 'sts' with a warning.
     """
 
     def __init__(

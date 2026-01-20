@@ -13,8 +13,8 @@ from boto3_refresh_session.exceptions import (
     BRSCredentialError,
     BRSValidationError,
 )
-from boto3_refresh_session.utils import AssumeRoleConfig
 from boto3_refresh_session.methods.iot.x509 import IOTX509RefreshableSession
+from boto3_refresh_session.utils import AssumeRoleConfig
 
 
 def _set_dummy_env(monkeypatch) -> None:

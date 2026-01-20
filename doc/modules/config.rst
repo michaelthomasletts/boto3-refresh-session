@@ -19,6 +19,11 @@ Beginning v7.1.0, ``AssumeRoleConfig`` and ``STSClientConfig`` objects were intr
     
     ``AssumeRoleConfig`` and ``STSClientConfig`` attributes can be accessed using dot-notation *or* dictionary-style access.
 
+.. note::
+
+    Accessing a valid but unset attribute (e.g., ``SerialNumber``) via dot-notation returns ``None`` instead of raising an error.
+    While this behavior is convenient, it may surprise users accustomed to seeing ``AttributeError`` exceptions in similar contexts
+
 .. warning::
 
     ``TokenCode`` values in ``AssumeRoleConfig`` which do not conform with AWS' specifications (i.e. 6 digit numeric strings) will result in errors raised during construction of the ``TokenCode`` attribute.
