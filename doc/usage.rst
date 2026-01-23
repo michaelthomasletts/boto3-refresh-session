@@ -119,7 +119,7 @@ Set ``defer_refresh`` to False to enable eager refresh:
     )
 
 Eager Refresh Behavior
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
 With eager refresh enabled (i.e. ``defer_refresh=False``), credentials are refreshed according to two settings: advisory and mandatory timeouts.
 The so-called "advisory" and "mandatory" timeouts are concepts created by botocore to manage credential expiration.
@@ -192,11 +192,44 @@ Below is an example of using an MFA token provider which calls Yubikey.
 Client Caching
 --------------
 
-boto3-refresh-session supports ``Client`` caching via the ``cache_clients`` parameter.
+boto3-refresh-session supports ``Client`` caching using an LRU eviction strategy.
 The purpose of this feature is to minimize the massive memory footprint of multiple ``Client`` objects created with identical parameters.
-When ``cache_clients`` is set to True, ``Client`` objects created via the session's ``client`` method are cached and reused for subsequent calls with the same parameters.
-This can improve performance by reducing the overhead of creating new ``Client`` objects.
-boto3-refresh-session caches clients by default; to disable client caching, set ``cache_clients=False`` when initializing ``RefreshableSession``.
+To do this, when ``cache_clients`` is enabled, ``Client`` objects created via the refreshable session's ``client`` method are cached and reused for subsequent calls with the same parameters.
+
+.. tip::
+    
+    **boto3-refresh-session caches clients by default**; to disable client caching, set ``cache_clients=False`` when initializing ``RefreshableSession``.
+
+.. tip:: 
+    
+    To interact with the client cache directly, reference the ``RefreshableSession.client_cache`` attribute.
+
+.. note::
+    
+    In order to retrieve clients from the cache, you must use the ``ClientCacheKey`` object.
+
+.. code-block:: python
+    
+    from boto3_refresh_session import AssumeRoleConfig, ClientCacheKey, RefreshableSession
+
+    session = RefreshableSession(
+        assume_role_kwargs=AssumeRoleConfig(RoleArn="<your-role-arn>")
+    )
+    
+    # deliberately creating two clients with the same parameters
+    s3_client_1 = session.client("s3", region_name="us-east-1")
+    s3_client_2 = session.client("s3", region_name="us-east-1")
+
+    # but s3_client_1 and s3_client_2 are the same object since client caching is enabled
+    assert s3_client_1 is s3_client_2
+
+    # accessing the client cache directly via client_cache
+    # and retrieving the cached client using ClientCacheKey
+    cache_key = ClientCacheKey("s3", region_name="us-east-1")
+    cached_s3_client = session.client_cache.get(cache_key)
+
+    # and ensuring equality again
+    assert s3_client_1 is cached_s3_client
 
 IoT Core X.509
 --------------
