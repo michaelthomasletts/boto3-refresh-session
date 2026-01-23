@@ -118,6 +118,9 @@ class IOTX509RefreshableSession(
         reused for subsequent calls to :meth:`client()` with the same
         parameter signatures. Due to the memory overhead of clients, the
         default is ``True`` in order to protect system resources.
+    client_cache_max_size : int, optional
+        The maximum number of clients to store in the client cache. Only
+        applicable if ``cache_clients`` is ``True``. Defaults to 10.
 
     Other Parameters
     ----------------
