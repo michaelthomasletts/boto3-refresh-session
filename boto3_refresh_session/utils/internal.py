@@ -186,6 +186,11 @@ class BRSSession(Session):
         The maximum number of clients to store in the client cache. Only
         applicable if ``cache_clients`` is ``True``. Defaults to 10.
 
+    Attributes
+    ----------
+    client_cache : ClientCache
+        The client cache used to store and retrieve cached clients.
+
     Other Parameters
     ----------------
     kwargs : Any

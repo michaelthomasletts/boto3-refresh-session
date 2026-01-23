@@ -99,19 +99,19 @@ class ClientCacheKey:
     created using the same arguments that would be used to initialize the
     client.
 
-    Attributes
-    ----------
-    key : tuple
-        The unique key representing the client's initialization parameters.
-    label : str
-        A human-readable label for the cache key, useful for debugging.
-
     Parameters
     ----------
     *args : Any
         Positional arguments used to create the cache key.
     **kwargs : Any
         Keyword arguments used to create the cache key.
+
+    Attributes
+    ----------
+    key : tuple
+        The unique key representing the client's initialization parameters.
+    label : str
+        A human-readable label for the cache key, useful for debugging.
     """
 
     def __init__(self, *args, **kwargs) -> None:
