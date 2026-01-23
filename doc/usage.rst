@@ -119,7 +119,7 @@ Set ``defer_refresh`` to False to enable eager refresh:
     )
 
 Eager Refresh Behavior
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
 With eager refresh enabled (i.e. ``defer_refresh=False``), credentials are refreshed according to two settings: advisory and mandatory timeouts.
 The so-called "advisory" and "mandatory" timeouts are concepts created by botocore to manage credential expiration.
