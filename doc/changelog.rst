@@ -10,12 +10,12 @@ v3.0.0
 
 Advanced users, however, particularly those using low-level objects such as ``BaseRefreshableSession | refreshable_session | BRSSession | utils.py``, may experience breaking changes. 
 
-Please review `this PR <https://github.com/michaelthomasletts/boto3-refresh-session/pull/75>`_ for additional details.
+Please review `this PR <https://github.com/michaelthomasletts/boto3-refresh-session/pull/75>`__ for additional details.
 
 v4.0.0
 ------
 
-The ``ecs`` module has been dropped. For additional details and rationale, please review `this PR <https://github.com/michaelthomasletts/boto3-refresh-session/pull/78>`_.
+The ``ecs`` module has been dropped. For additional details and rationale, please review `this PR <https://github.com/michaelthomasletts/boto3-refresh-session/pull/78>`__.
 
 v5.0.0
 ------
@@ -65,3 +65,13 @@ Users should find it easier to manage and pass around STS-related configurations
 Dictionaries are still supported for backward compatibility on ``sts_client_kwargs`` and ``assume_role_kwargs``.
 However, using these new objects is now the recommended approach.
 Refer to the `PR <https://github.com/michaelthomasletts/boto3-refresh-session/pull/102>`_ for more details.
+
+v7.1.12
+-------
+LRU caching has been added to ``ClientCache`` which previously did not have an eviction strategy. 
+To disable client caching altogether, set ``cache_clients=False`` when initializing ``RefreshableSession`` (it's set to True by default).
+To adjust the default maximum size of the client cache (which is 10), set the ``client_cache_max_size`` parameter when initializing ``RefreshableSession``.
+When caching is enabled, the least recently used client will be evicted when the cache exceeds its maximum size.
+The ``_client_cache`` private attribute in ``RefreshableSession`` has been replaced with ``client_cache``, which invites direct interaction with the ``ClientCache`` instance for advanced use cases.
+Lastly, the hashing (keying) strategy for ``ClientCache`` has been adjusted to require ``ClientCacheKey``. 
+Simply pass ``*args`` and ``**kwargs`` (the same parameters passed to ``RefreshableSession.client``) to ``ClientCache`` when calling it to store or retrieve clients, and it will internally create a ``ClientCacheKey`` for you.

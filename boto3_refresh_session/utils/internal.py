@@ -51,14 +51,13 @@ from typing import Any, Callable, ClassVar, Generic, TypeVar, cast
 from awscrt.http import HttpHeaders
 from boto3.session import Session
 from botocore.client import BaseClient
-from botocore.config import Config
 from botocore.credentials import (
     DeferredRefreshableCredentials,
     RefreshableCredentials,
 )
 
 from ..exceptions import BRSCacheError, BRSWarning
-from .cache import ClientCache
+from .cache import ClientCache, ClientCacheKey
 from .typing import (
     Identity,
     IoTAuthenticationMethod,
@@ -67,46 +66,6 @@ from .typing import (
     RegistryKey,
     TemporaryCredentials,
 )
-
-
-def _freeze_value(value: Any) -> Any:
-    """Recursively freezes a value for use in cache keys.
-
-    Parameters
-    ----------
-    value : Any
-        The value to freeze.
-    """
-
-    if isinstance(value, dict):
-        return tuple(
-            sorted((key, _freeze_value(val)) for key, val in value.items())
-        )
-
-    # checking for list, tuple, or set just to be safe
-    if isinstance(value, (list, tuple, set)):
-        return tuple(sorted(_freeze_value(item) for item in value))
-    return value
-
-
-def _config_cache_key(config: Config | None) -> Any:
-    """Generates a cache key for a botocore.config.Config object.
-
-    Parameters
-    ----------
-    config : Config | None
-        The Config object to generate a cache key for.
-    """
-
-    if config is None:
-        return None
-
-    # checking for user-provided options first
-    options = getattr(config, "_user_provided_options", None)
-    if options is None:
-        # __dict__ is pedantic but stable
-        return _freeze_value(getattr(config, "__dict__", {}))
-    return _freeze_value(options)
 
 
 class CredentialProvider(ABC):
@@ -223,6 +182,9 @@ class BRSSession(Session):
         reused for subsequent calls to :meth:`client()` with the same
         parameter signatures. Due to the memory overhead of clients, the
         default is ``True`` in order to protect system resources.
+    client_cache_max_size : int, optional
+        The maximum number of clients to store in the client cache. Only
+        applicable if ``cache_clients`` is ``True``. Defaults to 10.
 
     Other Parameters
     ----------------
@@ -237,6 +199,7 @@ class BRSSession(Session):
         advisory_timeout: int | None = None,
         mandatory_timeout: int | None = None,
         cache_clients: bool | None = None,
+        client_cache_max_size: int | None = None,
         **kwargs,
     ):
         # initializing parameters
@@ -245,12 +208,15 @@ class BRSSession(Session):
         self.advisory_timeout: int | None = advisory_timeout
         self.mandatory_timeout: int | None = mandatory_timeout
         self.cache_clients: bool | None = cache_clients is not False
+        self.client_cache_max_size: int | None = client_cache_max_size
 
         # initializing Session
         super().__init__(**kwargs)
 
         # initializing client cache
-        self._client_cache: ClientCache = ClientCache()
+        self.client_cache: ClientCache = ClientCache(
+            max_size=self.client_cache_max_size
+        )
 
     def __post_init__(self):
         if not self.defer_refresh:
@@ -296,49 +262,32 @@ class BRSSession(Session):
 
         # check if caching is enabled
         if self.cache_clients:
-            # checking if Config was passed as a positional arg
-            _args = [
-                _config_cache_key(arg) if isinstance(arg, Config) else arg
-                for arg in args
-            ]
-
-            # popping trailing None values from args, preserving None in middle
-            while _args and _args[-1] is None:
-                _args.pop()
-            _args = tuple(_args)
-
-            # checking if Config was passed as a keyword arg
-            _kwargs = kwargs.copy()
-            if _kwargs.get("config") is not None:
-                _kwargs["config"] = _config_cache_key(_kwargs["config"])
-
-            # preemptively removing None values from kwargs
-            _kwargs = {
-                key: value
-                for key, value in _kwargs.items()
-                if value is not None
-            }
-
-            # creating a unique key for the client cache
-            key = (_args, tuple(sorted(_kwargs.items())))
+            # moving "service_name" to args if present in kwargs
+            # helps normalize cache keys . . . very important!!!
+            if "service_name" in kwargs:
+                args = (kwargs.pop("service_name"),) + args
 
             # if client exists in cache, return it
-            if (_cached_client := self._client_cache.get(key)) is not None:
+            if (
+                _cached_client := self.client_cache.get(
+                    key := ClientCacheKey(*args, **kwargs)
+                )
+            ) is not None:
                 return _cached_client
 
-            # else -- initialize, cache, and return it
+            # else initialize it
             client = super().client(*args, **kwargs)
 
             # attempting to cache and return the client
             try:
-                self._client_cache[key] = client
+                self.client_cache[key] = client
                 return client
 
             # if caching fails, return cached client if possible
             except BRSCacheError:
                 return (
                     cached
-                    if (cached := self._client_cache.get(key)) is not None
+                    if (cached := self.client_cache.get(key)) is not None
                     else client
                 )
 
