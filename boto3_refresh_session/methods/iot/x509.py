@@ -128,6 +128,11 @@ class IOTX509RefreshableSession(
         Optional keyword arguments for the :class:`boto3.session.Session`
         object.
 
+    Attributes
+    ----------
+    client_cache : ClientCache
+        The client cache used to store and retrieve cached clients.
+
     Notes
     -----
     Gavin Adams at AWS was a major influence on this implementation.

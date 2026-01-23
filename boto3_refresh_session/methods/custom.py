@@ -65,6 +65,11 @@ class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
         Optional keyword arguments for the :class:`boto3.session.Session`
         object.
 
+    Attributes
+    ----------
+    client_cache : ClientCache
+        The client cache used to store and retrieve cached clients.
+
     Examples
     --------
     Write (or import) the callable object for obtaining temporary AWS security

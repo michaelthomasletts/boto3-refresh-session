@@ -65,6 +65,11 @@ class RefreshableSession:
         Additional keyword arguments forwarded to the constructor of the
         selected session class.
 
+    Attributes
+    ----------
+    client_cache : ClientCache
+        The client cache used to store and retrieve cached clients.
+
     See Also
     --------
     boto3_refresh_session.methods.custom.CustomRefreshableSession

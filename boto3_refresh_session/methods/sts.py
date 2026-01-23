@@ -89,6 +89,11 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
         Optional keyword arguments for the :class:`boto3.session.Session`
         object.
 
+    Attributes
+    ----------
+    client_cache : ClientCache
+        The client cache used to store and retrieve cached clients.
+
     See Also
     --------
     boto3_refresh_session.utils.config.AssumeRoleConfig
