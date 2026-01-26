@@ -110,15 +110,11 @@ A testimonial from a Cyber Security Engineer at a FAANG company:
 
 boto3-refresh-session is available on PyPI.
 
-To install boto3-refresh-session _without_ IoT as an extra:
-
 ```bash
+# with pip
 pip install boto3-refresh-session
-```
 
-To install boto3-refresh-session _with_ IoT as an extra:
-
-```bash
+# with pip + iot as an extra
 pip install boto3-refresh-session[iot]
 ```
 

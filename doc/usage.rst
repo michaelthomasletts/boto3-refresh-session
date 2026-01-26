@@ -21,16 +21,12 @@ Installation
 
 boto3-refresh-session is available on PyPI.
 
-To install boto3-refresh-session *without* IoT as an extra:
-
 .. code-block:: bash
 
+    # with pip
     pip install boto3-refresh-session
 
-To install boto3-refresh-session *with* IoT as an extra:
-
-.. code-block:: bash
-
+    # with pip + iot as an extra
     pip install boto3-refresh-session[iot]
 
 Authorization
