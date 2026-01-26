@@ -75,3 +75,9 @@ When caching is enabled, the least recently used client will be evicted when the
 The ``_client_cache`` private attribute in ``RefreshableSession`` has been replaced with ``client_cache``, which invites direct interaction with the ``ClientCache`` instance for advanced use cases.
 Lastly, the hashing (keying) strategy for ``ClientCache`` has been adjusted to require ``ClientCacheKey``. 
 Simply pass ``*args`` and ``**kwargs`` (the same parameters passed to ``RefreshableSession.client``) to ``ClientCache`` when calling it to store or retrieve clients, and it will internally create a ``ClientCacheKey`` for you.
+
+v7.2.0
+------
+
+As of v7.2.0, ``boto3-refresh-session`` requires explicitly installing "iot" as an extra dependency in order to use IoT features, i.e. ``pip install boto3-refresh-session[iot]``.
+This change was made to reduce the number of dependencies for users who do not require IoT functionality.

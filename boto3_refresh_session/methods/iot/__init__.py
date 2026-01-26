@@ -2,6 +2,9 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+"""IoT Core credential provider refreshable session methods. Requires the
+installation of the 'iot' extra."""
+
 __all__ = []
 
 import importlib.util
