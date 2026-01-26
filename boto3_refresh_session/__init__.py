@@ -16,7 +16,10 @@ from .utils.cache import *
 from .utils.config import *
 
 # checking if iot extra is installed
-if importlib.util.find_spec("awscrt") is not None:
+if (
+    importlib.util.find_spec("awscrt") is not None
+    and importlib.util.find_spec("awsiot") is not None
+):
     from .methods.iot import *
 
 __all__.extend(cache.__all__)

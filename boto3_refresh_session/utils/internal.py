@@ -42,6 +42,7 @@ __all__ = [
     "refreshable_session",
 ]
 
+import importlib.util
 from abc import ABC, abstractmethod
 from functools import wraps
 from typing import Any, Callable, ClassVar, Generic, TypeVar, cast
@@ -360,13 +361,14 @@ class BaseRefreshableSession(
 
 
 # checking if iot extra is installed
-try:
+if (
+    importlib.util.find_spec("awscrt") is not None
+    and importlib.util.find_spec("awsiot") is not None
+):
     from awscrt.http import HttpHeaders
 
     from .typing import IoTAuthenticationMethod
-except ModuleNotFoundError:
-    ...
-else:
+
     __all__ += ["AWSCRTResponse", "BaseIoTRefreshableSession"]
 
     class BaseIoTRefreshableSession(

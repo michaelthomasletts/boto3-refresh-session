@@ -21,9 +21,10 @@ from boto3_refresh_session.utils import (
 )
 from boto3_refresh_session.utils.typing import Method
 
-IOT_AVAILABLE = importlib.util.find_spec("awscrt") is not None
-
-if IOT_AVAILABLE:
+if IOT_AVAILABLE := (
+    importlib.util.find_spec("awscrt") is not None
+    and importlib.util.find_spec("awsiot") is not None
+):
     from boto3_refresh_session.methods.iot.x509 import (
         IOTX509RefreshableSession,
     )
