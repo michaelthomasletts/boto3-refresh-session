@@ -12,12 +12,89 @@ permissions:
   contents: write   # needed for pushing commits and tags
 
 jobs:
+  checks:
+    name: Checks (${{ matrix.extras_label }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - extras: "dev"
+            extras_label: "no-iot"
+            cache_suffix: "dev"
+          - extras: "dev iot"
+            extras_label: "with-iot"
+            cache_suffix: "dev-iot"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        id: setup-python
+        with:
+          python-version: '3.10'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          virtualenvs-path: .venv
+          installer-parallel: true
+
+      - name: Cache Poetry dependencies
+        id: cached-poetry-dependencies
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: poetry-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ matrix.cache_suffix }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
+
+      - name: Install dependencies (no-root)
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: |
+          EXTRAS_ARGS=""
+          for extra in ${{ matrix.extras }}; do
+            EXTRAS_ARGS="$EXTRAS_ARGS --extras $extra"
+          done
+          poetry install --no-interaction --no-root $EXTRAS_ARGS
+
+      - name: Install project
+        run: |
+          EXTRAS_ARGS=""
+          for extra in ${{ matrix.extras }}; do
+            EXTRAS_ARGS="$EXTRAS_ARGS --extras $extra"
+          done
+          poetry install --no-interaction $EXTRAS_ARGS
+
+      - name: Check formatting with Black
+        if: matrix.extras_label == 'no-iot'
+        uses: psf/black@stable
+        with:
+          options: ". --check"
+
+      - name: Check import order with isort
+        if: matrix.extras_label == 'no-iot'
+        run: poetry run isort --check-only .
+
+      - name: Lint with Flake8
+        if: matrix.extras_label == 'no-iot'
+        uses: reviewdog/action-flake8@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run unit tests
+        run: |
+          source .venv/bin/activate
+          pytest tests/ -v
+
   bump_version:
+    needs: checks
     if: |
+      needs.checks.result == 'success' &&
       !contains(github.event.head_commit.message, '[skip release]') &&
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main'
-
     name: Bump Version, Publish to PyPI, tag, and deploy docs
     runs-on: ubuntu-latest
     steps:
@@ -45,11 +122,11 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .venv
-          key: poetry-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
+          key: poetry-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-dev-iot-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
 
-      - name: Install dependencies (no-root)
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-root --all-groups
+      - name: Install dependencies
+        run: |
+          poetry install --no-interaction --extras dev --extras iot
 
       - name: Determine version part to update
         run: |
@@ -140,7 +217,6 @@ jobs:
         env:
           POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          poetry install --no-interaction --all-groups
           poetry build
           poetry publish --no-interaction
 

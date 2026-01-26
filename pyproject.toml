@@ -8,7 +8,7 @@ authors = [
 license = { text = "MPL-2.0" }
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["boto3", "botocore", "requests", "typing-extensions", "awscrt", "awsiotsdk"]
+dependencies = ["boto3", "botocore", "typing-extensions"]
 keywords = ["boto3", "botocore", "aws", "sts", "credentials", "token", "refresh", "iot", "x509", "mqtt"]
 maintainers = [
   {name="Michael Letts", email="lettsmt@gmail.com"},
@@ -42,17 +42,20 @@ documentation = "https://michaelthomasletts.github.io/boto3-refresh-session/inde
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.3.4"
-black = "^24.10.0"
-isort = "^5.13.2"
-flake8 = "^7.1.1"
-pre-commit = "^4.0.1"
-sphinx = "^8.1.3"
-pydata-sphinx-theme = "^0.16.1"
-numpydoc = "^1.8.0"
-tomlkit = "^0.13.2"
-flask = "^3.1.1"
+[project.optional-dependencies]
+iot = ["awscrt", "awsiotsdk"]
+dev = [
+  "pytest", 
+  "black", 
+  "isort", 
+  "flake8", 
+  "pre-commit", 
+  "sphinx", 
+  "pydata-sphinx-theme", 
+  "numpydoc", 
+  "tomlkit", 
+  "flask"
+]
 
 [tool.black]
 line-length = 79

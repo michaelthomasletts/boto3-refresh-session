@@ -4,8 +4,12 @@
 
 __all__ = []
 
-from . import core
-from .core import IoTRefreshableSession
-from .x509 import IOTX509RefreshableSession
+import importlib.util
 
-__all__.extend(core.__all__)
+# checking if iot extra is installed
+if importlib.util.find_spec("awscrt") is not None:
+    from . import core
+    from .core import IoTRefreshableSession
+    from .x509 import IOTX509RefreshableSession
+
+    __all__.extend(core.__all__)
