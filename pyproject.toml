@@ -9,7 +9,7 @@ license = { text = "MPL-2.0" }
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = ["boto3", "botocore", "typing-extensions"]
-keywords = ["boto3", "botocore", "aws", "sts", "credentials", "token", "refresh", "iot", "x509", "mqtt"]
+keywords = ["boto3", "botocore", "boto", "aws", "sts", "credentials", "token", "refresh", "iot", "x509", "mqtt"]
 maintainers = [
   {name="Michael Letts", email="lettsmt@gmail.com"},
 ]
@@ -53,8 +53,7 @@ dev = [
   "sphinx", 
   "pydata-sphinx-theme", 
   "numpydoc", 
-  "tomlkit", 
-  "flask"
+  "tomlkit"
 ]
 
 [tool.black]
