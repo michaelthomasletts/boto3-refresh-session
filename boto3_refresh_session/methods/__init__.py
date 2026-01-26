@@ -14,7 +14,10 @@ __all__.extend(custom.__all__)
 __all__.extend(sts.__all__)
 
 # checking if iot extra is installed
-if importlib.util.find_spec("awscrt") is not None:
+if (
+    importlib.util.find_spec("awscrt") is not None
+    and importlib.util.find_spec("awsiot") is not None
+):
     from . import iot
     from .iot import *
 

@@ -10,7 +10,10 @@ __all__ = []
 import importlib.util
 
 # checking if iot extra is installed
-if importlib.util.find_spec("awscrt") is not None:
+if (
+    importlib.util.find_spec("awscrt") is not None
+    and importlib.util.find_spec("awsiot") is not None
+):
     from . import core
     from .core import IoTRefreshableSession
     from .x509 import IOTX509RefreshableSession

@@ -19,6 +19,7 @@ __all__ = [
     "TemporaryCredentials",
 ]
 
+import importlib.util
 from datetime import datetime
 from typing import (
     Any,
@@ -37,14 +38,10 @@ except ImportError:
     from typing_extensions import NotRequired
 
 # checking if iot extra is installed
-try:
-    import awscrt  # typing: ignore[import] # noqa: F401
-except ModuleNotFoundError:
-    _IOT_EXTRA_INSTALLED = False
-else:
-    _IOT_EXTRA_INSTALLED = True
-
-if _IOT_EXTRA_INSTALLED:
+if _IOT_EXTRA_INSTALLED := (
+    importlib.util.find_spec("awscrt") is not None
+    and importlib.util.find_spec("awsiot") is not None
+):
     __all__ += [
         "IoTAuthenticationMethod",
         "PublicIoTAuthenticationMethod",
