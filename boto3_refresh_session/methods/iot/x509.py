@@ -58,6 +58,12 @@ class IOTX509RefreshableSession(
     """A :class:`boto3.session.Session` object that automatically refreshes
     temporary credentials returned by the IoT Core credential provider.
 
+    .. note::
+
+        As of v7.2.0, ``boto3-refresh-session`` requires explicitly installing
+        "iot" as an extra dependency in order to use IoT features, i.e.
+        ``pip install boto3-refresh-session[iot]``.
+
     Parameters
     ----------
     endpoint : str

@@ -32,7 +32,8 @@ class RefreshableSession:
     method : PublicMethod
         The authentication and refresh method to use for the session. Must
         match a registered method name. Options include "sts", "custom", and
-        "iot". Default is "sts".
+        "iot". "iot" requires explicitly installing the "iot" extra, i.e.
+        ``pip install boto3-refresh-session[iot]``. Default is "sts".
     defer_refresh : bool, optional
         If ``True`` then temporary credentials are not automatically refreshed
         until they are explicitly needed. If ``False`` then temporary
@@ -85,10 +86,37 @@ class RefreshableSession:
 
     >>> from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
     >>> session = RefreshableSession(
-    ...     assume_role_kwargs=AssumeRoleConfig(RoleArn="<your-role-arn>"),
-    ...     region_name="us-east-1"
+    ...     assume_role_kwargs=AssumeRoleConfig(RoleArn="<your-role-arn>")
     ... )
-    >>> s3 = session.client("s3")
+
+    Basic initialization using a custom credential callable
+    (i.e. ``method="custom"``):
+
+    >>> from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
+    >>> def custom_credential_provider(...):
+    ...     ...
+    ...     return {"AccessKeyId": "...",
+    ...             "SecretAccessKey": "...",
+    ...             "SessionToken": "...",
+    ...             "Expiration": datetime.datetime(...)}
+    ...
+    >>> session = RefreshableSession(
+    ...     method="custom",
+    ...     custom_credentials_method=custom_credential_provider,
+    ...     custom_credentials_method_args={...},
+    ... )
+
+    Basic initialization using IoT X.509 (i.e. ``method="iot"``):
+
+    >>> from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
+    >>> session = RefreshableSession(
+    ...     method="iot",
+    ...     iot_endpoint="your-iot-endpoint",
+    ...     thing_name="your-thing-name",
+    ...     role_alias="your-role-alias",
+    ...     certificate_path="path/to/certificate.pem.crt",
+    ...     private_key_path="path/to/private.pem.key",
+    ... )
     """
 
     def __new__(
@@ -98,7 +126,10 @@ class RefreshableSession:
             raise BRSValidationError(
                 f"{method!r} is an invalid method parameter. "
                 "Available methods are "
-                f"{', '.join(repr(meth) for meth in methods)}.",
+                f"{', '.join(repr(meth) for meth in methods)}. "
+                "If you are trying to use method='iot', ensure you have "
+                "installed the 'iot' extra via pip install "
+                "boto3-refresh-session[iot]",
                 param="method",
                 value=method,
             )

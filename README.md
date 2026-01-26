@@ -91,11 +91,7 @@
 - MFA support included for STS
 - SSO support via AWS profiles
 - Optionally caches boto3 clients
-- Supports automatic temporary credential refresh for: 
-  - **STS**
-  - **IoT Core** 
-    - X.509 certificates w/ role aliases over mTLS (PEM files and PKCS#11)
-    - MQTT actions are available!
+- Supports automatic temporary credential refresh for STS, custom credential flows, and IoT Core (X.509)
 - [Tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [documented](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/)
 
 ## Recognition and Testimonials
@@ -112,10 +108,14 @@ A testimonial from a Cyber Security Engineer at a FAANG company:
 
 ## Installation
 
-boto3-refresh-session is available on PyPI:
+boto3-refresh-session is available on PyPI.
 
 ```bash
+# with pip
 pip install boto3-refresh-session
+
+# with pip + iot as an extra
+pip install boto3-refresh-session[iot]
 ```
 
 ## Usage

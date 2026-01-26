@@ -11,16 +11,12 @@ __all__ = [
     "CustomCredentialsMethod",
     "CustomCredentialsMethodArgs",
     "Identity",
-    "IoTAuthenticationMethod",
     "Method",
-    "PublicIoTAuthenticationMethod",
     "PublicMethod",
-    "PKCS11",
     "RefreshMethod",
     "RegistryKey",
     "STSClientParams",
     "TemporaryCredentials",
-    "Transport",
 ]
 
 from datetime import datetime
@@ -40,39 +36,60 @@ try:
 except ImportError:
     from typing_extensions import NotRequired
 
-#: Type alias for all currently available IoT authentication methods.
-IoTAuthenticationMethod: TypeAlias = Literal["x509", "__iot_sentinel__"]
+# checking if iot extra is installed
+try:
+    import awscrt  # typing: ignore[import] # noqa: F401
+except ModuleNotFoundError:
+    _IOT_EXTRA_INSTALLED = False
+else:
+    _IOT_EXTRA_INSTALLED = True
 
-#: Public type alias for all currently available IoT authentication methods.
-PublicIoTAuthenticationMethod: TypeAlias = Literal["x509"]
+if _IOT_EXTRA_INSTALLED:
+    __all__ += [
+        "IoTAuthenticationMethod",
+        "PublicIoTAuthenticationMethod",
+        "PKCS11",
+        "Transport",
+    ]
 
-#: Type alias for all currently available credential refresh methods.
-Method: TypeAlias = Literal[
-    "custom",
-    "iot",
-    "sts",
-    "__sentinel__",
-    "__iot_sentinel__",
-]
+    #: Type alias for all currently available IoT authentication methods.
+    IoTAuthenticationMethod: TypeAlias = Literal["x509", "__iot_sentinel__"]
 
-#: Public type alias for all currently available credential refresh methods.
-PublicMethod: TypeAlias = Literal["custom", "iot", "sts"]
+    #: Public type alias for currently available IoT authentication methods.
+    PublicIoTAuthenticationMethod: TypeAlias = Literal["x509"]
 
-#: Type alias for all refresh method names.
-RefreshMethod: TypeAlias = Literal[
-    "custom",
-    "iot-x509",
-    "sts-assume-role",
-]
+    #: Type alias for all currently available credential refresh methods.
+    Method: TypeAlias = Literal[
+        "custom",
+        "iot",
+        "sts",
+        "__sentinel__",
+        "__iot_sentinel__",
+    ]
+
+    #: Public type alias for currently available credential refresh methods.
+    PublicMethod: TypeAlias = Literal["custom", "iot", "sts"]
+
+    #: Type alias for all refresh method names.
+    RefreshMethod: TypeAlias = Literal["custom", "iot-x509", "sts-assume-role"]
+
+    #: Type alias for acceptable transports
+    Transport: TypeAlias = Literal["x509", "ws"]
+else:
+    #: Type alias for currently available credential refresh methods.
+    Method: TypeAlias = Literal["custom", "sts", "__sentinel__"]
+
+    #: Public type alias for currently available credential refresh methods.
+    PublicMethod: TypeAlias = Literal["custom", "sts"]
+
+    #: Type alias for all refresh method names.
+    RefreshMethod: TypeAlias = Literal["custom", "sts-assume-role"]
 
 #: Type alias for all currently registered credential refresh methods.
 RegistryKey = TypeVar("RegistryKey", bound=str)
 
 #: Type alias for values returned by get_identity
 Identity: TypeAlias = dict[str, Any]
-
-#: Type alias for acceptable transports
-Transport: TypeAlias = Literal["x509", "ws"]
 
 
 class TemporaryCredentials(TypedDict):
@@ -138,9 +155,11 @@ class STSClientParams(TypedDict):
     aws_account_id: NotRequired[str]
 
 
-class PKCS11(TypedDict):
-    pkcs11_lib: str
-    user_pin: NotRequired[str]
-    slot_id: NotRequired[int]
-    token_label: NotRequired[str | None]
-    private_key_label: NotRequired[str | None]
+if _IOT_EXTRA_INSTALLED:
+
+    class PKCS11(TypedDict):
+        pkcs11_lib: str
+        user_pin: NotRequired[str]
+        slot_id: NotRequired[int]
+        token_label: NotRequired[str | None]
+        private_key_label: NotRequired[str | None]
