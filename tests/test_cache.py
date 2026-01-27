@@ -4,7 +4,11 @@
 
 from botocore.config import Config
 
-from boto3_refresh_session.utils.cache import ClientCache, ClientCacheKey
+from boto3_refresh_session.utils.cache import (
+    LRUClientCache,
+    ClientCacheKey,
+    LFUClientCache,
+)
 
 
 def test_client_cache_key_normalizes_config() -> None:
@@ -19,7 +23,7 @@ def test_client_cache_key_normalizes_config() -> None:
 
 
 def test_client_cache_evicts_lru() -> None:
-    cache = ClientCache(max_size=2)
+    cache = LRUClientCache(max_size=2)
     obj_a = object()
     obj_b = object()
     obj_c = object()
@@ -39,8 +43,31 @@ def test_client_cache_evicts_lru() -> None:
     assert key_c in cache
 
 
+def test_client_cache_evicts_lfu() -> None:
+    cache = LFUClientCache(max_size=2)
+    obj_a = object()
+    obj_b = object()
+    obj_c = object()
+
+    key_a = ClientCacheKey("s3")
+    key_b = ClientCacheKey("sts")
+    key_c = ClientCacheKey("ec2")
+
+    cache[key_a] = obj_a
+    cache[key_b] = obj_b
+
+    for _ in range(5):
+        assert cache.get(key_a) is obj_a
+
+    cache[key_c] = obj_c
+
+    assert key_b not in cache
+    assert key_a in cache
+    assert key_c in cache
+
+
 def test_client_cache_call_inserts() -> None:
-    cache = ClientCache(max_size=10)
+    cache = LRUClientCache(max_size=10)
     obj = object()
     args = ("s3",)
     kwargs = {"region_name": "us-west-2"}
@@ -53,7 +80,7 @@ def test_client_cache_call_inserts() -> None:
 
 
 def test_client_cache_str_includes_entries() -> None:
-    cache = ClientCache(max_size=10)
+    cache = LRUClientCache(max_size=10)
     cache(object(), "s3")
 
     output = str(cache)

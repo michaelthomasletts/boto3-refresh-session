@@ -57,7 +57,7 @@ from botocore.credentials import (
 )
 
 from ..exceptions import BRSCacheError, BRSWarning
-from .cache import ClientCache, ClientCacheKey
+from .cache import LRUClientCache, ClientCacheKey
 from .typing import (
     Identity,
     IoTAuthenticationMethod,
@@ -219,7 +219,7 @@ class BRSSession(Session):
         super().__init__(**kwargs)
 
         # initializing client cache
-        self.client_cache: ClientCache = ClientCache(
+        self.client_cache: LRUClientCache = LRUClientCache(
             max_size=self.client_cache_max_size
         )
 
