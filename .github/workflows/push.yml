@@ -142,11 +142,18 @@ jobs:
           uv run make bump-version "$VERSION_TYPE"
           echo "'make bump-version $VERSION_TYPE' completed"
 
+      - name: Verify uv.lock
+        run: |
+          if ! uv lock --check; then
+            echo "uv.lock out of date; regenerating."
+            uv lock
+          fi
+
       - name: Commit Version Bump
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add pyproject.toml boto3_refresh_session/__init__.py || true
+          git add pyproject.toml boto3_refresh_session/__init__.py uv.lock || true
           if ! git diff --cached --quiet; then
             git commit -m "bump $VERSION_TYPE version [skip ci]"
             git push origin main
