@@ -130,7 +130,7 @@ jobs:
 
       - name: Bump Version
         run: |
-          make bump-version "$VERSION_TYPE"
+          uv run make bump-version "$VERSION_TYPE"
           echo "'make bump-version $VERSION_TYPE' completed"
 
       - name: Commit Version Bump
