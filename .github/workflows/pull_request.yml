@@ -34,55 +34,43 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          virtualenvs-path: .venv
-          installer-parallel: true
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
 
-      - name: Cache Poetry dependencies
-        id: cached-poetry-dependencies
+      - name: Check uv lockfile
+        run: uv lock --check
+
+      - name: Cache uv dependencies
+        id: cached-uv-dependencies
         uses: actions/cache@v4
         with:
           path: .venv
-          key: poetry-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ matrix.cache_suffix }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
+          key: uv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ matrix.cache_suffix }}-${{ hashFiles('**/uv.lock', '**/pyproject.toml') }}
 
       - name: Install dependencies
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        if: steps.cached-uv-dependencies.outputs.cache-hit != 'true'
         run: |
           EXTRAS_ARGS=""
           for extra in ${{ matrix.extras }}; do
-            EXTRAS_ARGS="$EXTRAS_ARGS --extras $extra"
+            EXTRAS_ARGS="$EXTRAS_ARGS --extra $extra"
           done
-          poetry install --no-interaction --no-root $EXTRAS_ARGS
+          uv sync --frozen --no-install-project $EXTRAS_ARGS
 
       - name: Install project
         run: |
           EXTRAS_ARGS=""
           for extra in ${{ matrix.extras }}; do
-            EXTRAS_ARGS="$EXTRAS_ARGS --extras $extra"
+            EXTRAS_ARGS="$EXTRAS_ARGS --extra $extra"
           done
-          poetry install --no-interaction $EXTRAS_ARGS
+          uv sync --frozen $EXTRAS_ARGS
 
-      - name: Check formatting with Black
+      - name: Check formatting with Ruff
         if: matrix.extras_label == 'no-iot'
-        uses: psf/black@stable
-        with:
-          options: ". --check"
+        run: uv run ruff format --check .
 
-      - name: Check import order with isort
+      - name: Lint with Ruff
         if: matrix.extras_label == 'no-iot'
-        run: poetry run isort --check-only .
-
-      - name: Lint with Flake8
-        if: matrix.extras_label == 'no-iot'
-        uses: reviewdog/action-flake8@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+        run: uv run ruff check .
 
       - name: Run unit tests
-        run: |
-          source .venv/bin/activate
-          pytest tests/ -v
+        run: uv run pytest tests/ -v

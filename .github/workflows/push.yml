@@ -35,58 +35,46 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          virtualenvs-path: .venv
-          installer-parallel: true
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
 
-      - name: Cache Poetry dependencies
-        id: cached-poetry-dependencies
+      - name: Check uv lockfile
+        run: uv lock --check
+
+      - name: Cache uv dependencies
+        id: cached-uv-dependencies
         uses: actions/cache@v4
         with:
           path: .venv
-          key: poetry-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ matrix.cache_suffix }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
+          key: uv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ matrix.cache_suffix }}-${{ hashFiles('**/uv.lock', '**/pyproject.toml') }}
 
       - name: Install dependencies (no-root)
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        if: steps.cached-uv-dependencies.outputs.cache-hit != 'true'
         run: |
           EXTRAS_ARGS=""
           for extra in ${{ matrix.extras }}; do
-            EXTRAS_ARGS="$EXTRAS_ARGS --extras $extra"
+            EXTRAS_ARGS="$EXTRAS_ARGS --extra $extra"
           done
-          poetry install --no-interaction --no-root $EXTRAS_ARGS
+          uv sync --frozen --no-install-project $EXTRAS_ARGS
 
       - name: Install project
         run: |
           EXTRAS_ARGS=""
           for extra in ${{ matrix.extras }}; do
-            EXTRAS_ARGS="$EXTRAS_ARGS --extras $extra"
+            EXTRAS_ARGS="$EXTRAS_ARGS --extra $extra"
           done
-          poetry install --no-interaction $EXTRAS_ARGS
+          uv sync --frozen $EXTRAS_ARGS
 
-      - name: Check formatting with Black
+      - name: Check formatting with Ruff
         if: matrix.extras_label == 'no-iot'
-        uses: psf/black@stable
-        with:
-          options: ". --check"
+        run: uv run ruff format --check .
 
-      - name: Check import order with isort
+      - name: Lint with Ruff
         if: matrix.extras_label == 'no-iot'
-        run: poetry run isort --check-only .
-
-      - name: Lint with Flake8
-        if: matrix.extras_label == 'no-iot'
-        uses: reviewdog/action-flake8@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+        run: uv run ruff check .
 
       - name: Run unit tests
-        run: |
-          source .venv/bin/activate
-          pytest tests/ -v
+        run: uv run pytest tests/ -v
 
   bump_version:
     needs: checks
@@ -109,24 +97,22 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          virtualenvs-path: .venv
-          installer-parallel: true
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
 
-      - name: Cache Poetry dependencies
-        id: cached-poetry-dependencies
+      - name: Check uv lockfile
+        run: uv lock --check
+
+      - name: Cache uv dependencies
+        id: cached-uv-dependencies
         uses: actions/cache@v4
         with:
           path: .venv
-          key: poetry-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-dev-iot-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
+          key: uv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-dev-iot-${{ hashFiles('**/uv.lock', '**/pyproject.toml') }}
 
       - name: Install dependencies
         run: |
-          poetry install --no-interaction --extras dev --extras iot
+          uv sync --frozen --extra dev --extra iot
 
       - name: Determine version part to update
         run: |
@@ -142,49 +128,10 @@ jobs:
           echo "Determined VERSION_TYPE=$VERSION_TYPE"
           echo "VERSION_TYPE=$VERSION_TYPE" >> $GITHUB_ENV
 
-      - name: Bump version with Poetry
+      - name: Bump version
         run: |
-          poetry version $VERSION_TYPE
-          echo "NEW_VERSION=$(poetry version -s)" >> $GITHUB_ENV
-
-      - name: Update __version__ in package __init__.py
-        run: |
-          python - << 'PY'
-          import re, subprocess, sys
-          from pathlib import Path
-
-          # Get the version Poetry just set in pyproject.toml
-          ver = subprocess.check_output(["poetry", "version", "-s"], text=True).strip()
-
-          pkg_init = Path("boto3_refresh_session/__init__.py")
-          if not pkg_init.exists():
-              print("No __init__.py found; skipping.")
-              sys.exit(0)
-
-          text = pkg_init.read_text(encoding="utf-8")
-
-          # Replace existing __version__ line if present
-          pattern = re.compile(r'(?m)^(?P<prefix>__version__\s*=\s*)([\'"])(?P<val>.*?)(\2)')
-          if pattern.search(text):
-              new_text = pattern.sub(lambda m: f"{m.group('prefix')}{m.group(2)}{ver}{m.group(2)}", text, count=1)
-          else:
-              # Otherwise, try to insert after the last import; fall back to appending
-              import_pat = re.compile(r'(?m)^(?:from\s+\S+\s+import\s+.+|import\s+\S+.*)$')
-              last_import = None
-              for m in import_pat.finditer(text):
-                  last_import = m
-              if last_import:
-                  insert_at = last_import.end()
-                  new_text = text[:insert_at] + f"\n__version__ = '{ver}'\n" + text[insert_at:]
-              else:
-                  new_text = text.rstrip() + f"\n\n__version__ = '{ver}'\n"
-
-          if new_text != text:
-              pkg_init.write_text(new_text, encoding="utf-8")
-              print(f"Updated __version__ to {ver}")
-          else:
-              print("No change required.")
-          PY
+          make bump-version "$VERSION_TYPE"
+          echo "'make bump-version $VERSION_TYPE' completed"
 
       - name: Commit version bump
         run: |
@@ -205,7 +152,11 @@ jobs:
 
       - name: Create tag
         run: |
-          VERSION="${NEW_VERSION:-$(poetry version -s)}"
+          VERSION="$NEW_VERSION"
+          if [ -z "$VERSION" ]; then
+            echo "NEW_VERSION not set; cannot create tag." >&2
+            exit 1
+          fi
           if git rev-parse "$VERSION" >/dev/null 2>&1; then
             echo "Tag $VERSION already exists; skipping."
           else
@@ -215,10 +166,10 @@ jobs:
 
       - name: Build wheel and publish to PyPI
         env:
-          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          poetry build
-          poetry publish --no-interaction
+          uv build
+          uv publish
 
       - name: Build Documentation
         run: |
