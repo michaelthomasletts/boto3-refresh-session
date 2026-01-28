@@ -2,7 +2,24 @@
 
 - Python >= 3.10
 - Local development requires `uv`. Installation instructions can be found [here](https://docs.astral.sh/uv/getting-started/installation/).
-- Development dependencies can be installed by running `pip install boto3-refresh-session[dev,iot]`
+- Development dependencies are managed via `uv` and `uv.lock` (see quickstart below).
+
+## Quickstart
+
+```bash
+# create/update the local venv with dev + iot extras
+uv sync --extra dev --extra iot
+
+# install git hooks (optional but recommended)
+uv run pre-commit install
+
+# run tests
+uv run pytest -v
+
+# lint and format checks
+uv run ruff check .
+uv run ruff format --check .
+```
 
 ## Documentation
 
@@ -12,11 +29,17 @@ boto3-refresh-session employs a consistent docstring standard and online documen
 - The [official documentation](https://michaelthomasletts.com/boto3-refresh-session/) is generated using `sphinx` and `pydata-sphinx-theme`.
 - Documentation configurations can be found in `doc/conf.py`.  
 - `autosummary_generate` is **deliberately** deactivated in `doc/conf.py`! RST files are customarily written *manually* in this project; this provides granular control over resultant documentation.
-- Verify your documentation edits *before* opening a pull request. To do this, run `cd doc && make clean && make html`. Navigate to `doc/_build/html` and open `index.html` to check the documentation locally from your internet browser.
+- Verify your documentation edits *before* opening a pull request. To do this, run `uv run bash -lc "cd doc && make clean && make html"`. Navigate to `doc/_build/html` and open `index.html` to check the documentation locally from your internet browser.
 - A great deal of care goes into the documentation for boto3-refresh-session. Ensure your writing is coherent, concise, and helpful for an audience ranging from novices to experts.
 
 ## Local Development
 
 - Ensure your changes include unit tests (with mocks, etc as necessary). Integration tests are also fine.
 - `pre-commit` runs a [variety of checks](https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/.pre-commit-config.yaml) automatically.
-- Include the version part parameter (i.e. [major | minor | patch]) to the beginning of your pull request title so that the version is bumped correctly.
+- Include the version part parameter (i.e. [major | minor | patch]) in your pull request title so that the version is bumped correctly.
+
+## Support and Issues
+
+- For bugs, please open a GitHub Issue with steps to reproduce, expected behavior, and actual behavior.
+- For questions or usage help, open a GitHub Discussion or Issue with a minimal example.
+- For security issues, please avoid public issues and contact the maintainer directly.
