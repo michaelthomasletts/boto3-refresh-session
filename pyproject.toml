@@ -40,7 +40,7 @@ requires = ["hatchling>=1.27.0"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build]
-include = ["NOTICE"]
+include = ["NOTICE", "LICENSE"]
 
 [project.optional-dependencies]
 iot = ["awscrt", "awsiotsdk"]

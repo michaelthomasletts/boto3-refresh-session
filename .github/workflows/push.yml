@@ -122,23 +122,7 @@ jobs:
           VERSION_TYPE="patch"
           MESSAGE=$(git log -1 --pretty=%B)
 
-          PR_TITLE=$(curl -fsSL \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${{ github.repository }}/commits/${{ github.sha }}/pulls" \
-            | python - << 'PY'
-          import json
-          import sys
-
-          try:
-              prs = json.load(sys.stdin)
-          except json.JSONDecodeError:
-              prs = []
-
-          if prs:
-              print(prs[0].get("title", ""), end="")
-          PY
-            || true)
+          PR_TITLE=$(make get-pr-title)
 
           if echo "$PR_TITLE" | grep -qi '\[major\]'; then
             VERSION_TYPE="major"

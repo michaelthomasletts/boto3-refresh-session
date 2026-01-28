@@ -2,7 +2,7 @@ PYTHON ?= python
 
 BUMP := $(word 1,$(filter-out bump-version,$(MAKECMDGOALS)))
 
-.PHONY: bump-version major minor patch
+.PHONY: bump-version major minor patch get-pr-title
 
 bump-version:
 	@if [ -z "$(BUMP)" ]; then \
@@ -13,3 +13,6 @@ bump-version:
 
 major minor patch:
 	@:
+
+get-pr-title:
+	uv run python scripts/get_pr_title.py
