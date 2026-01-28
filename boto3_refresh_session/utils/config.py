@@ -246,21 +246,17 @@ class STSClientConfig(BaseConfig):
         """Override to enforce 'sts' as service_name."""
 
         if key == "service_name":
-            match value:
-                case None:
-                    value = "sts"
-                case str() if value != "sts":
+            if value is None:
+                value = "sts"
+            elif isinstance(value, str):
+                if value != "sts":
                     BRSWarning.warn(
                         "The 'service_name' for STSClientConfig should be "
                         "'sts'. Overriding to 'sts'."
                     )
                     value = "sts"
-                case str():
-                    ...
-                case _:
-                    raise BRSValidationError(
-                        "'service_name' must be a string."
-                    )
+            else:
+                raise BRSValidationError("'service_name' must be a string.")
 
         super().__setitem__(key, value)
 
