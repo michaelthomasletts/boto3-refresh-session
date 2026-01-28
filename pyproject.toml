@@ -32,8 +32,8 @@ classifiers = [
 ]
 
 [project.urls]
-repository = "https://github.com/michaelthomasletts/boto3-refresh-session"
-documentation = "https://michaelthomasletts.github.io/boto3-refresh-session/index.html"
+Repository = "https://github.com/michaelthomasletts/boto3-refresh-session"
+Documentation = "https://michaelthomasletts.github.io/boto3-refresh-session/index.html"
 
 [build-system]
 requires = ["hatchling>=1.27.0"]
