@@ -1,3 +1,41 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/doc/brs.png" />
+</div>
+
+</br>
+
+<div align="center">
+
+  <a href="https://pypi.org/project/boto3-refresh-session/">
+    <img 
+      src="https://img.shields.io/pypi/v/boto3-refresh-session?color=%23FF0000FF&logo=python&label=Latest%20Version"
+      alt="pypi_version"
+    />
+  </a>
+
+  <a href="https://pypi.org/project/boto3-refresh-session/">
+    <img 
+      src="https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi&color=%23FF0000FF&logo=python&label=Compatible%20Python%20Versions" 
+      alt="py_version"
+    />
+  </a>
+
+  <a href="https://michaelthomasletts.github.io/boto3-refresh-session/index.html">
+    <img 
+      src="https://img.shields.io/badge/Official%20Documentation-📘-FF0000?style=flat&labelColor=555&logo=readthedocs" 
+      alt="documentation"
+    />
+  </a>
+
+  <a href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/LICENSE">
+    <img 
+      src="https://img.shields.io/static/v1?label=License&message=MPL-2.0&color=FF0000&labelColor=555&logo=github&style=flat"
+      alt="license"
+    />
+  </a>
+
+</div>
+
 ## Requirements
 
 - Python >= 3.10

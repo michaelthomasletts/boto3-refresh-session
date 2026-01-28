@@ -7,6 +7,9 @@ on:
       - "boto3_refresh_session/**"
       - "README.md"
       - "doc/brs.png"
+      - NOTICE
+      - pyproject.toml
+      - LICENSE
 
 permissions:
   contents: write   # needed for pushing commits and tags
