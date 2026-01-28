@@ -15,7 +15,7 @@
 
 * [ ] Does your new feature include documentation? If not, why not?
     * [ ] Does that documentation match the numpydoc guidelines?
-    * [ ] Did you locally test your documentation changes using `sphinx-build doc doc/_build` from the root directory?
+    * [ ] Did you locally test your documentation changes using `uv run bash -lc "cd docs && make html"` from the root directory?
 * [ ] Did you write unit tests for the new feature? If not, why not?
     * [ ] Did the unit tests pass?
 

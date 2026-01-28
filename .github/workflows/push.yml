@@ -6,7 +6,7 @@ on:
     paths:
       - "boto3_refresh_session/**"
       - "README.md"
-      - "doc/brs.png"
+      - "docs/brs.png"
       - NOTICE
       - pyproject.toml
       - LICENSE
@@ -190,13 +190,13 @@ jobs:
       - name: Build Documentation
         run: |
           source .venv/bin/activate
-          cd doc/ && make clean && cd ..
-          sphinx-build doc _build
+          cd docs/ && make clean && cd ..
+          sphinx-build docs docs/_build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: _build/
+          publish_dir: docs/_build/
           force_orphan: true

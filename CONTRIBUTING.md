@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/doc/brs.png" />
+  <img src="https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/docs/brs.png" />
 </div>
 
 </br>
@@ -65,9 +65,9 @@ boto3-refresh-session employs a consistent docstring standard and online documen
 
 - boto3-refresh-session uses [numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html) for docstrings.
 - The [official documentation](https://michaelthomasletts.com/boto3-refresh-session/) is generated using `sphinx` and `pydata-sphinx-theme`.
-- Documentation configurations can be found in `doc/conf.py`.  
-- `autosummary_generate` is **deliberately** deactivated in `doc/conf.py`! RST files are customarily written *manually* in this project; this provides granular control over resultant documentation.
-- Verify your documentation edits *before* opening a pull request. To do this, run `uv run bash -lc "cd doc && make clean && make html"`. Navigate to `doc/_build/html` and open `index.html` to check the documentation locally from your internet browser.
+- Documentation configurations can be found in `docs/conf.py`.  
+- `autosummary_generate` is **deliberately** deactivated in `docs/conf.py`! RST files are customarily written *manually* in this project; this provides granular control over resultant documentation.
+- Verify your documentation edits *before* opening a pull request. To do this, run `uv run bash -lc "cd docs && make clean && make html"`. Navigate to `docs/_build/html` and open `index.html` to check the documentation locally from your internet browser.
 - A great deal of care goes into the documentation for boto3-refresh-session. Ensure your writing is coherent, concise, and helpful for an audience ranging from novices to experts.
 
 ## Local Development

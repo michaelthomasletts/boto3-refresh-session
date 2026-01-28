@@ -175,9 +175,5 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-# docs
-doc/_build
-_build
-
 # VS Code
 .vscode/
