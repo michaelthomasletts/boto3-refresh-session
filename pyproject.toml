@@ -31,24 +31,22 @@ classifiers = [
   "Topic :: Security",
 ]
 
-[tool.poetry]
-include = ["NOTICE"]
-
 [project.urls]
 repository = "https://github.com/michaelthomasletts/boto3-refresh-session"
 documentation = "https://michaelthomasletts.github.io/boto3-refresh-session/index.html"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+include = ["NOTICE"]
 
 [project.optional-dependencies]
 iot = ["awscrt", "awsiotsdk"]
 dev = [
   "pytest", 
-  "black", 
-  "isort", 
-  "flake8", 
+  "ruff", 
   "pre-commit", 
   "sphinx", 
   "pydata-sphinx-theme", 
@@ -56,18 +54,20 @@ dev = [
   "tomlkit"
 ]
 
-[tool.black]
+[tool.ruff]
 line-length = 79
-target-version = ["py310"]
-quiet = true
+target-version = "py310"
 
-[tool.isort]
-profile = "black"
-line_length = 79
-ensure_newline_before_comments = true
-use_parentheses = true
-include_trailing_comma = true
-multi_line_output = 3
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.ruff.lint.isort]
+split-on-trailing-comma = true
+
+[tool.ruff.lint.per-file-ignores]
+"**/__init__.py" = ["F401", "F403"]
+"tests/test_session_stubbed.py" = ["E501"]
+"boto3_refresh_session/utils/config.py" = ["E501"]
 
 [tool.pytest.ini_options]
 log_cli = true
