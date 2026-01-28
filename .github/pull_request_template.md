@@ -6,6 +6,7 @@
 * [ ] Did you verify that your changes pass pre-commit checks before opening this pull request?
     * The pre-commit checks are identical to required status checks for pull requests in this repository. Know that suppressing pre-commit checks via the `--no-verify` | `-nv` arguments will not help you avoid the PR status checks!
     * To ensure that pre-commit checks work on your branch before running `git commit`, run `pre-commit install` and `pre-commit install-hooks` beforehand. 
+    * `uv lock --check`, which is run by `pre-commit`, is the most critical pre-commit check of all for CI consistency.
 * [ ] Have you checked that your changes don't relate to other open pull requests?
 
 <!-- You can erase any parts of this template not applicable to your Pull Request. -->
