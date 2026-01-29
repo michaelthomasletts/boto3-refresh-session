@@ -20,10 +20,7 @@ from boto3_refresh_session.utils import (
     BaseIoTRefreshableSession,
     BaseRefreshableSession,
 )
-from boto3_refresh_session.utils.typing import (
-    IoTAuthenticationMethod,
-    Method,
-)
+from boto3_refresh_session.utils.typing import IoTAuthenticationMethod, Method
 
 
 def _set_dummy_env(monkeypatch) -> None:

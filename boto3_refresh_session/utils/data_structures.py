@@ -7,14 +7,14 @@ _KT = TypeVar("_KT", bound=Hashable)
 
 
 class ListNode(Generic[_KT]):
-    """A linear, thread-safe collection of ListNodes with forward and backward
-    references.
+    """An object that represents a member of a ``DoublyLinkedList`` with
+    references to its adjacent nodes.
 
     Parameters
     ----------
     value : int
         TODO
-    items : set, optional
+    data : set, optional
         TODO
     previous_node : ListNode, optional
         TODO
@@ -25,12 +25,12 @@ class ListNode(Generic[_KT]):
     def __init__(
         self,
         value: int | None = None,
-        items: set[_KT] | None = None,
+        data: set[_KT] | None = None,
         previous_node: "ListNode | None" = None,
         next_node: "ListNode | None" = None,
     ):
         self.value = value
-        self.items = set() if items is None else items
+        self.data = set() if data is None else data
         self.previous_node = previous_node
         self.next_node = next_node
 
@@ -40,15 +40,15 @@ class ListNode(Generic[_KT]):
             self.next_node.previous_node = self
 
     def __str__(self) -> str:
-        return ", ".join(self.items)
+        return ", ".join(self.data)
 
     def __repr__(self) -> str:
         return f"ListNode({str(self)})"
 
 
 class DoublyLinkedList(Generic[_KT]):
-    """A linear, thread-safe collection of ListNodes with forward and backward
-    references.
+    """A thread-safe, linear collection of ``ListNode`` with forward and back-
+    ward references.
 
     Attributes
     ----------

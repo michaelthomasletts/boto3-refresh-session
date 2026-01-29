@@ -5,9 +5,9 @@
 from botocore.config import Config
 
 from boto3_refresh_session.utils.cache import (
-    LRUClientCache,
     ClientCacheKey,
     LFUClientCache,
+    LRUClientCache,
 )
 
 

@@ -46,7 +46,7 @@ __all__ = [
 
 from abc import ABC, abstractmethod
 from functools import wraps
-from typing import Any, Callable, ClassVar, Generic, TypeVar, cast
+from typing import Any, Callable, ClassVar, Generic, Literal, TypeVar, cast
 
 from awscrt.http import HttpHeaders
 from boto3.session import Session
@@ -57,7 +57,7 @@ from botocore.credentials import (
 )
 
 from ..exceptions import BRSCacheError, BRSWarning
-from .cache import LRUClientCache, ClientCacheKey
+from .cache import BaseCache, ClientCacheKey
 from .typing import (
     Identity,
     IoTAuthenticationMethod,
@@ -205,6 +205,7 @@ class BRSSession(Session):
         mandatory_timeout: int | None = None,
         cache_clients: bool | None = None,
         client_cache_max_size: int | None = None,
+        client_cache_strategy: Literal["lru", "lfu"] | None = None,
         **kwargs,
     ):
         # initializing parameters
@@ -214,13 +215,17 @@ class BRSSession(Session):
         self.mandatory_timeout: int | None = mandatory_timeout
         self.cache_clients: bool | None = cache_clients is not False
         self.client_cache_max_size: int | None = client_cache_max_size
+        self.client_cache_strategy: Literal["lru", "lfu"] | None = (
+            client_cache_strategy
+        )
 
         # initializing Session
         super().__init__(**kwargs)
 
         # initializing client cache
-        self.client_cache: LRUClientCache = LRUClientCache(
-            max_size=self.client_cache_max_size
+        self.client_cache = BaseCache.new(
+            max_size=self.client_cache_max_size,
+            strategy=client_cache_strategy,
         )
 
     def __post_init__(self):

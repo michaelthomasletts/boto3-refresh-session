@@ -4,21 +4,21 @@
 
 """Cache primitives for memoizing objects."""
 
-__all__ = ["LFUClientCache", "LRUClientCache", "ClientCacheKey"]
+__all__ = ["BaseCache", "LFUClientCache", "LRUClientCache", "ClientCacheKey"]
 
 from abc import ABC, abstractmethod
 from threading import RLock
-from typing import Any, Iterable
+from typing import Any, Iterable, Literal
 
 from botocore.client import BaseClient
 from botocore.config import Config
 
-from .data_structures import DoublyLinkedList, ListNode
 from ..exceptions import (
     BRSCacheError,
     BRSCacheExistsError,
     BRSCacheNotFoundError,
 )
+from .data_structures import DoublyLinkedList, ListNode
 
 CacheTrackingList = DoublyLinkedList["ClientCacheKey"]
 CacheTrackingNode = ListNode["ClientCacheKey"]
@@ -172,6 +172,10 @@ class ClientCacheKey:
 
 
 class _CacheItem:
+    """Provides an indirection layer between a cache dict and an item in the
+    cache, primarily for carrying a reference to a tracking object.
+    """
+
     data: BaseClient
     tracking_node: CacheTrackingNode
 
@@ -181,6 +185,22 @@ class _CacheItem:
 
 
 class BaseCache(ABC):
+    """A thread-safe cache for storing clients which can be used like a
+    dictionary.
+
+    Clients stored in the cache must be hashable. The cache has a maximum size
+    attribute, and retrieved and newly added clients are marked as recently
+    used. When the cache exceeds its maximum size, the least recently used
+    client is evicted. When setting a client, use :class:`ClientCacheKey` for
+    the key, not ``*args`` and ``**kwargs`` unless calling this class via
+    ``__call__``.
+
+    Parameters
+    ----------
+    max_size : int, optional
+        The maximum number of clients to store in the cache. Defaults to 10.
+    """
+
     def __init__(self, max_size: int | None = None):
         self.max_size = abs(max_size if max_size is not None else 10)
         self._cache: dict[ClientCacheKey, _CacheItem] = dict()
@@ -245,6 +265,22 @@ class BaseCache(ABC):
 
     def __setitem__(self, key: ClientCacheKey, obj: BaseClient) -> None:
         self.set(key, obj)
+
+    @staticmethod
+    def new(
+        max_size: int = None, strategy: Literal["lru", "lfu"] | None = None
+    ) -> "LRUClientCache | LFUClientCache":
+        if strategy is None:
+            strategy = "lru"
+        match strategy:
+            case "lru":
+                return LRUClientCache(max_size=max_size)
+            case "lfu":
+                return LFUClientCache(max_size=max_size)
+            case _:
+                raise BRSCacheError(
+                    "Strategy not supported, must be lru or lfu"
+                )
 
     @abstractmethod
     def get(
@@ -338,11 +374,6 @@ class LRUClientCache(BaseCache):
     the key, not ``*args`` and ``**kwargs`` unless calling this class via
     ``__call__``.
 
-    Parameters
-    ----------
-    max_size : int, optional
-        The maximum number of clients to store in the cache. Defaults to 10.
-
     Raises
     ------
     BRSCacheExistsError
@@ -377,7 +408,7 @@ class LRUClientCache(BaseCache):
 
                 # if the tracking head contains the key, replace the head with
                 # the next node
-                if self._tracking.head.items == {key}:
+                if self._tracking.head.data == {key}:
                     self._tracking.head = self._tracking.head.next_node
 
                 return item.data
@@ -400,7 +431,7 @@ class LRUClientCache(BaseCache):
                 raise BRSCacheExistsError("Client already exists in cache.")
 
             # setting the object
-            tracking_node = CacheTrackingNode(items={key})
+            tracking_node = CacheTrackingNode(data={key})
             self._cache[key] = _CacheItem(
                 data=value,
                 tracking_node=tracking_node,
@@ -410,7 +441,7 @@ class LRUClientCache(BaseCache):
 
             # removing least recently used object if cache exceeds max size
             if len(self._cache) > self.max_size:
-                first_key = self._tracking.head.items.pop()
+                first_key = self._tracking.head.data.pop()
                 del self._cache[first_key]
                 self._tracking.remove(self._tracking.head)
 
@@ -446,11 +477,6 @@ class LFUClientCache(BaseCache):
 
     [1]: https://arxiv.org/abs/2110.11602
 
-    Parameters
-    ----------
-    max_size : int, optional
-        The maximum number of clients to store in the cache. Defaults to 10.
-
     Raises
     ------
     BRSCacheExistsError
@@ -480,7 +506,7 @@ class LFUClientCache(BaseCache):
     ) -> BaseClient | None:
         with self._lock:
             if key in self._cache:
-                item = self._cache[key]  # raises KeyError if key is missing
+                item = self._cache[key]
                 frequency = item.tracking_node
 
                 if not frequency.next_node:
@@ -499,11 +525,11 @@ class LFUClientCache(BaseCache):
                         next_node=next_frequency,
                     )
 
-                next_frequency.items.add(key)
+                next_frequency.data.add(key)
                 item.tracking_node = next_frequency
 
-                frequency.items.remove(key)
-                if len(frequency.items) == 0:
+                frequency.data.remove(key)
+                if len(frequency.data) == 0:
                     self._tracking.remove(frequency)
                 return item.data
         return default
@@ -526,7 +552,7 @@ class LFUClientCache(BaseCache):
                 self._tracking.head = frequency
 
             self._evict()
-            frequency.items.add(key)
+            frequency.data.add(key)
             self._cache[key] = _CacheItem(data=value, tracking_node=frequency)
 
     def _evict(self):
@@ -535,21 +561,21 @@ class LFUClientCache(BaseCache):
 
         current_node = self._tracking.head
         while True:
-            if not current_node.items:
+            if not current_node.data:
                 current_node = current_node.next_node
             else:
                 break
-        key_to_delete = current_node.items.pop()
+        key_to_delete = current_node.data.pop()
         del self._cache[key_to_delete]
 
-        if not self._tracking.head.items:
+        if not self._tracking.head.data:
             self._tracking.remove(self._tracking.head)
 
     def pop(self, key: ClientCacheKey) -> BaseClient:
         with self._lock:
             if (obj := self._cache.get(key)) is None:
                 raise BRSCacheNotFoundError("Client not found in cache.")
-            obj.tracking_node.items.remove(key)
+            obj.tracking_node.data.remove(key)
             del self._cache[key]
             return obj.data
 
