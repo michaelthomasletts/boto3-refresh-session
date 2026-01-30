@@ -74,3 +74,7 @@ log_cli = true
 log_cli_level = "INFO"
 log_cli_date_format = "%Y-%m-%d %H:%M:%S"
 log_cli_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
