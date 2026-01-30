@@ -4,11 +4,21 @@
 
 __all__ = []
 
-from . import custom, iot, sts
+import importlib.util
+
+from . import custom, sts
 from .custom import *
-from .iot import *
 from .sts import *
 
 __all__.extend(custom.__all__)
-__all__.extend(iot.__all__)
 __all__.extend(sts.__all__)
+
+# checking if iot extra is installed
+if (
+    importlib.util.find_spec("awscrt") is not None
+    and importlib.util.find_spec("awsiot") is not None
+):
+    from . import iot
+    from .iot import *
+
+    __all__.extend(iot.__all__)

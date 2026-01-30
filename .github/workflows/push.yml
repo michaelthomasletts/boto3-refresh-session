@@ -1,4 +1,4 @@
-name: Bump version, publish to PyPI, tag, and deploy docs
+name: Bump Version, Publish to PyPI, Tag, and Deploy Docs
 
 on:
   push:
@@ -6,22 +6,90 @@ on:
     paths:
       - "boto3_refresh_session/**"
       - "README.md"
-      - "doc/brs.png"
+      - "docs/brs.png"
+      - NOTICE
+      - pyproject.toml
+      - LICENSE
 
 permissions:
   contents: write   # needed for pushing commits and tags
 
 jobs:
+  checks:
+    name: Checks (${{ matrix.extras_label }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - extras: "dev"
+            extras_label: "no-iot"
+            cache_suffix: "dev"
+          - extras: "dev iot"
+            extras_label: "with-iot"
+            cache_suffix: "dev-iot"
+    steps:
+      - name: Check-Out Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        id: setup-python
+        with:
+          python-version: '3.10'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Check uv lockfile
+        run: uv lock --check
+
+      - name: Cache uv Dependencies
+        id: cached-uv-dependencies
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: uv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ matrix.cache_suffix }}-${{ hashFiles('**/uv.lock', '**/pyproject.toml') }}
+
+      - name: Install Dependencies (no-root)
+        if: steps.cached-uv-dependencies.outputs.cache-hit != 'true'
+        run: |
+          EXTRAS_ARGS=""
+          for extra in ${{ matrix.extras }}; do
+            EXTRAS_ARGS="$EXTRAS_ARGS --extra $extra"
+          done
+          uv sync --frozen --no-install-project $EXTRAS_ARGS
+
+      - name: Install Project
+        run: |
+          EXTRAS_ARGS=""
+          for extra in ${{ matrix.extras }}; do
+            EXTRAS_ARGS="$EXTRAS_ARGS --extra $extra"
+          done
+          uv sync --frozen $EXTRAS_ARGS
+
+      - name: Check Formatting with Ruff
+        if: matrix.extras_label == 'no-iot'
+        run: uv run ruff format --check .
+
+      - name: Lint with Ruff
+        if: matrix.extras_label == 'no-iot'
+        run: uv run ruff check .
+
+      - name: Run Unit Tests
+        run: uv run pytest tests/ -v
+
   bump_version:
+    needs: checks
     if: |
+      needs.checks.result == 'success' &&
       !contains(github.event.head_commit.message, '[skip release]') &&
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main'
-
     name: Bump Version, Publish to PyPI, tag, and deploy docs
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
+      - name: Check-Out Repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GH_PAT }}
@@ -32,31 +100,35 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          virtualenvs-path: .venv
-          installer-parallel: true
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
 
-      - name: Cache Poetry dependencies
-        id: cached-poetry-dependencies
+      - name: Check uv lockfile
+        run: uv lock --check
+
+      - name: Cache uv Dependencies
+        id: cached-uv-dependencies
         uses: actions/cache@v4
         with:
           path: .venv
-          key: poetry-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
+          key: uv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-dev-iot-${{ hashFiles('**/uv.lock', '**/pyproject.toml') }}
 
-      - name: Install dependencies (no-root)
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-root --all-groups
+      - name: Install Dependencies
+        run: |
+          uv sync --frozen --extra dev --extra iot
 
-      - name: Determine version part to update
+      - name: Determine Version Part to Update
         run: |
           VERSION_TYPE="patch"
           MESSAGE=$(git log -1 --pretty=%B)
 
-          if echo "$MESSAGE" | grep -qi '\[major\]'; then
+          PR_TITLE=$(make get-pr-title)
+
+          if echo "$PR_TITLE" | grep -qi '\[major\]'; then
+            VERSION_TYPE="major"
+          elif echo "$PR_TITLE" | grep -qi '\[minor\]'; then
+            VERSION_TYPE="minor"
+          elif echo "$MESSAGE" | grep -qi '\[major\]'; then
             VERSION_TYPE="major"
           elif echo "$MESSAGE" | grep -qi '\[minor\]'; then
             VERSION_TYPE="minor"
@@ -65,55 +137,23 @@ jobs:
           echo "Determined VERSION_TYPE=$VERSION_TYPE"
           echo "VERSION_TYPE=$VERSION_TYPE" >> $GITHUB_ENV
 
-      - name: Bump version with Poetry
+      - name: Bump Version
         run: |
-          poetry version $VERSION_TYPE
-          echo "NEW_VERSION=$(poetry version -s)" >> $GITHUB_ENV
+          uv run make bump-version "$VERSION_TYPE"
+          echo "'make bump-version $VERSION_TYPE' completed"
 
-      - name: Update __version__ in package __init__.py
+      - name: Verify uv.lock
         run: |
-          python - << 'PY'
-          import re, subprocess, sys
-          from pathlib import Path
+          if ! uv lock --check; then
+            echo "uv.lock out of date; regenerating."
+            uv lock
+          fi
 
-          # Get the version Poetry just set in pyproject.toml
-          ver = subprocess.check_output(["poetry", "version", "-s"], text=True).strip()
-
-          pkg_init = Path("boto3_refresh_session/__init__.py")
-          if not pkg_init.exists():
-              print("No __init__.py found; skipping.")
-              sys.exit(0)
-
-          text = pkg_init.read_text(encoding="utf-8")
-
-          # Replace existing __version__ line if present
-          pattern = re.compile(r'(?m)^(?P<prefix>__version__\s*=\s*)([\'"])(?P<val>.*?)(\2)')
-          if pattern.search(text):
-              new_text = pattern.sub(lambda m: f"{m.group('prefix')}{m.group(2)}{ver}{m.group(2)}", text, count=1)
-          else:
-              # Otherwise, try to insert after the last import; fall back to appending
-              import_pat = re.compile(r'(?m)^(?:from\s+\S+\s+import\s+.+|import\s+\S+.*)$')
-              last_import = None
-              for m in import_pat.finditer(text):
-                  last_import = m
-              if last_import:
-                  insert_at = last_import.end()
-                  new_text = text[:insert_at] + f"\n__version__ = '{ver}'\n" + text[insert_at:]
-              else:
-                  new_text = text.rstrip() + f"\n\n__version__ = '{ver}'\n"
-
-          if new_text != text:
-              pkg_init.write_text(new_text, encoding="utf-8")
-              print(f"Updated __version__ to {ver}")
-          else:
-              print("No change required.")
-          PY
-
-      - name: Commit version bump
+      - name: Commit Version Bump
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add pyproject.toml boto3_refresh_session/__init__.py || true
+          git add pyproject.toml boto3_refresh_session/__init__.py uv.lock || true
           if ! git diff --cached --quiet; then
             git commit -m "bump $VERSION_TYPE version [skip ci]"
             git push origin main
@@ -121,14 +161,18 @@ jobs:
             echo "No changes to commit."
           fi
 
-      - name: Sync local repo to latest
+      - name: Sync Local Repo to Latest
         run: |
           git fetch origin main --tags
           git reset --hard origin/main
 
-      - name: Create tag
+      - name: Create Tag
         run: |
-          VERSION="${NEW_VERSION:-$(poetry version -s)}"
+          VERSION="$NEW_VERSION"
+          if [ -z "$VERSION" ]; then
+            echo "NEW_VERSION not set; cannot create tag." >&2
+            exit 1
+          fi
           if git rev-parse "$VERSION" >/dev/null 2>&1; then
             echo "Tag $VERSION already exists; skipping."
           else
@@ -136,24 +180,23 @@ jobs:
             git push origin "$VERSION"
           fi
 
-      - name: Build wheel and publish to PyPI
+      - name: Build Wheel and Publish to PyPI
         env:
-          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          poetry install --no-interaction --all-groups
-          poetry build
-          poetry publish --no-interaction
+          uv build
+          uv publish
 
       - name: Build Documentation
         run: |
           source .venv/bin/activate
-          cd doc/ && make clean && cd ..
-          sphinx-build doc _build
+          cd docs/ && make clean && cd ..
+          sphinx-build docs docs/_build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: _build/
+          publish_dir: docs/_build/
           force_orphan: true

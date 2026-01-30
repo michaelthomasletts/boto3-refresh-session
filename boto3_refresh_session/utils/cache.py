@@ -33,21 +33,24 @@ def _freeze_value(value: Any) -> Any:
         The value to freeze.
     """
 
-    # recursively freezing dicts
-    if isinstance(value, dict):
-        return tuple(
-            sorted((key, _freeze_value(val)) for key, val in value.items()),
-        )
+    match value:
+        # recursively freezing dicts
+        case dict():
+            return tuple(
+                sorted((key, _freeze_value(val)) for key, val in value.items())
+            )
 
-    # recursively freezing lists and tuples
-    if isinstance(value, (list, tuple)):
-        return tuple(_freeze_value(item) for item in value)
+        # recursively freezing lists and tuples
+        case list() | tuple():
+            return tuple(_freeze_value(item) for item in value)
 
-    # recursively freezing sets
-    if isinstance(value, set):
-        return tuple(sorted(_freeze_value(item) for item in value))
+        # recursively freezing sets
+        case set():
+            return tuple(sorted(_freeze_value(item) for item in value))
 
-    return value
+        # everything else remains unchanged
+        case _:
+            return value
 
 
 def _config_cache_key(config: Config | None) -> Any:

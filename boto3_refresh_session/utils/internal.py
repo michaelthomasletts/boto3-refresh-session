@@ -35,20 +35,18 @@ common surface and registration behavior for subclasses like STS or IoT X.509.
 """
 
 __all__ = [
-    "AWSCRTResponse",
     "BRSSession",
-    "BaseIoTRefreshableSession",
     "BaseRefreshableSession",
     "CredentialProvider",
     "Registry",
     "refreshable_session",
 ]
 
+import importlib.util
 from abc import ABC, abstractmethod
 from functools import wraps
 from typing import Any, Callable, ClassVar, Generic, Literal, TypeVar, cast
 
-from awscrt.http import HttpHeaders
 from boto3.session import Session
 from botocore.client import BaseClient
 from botocore.credentials import (
@@ -60,7 +58,6 @@ from ..exceptions import BRSCacheError, BRSWarning
 from .cache import BaseCache, ClientCacheKey
 from .typing import (
     Identity,
-    IoTAuthenticationMethod,
     Method,
     RefreshMethod,
     RegistryKey,
@@ -368,33 +365,43 @@ class BaseRefreshableSession(
         super().__init__(**kwargs)
 
 
-class BaseIoTRefreshableSession(
-    Registry[IoTAuthenticationMethod],
-    CredentialProvider,
-    BRSSession,
-    registry_key="__iot_sentinel__",
+# checking if iot extra is installed
+if (
+    importlib.util.find_spec("awscrt") is not None
+    and importlib.util.find_spec("awsiot") is not None
 ):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    from awscrt.http import HttpHeaders
 
+    from .typing import IoTAuthenticationMethod
 
-class AWSCRTResponse:
-    """Lightweight response collector for awscrt HTTP."""
+    __all__ += ["AWSCRTResponse", "BaseIoTRefreshableSession"]
 
-    def __init__(self):
-        """Initialize to default for when callbacks are called."""
+    class BaseIoTRefreshableSession(
+        Registry[IoTAuthenticationMethod],
+        CredentialProvider,
+        BRSSession,
+        registry_key="__iot_sentinel__",
+    ):
+        def __init__(self, **kwargs):
+            super().__init__(**kwargs)
 
-        self.status_code = None
-        self.headers = None
-        self.body = bytearray()
+    class AWSCRTResponse:
+        """Lightweight response collector for awscrt HTTP."""
 
-    def on_response(self, http_stream, status_code, headers, **kwargs):
-        """Process awscrt.io response."""
+        def __init__(self):
+            """Initialize to default for when callbacks are called."""
 
-        self.status_code = status_code
-        self.headers = HttpHeaders(headers)
+            self.status_code = None
+            self.headers = None
+            self.body = bytearray()
 
-    def on_body(self, http_stream, chunk, **kwargs):
-        """Process awscrt.io body."""
+        def on_response(self, http_stream, status_code, headers, **kwargs):
+            """Process awscrt.io response."""
 
-        self.body.extend(chunk)
+            self.status_code = status_code
+            self.headers = HttpHeaders(headers)
+
+        def on_body(self, http_stream, chunk, **kwargs):
+            """Process awscrt.io body."""
+
+            self.body.extend(chunk)

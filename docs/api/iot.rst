@@ -5,12 +5,16 @@
 IOT Refresh Methods
 ===================
 
+.. versionadded:: 5.0.0
+
+.. note::
+   
+   As of v7.2.0, ``boto3-refresh-session`` requires explicitly installing "iot" as an extra dependency in order to use IoT features, i.e. ``pip install boto3-refresh-session[iot]``.
+
 This module currently only supports X.509 certificate based authentication for retrieving 
 temporary security credentials from the AWS IoT credentials provider (backed by STS). 
 In the future, this module may support additional authentication methods like Cognito.
 MQTT actions are available!
-
-.. versionadded:: 5.0.0
 
 Examples
 --------

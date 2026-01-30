@@ -112,9 +112,15 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
         match assume_role_kwargs:
             case AssumeRoleConfig():
                 self.assume_role_kwargs = assume_role_kwargs
-            case _:
+            case dict():
                 self.assume_role_kwargs = AssumeRoleConfig(
                     **assume_role_kwargs
+                )
+            case _:
+                raise BRSValidationError(
+                    "'assume_role_kwargs' must be an instance of "
+                    "'AssumeRoleConfig' or a dictionary!",
+                    param="assume_role_kwargs",
                 )
 
         # initializing sts_client_kwargs attribute
@@ -123,8 +129,14 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
                 self.sts_client_kwargs = sts_client_kwargs
             case None:
                 self.sts_client_kwargs = STSClientConfig()
-            case _:
+            case dict():
                 self.sts_client_kwargs = STSClientConfig(**sts_client_kwargs)
+            case _:
+                raise BRSValidationError(
+                    "'sts_client_kwargs' must be an instance of "
+                    "'STSClientConfig' or a dictionary!",
+                    param="sts_client_kwargs",
+                )
 
         # ensuring 'refresh_method' is not set manually
         if "refresh_method" in kwargs:

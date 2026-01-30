@@ -1,3 +1,4 @@
+import importlib.util
 from datetime import datetime, timedelta, timezone
 from threading import Barrier, Lock, Thread
 from time import sleep
@@ -14,13 +15,25 @@ from boto3_refresh_session.exceptions import (
     BRSCredentialError,
     BRSValidationError,
 )
-from boto3_refresh_session.methods.iot.x509 import IOTX509RefreshableSession
 from boto3_refresh_session.utils import (
     AssumeRoleConfig,
-    BaseIoTRefreshableSession,
     BaseRefreshableSession,
 )
-from boto3_refresh_session.utils.typing import IoTAuthenticationMethod, Method
+from boto3_refresh_session.utils.typing import Method
+
+if IOT_AVAILABLE := (
+    importlib.util.find_spec("awscrt") is not None
+    and importlib.util.find_spec("awsiot") is not None
+):
+    from boto3_refresh_session.methods.iot.x509 import (
+        IOTX509RefreshableSession,
+    )
+    from boto3_refresh_session.utils import BaseIoTRefreshableSession
+    from boto3_refresh_session.utils.typing import IoTAuthenticationMethod
+
+skip_iot = pytest.mark.skipif(
+    not IOT_AVAILABLE, reason="iot extra not installed"
+)
 
 
 def _set_dummy_env(monkeypatch) -> None:
@@ -154,19 +167,26 @@ def test_refreshable_session_positional_assume_role_config_without_method():
 def test_registry_tracks_method_and_refresh_method(monkeypatch):
     _set_dummy_env(monkeypatch)
 
-    assert set(RefreshableSession.get_available_methods()) == {
-        "custom",
-        "iot",
-        "sts",
-    }
-    assert {"custom", "iot", "sts"}.issubset(
-        BaseRefreshableSession.registry.keys()
-    )
+    expected_methods = {"custom", "sts"}
+    if IOT_AVAILABLE:
+        expected_methods.add("iot")
+
+    assert set(RefreshableSession.get_available_methods()) == expected_methods
+    assert {"custom", "sts"}.issubset(BaseRefreshableSession.registry.keys())
     assert "__sentinel__" not in BaseRefreshableSession.registry
-    assert "x509" in BaseIoTRefreshableSession.registry
-    assert "__iot_sentinel__" not in BaseIoTRefreshableSession.registry
-    assert "__sentinel__" in get_args(Method)
-    assert "__iot_sentinel__" in get_args(IoTAuthenticationMethod)
+    method_args = set(get_args(Method))
+    assert "__sentinel__" in method_args
+
+    if IOT_AVAILABLE:
+        assert "iot" in BaseRefreshableSession.registry
+        assert "iot" in method_args
+        assert "x509" in BaseIoTRefreshableSession.registry
+        assert "__iot_sentinel__" not in BaseIoTRefreshableSession.registry
+        assert "__iot_sentinel__" in get_args(IoTAuthenticationMethod)
+    else:
+        assert "iot" not in BaseRefreshableSession.registry
+        assert "iot" not in method_args
+        assert "__iot_sentinel__" not in method_args
 
     sts_session = RefreshableSession(
         method="sts",
@@ -197,17 +217,18 @@ def test_registry_tracks_method_and_refresh_method(monkeypatch):
     )
     assert custom_session.refresh_method == "custom"
 
-    iot_session = RefreshableSession(
-        method="iot",
-        authentication_method="x509",
-        endpoint="abc.credentials.iot.us-east-1.amazonaws.com",
-        role_alias="TestRoleAlias",
-        certificate=b"dummy-cert",
-        private_key=b"dummy-key",
-        region_name="us-east-1",
-        defer_refresh=True,
-    )
-    assert iot_session.refresh_method == "iot-x509"
+    if IOT_AVAILABLE:
+        iot_session = RefreshableSession(
+            method="iot",
+            authentication_method="x509",
+            endpoint="abc.credentials.iot.us-east-1.amazonaws.com",
+            role_alias="TestRoleAlias",
+            certificate=b"dummy-cert",
+            private_key=b"dummy-key",
+            region_name="us-east-1",
+            defer_refresh=True,
+        )
+        assert iot_session.refresh_method == "iot-x509"
 
 
 def test_session_get_credentials_uses_refreshable(monkeypatch):
@@ -303,6 +324,7 @@ def test_sts_refreshable_credentials_with_mfa_stubbed(monkeypatch):
         stubber.deactivate()
 
 
+@skip_iot
 def test_iot_refreshable_credentials_stubbed(monkeypatch):
     """Returns IoT refreshable credentials via patched getter."""
 
@@ -511,6 +533,7 @@ def test_sts_invalid_token_code_raises(monkeypatch):
         )
 
 
+@skip_iot
 def test_iot_invalid_endpoint_raises(monkeypatch):
     """Rejects invalid IoT credential endpoint format."""
 
@@ -528,6 +551,7 @@ def test_iot_invalid_endpoint_raises(monkeypatch):
         )
 
 
+@skip_iot
 def test_iot_missing_private_key_raises(monkeypatch):
     """Requires either private_key or pkcs11 for IoT x509."""
 
@@ -545,6 +569,7 @@ def test_iot_missing_private_key_raises(monkeypatch):
         )
 
 
+@skip_iot
 def test_iot_invalid_certificate_path_raises(monkeypatch):
     """Rejects invalid certificate file paths."""
 

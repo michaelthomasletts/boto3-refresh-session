@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/doc/brs.png" />
+  <img src="https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/docs/brs.png" />
 </div>
 
 </br>
@@ -91,11 +91,7 @@
 - MFA support included for STS
 - SSO support via AWS profiles
 - Optionally caches boto3 clients
-- Supports automatic temporary credential refresh for: 
-  - **STS**
-  - **IoT Core** 
-    - X.509 certificates w/ role aliases over mTLS (PEM files and PKCS#11)
-    - MQTT actions are available!
+- Supports automatic temporary credential refresh for STS, custom credential flows, and IoT Core (X.509)
 - [Tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [documented](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/)
 
 ## Recognition and Testimonials
@@ -112,10 +108,14 @@ A testimonial from a Cyber Security Engineer at a FAANG company:
 
 ## Installation
 
-boto3-refresh-session is available on PyPI:
+boto3-refresh-session is available on PyPI.
 
 ```bash
+# with pip
 pip install boto3-refresh-session
+
+# with pip + iot as an extra
+pip install boto3-refresh-session[iot]
 ```
 
 ## Usage
@@ -131,3 +131,16 @@ Refer to the [changelog](https://michaelthomasletts.com/boto3-refresh-session/ch
 ## License
 
 Beginning v7.0.0, `boto3-refresh-session` is licensed under [Mozilla Public License 2.0 (MPL-2.0)](https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/LICENSE). Earlier versions remain licensed under the MIT License.
+
+## Contributing
+
+Refer to the [contributing guidelines](https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/CONTRIBUTING.md) for additional information on contributing to boto3-refresh-session.
+
+## Special Thanks
+
+The people listed below inspired features, adopted boto3-refresh-session early, provided critical feedback, and more. Thank you for all of your support, encouragement, and guidance which make this project possible. 
+
+- [Gavin Adams](https://github.com/gadams999)
+- [Patrick Sanders](https://github.com/patricksanders)
+- [Liam Wadman](https://github.com/liwadman)
+- [Ben Kehoe](https://github.com/benkehoe)

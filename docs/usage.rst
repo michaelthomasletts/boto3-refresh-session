@@ -19,11 +19,15 @@ boto3-refresh-session exists to fill those gaps (and others not listed above) wh
 Installation
 ------------
 
-Install via pip:
+boto3-refresh-session is available on PyPI.
 
 .. code-block:: bash
 
+    # with pip
     pip install boto3-refresh-session
+
+    # with pip + iot as an extra
+    pip install boto3-refresh-session[iot]
 
 Authorization
 -------------
@@ -233,6 +237,15 @@ To do this, when ``cache_clients`` is enabled, ``Client`` objects created via th
 
 IoT Core X.509
 --------------
+
+.. note::
+
+    This section requires that you have installed boto3-refresh-session with the IoT extra.
+    If you have not done so, please reinstall using:
+    
+    .. code-block:: bash
+
+        pip install boto3-refresh-session[iot]
 
 AWS IoT Core can vend temporary AWS credentials through the credentials provider when you connect with an X.509 certificate and a role alias. 
 boto3-refresh-session makes this flow seamless by automatically refreshing credentials over mTLS.
