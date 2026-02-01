@@ -154,14 +154,17 @@ class AssumeRoleConfig(BaseConfig):
         )
 
     def _validate(self, key: str, value: Any) -> None:
+        # superfluous but why not
         if not isinstance(key, str):
             raise BRSValidationError("Attribute name must be a string.")
 
+        # this is superfluous/pedantic since __init__ only allows valid keys . . .
         if key not in ASSUME_ROLE_CONFIG_PARAMETERS:
             raise BRSValidationError(
                 f"'{key}' is not a valid attribute for AssumeRoleConfig."
             ) from None
 
+        # ensuring RoleArn is at least a 20 characters long str
         if key == "RoleArn":
             if not isinstance(value, str):
                 raise BRSValidationError(
@@ -180,14 +183,6 @@ class AssumeRoleConfig(BaseConfig):
         ):
             raise BRSValidationError(
                 f"'{key}' must be a 6-digit numeric string."
-            ) from None
-
-        # ensuring RoleArn is at least a 20 characters long str
-        if key == "RoleArn" and not (
-            isinstance(value, str) and len(value) >= 20
-        ):
-            raise BRSValidationError(
-                f"'{key}' must be a string with at least 20 characters."
             ) from None
 
 
@@ -283,11 +278,13 @@ class STSClientConfig(BaseConfig):
         super().__setitem__(key, value)
 
     def _validate(self, key: str, value: Any) -> None:
+        # superfluous but why not
         if not isinstance(key, str):
             raise BRSValidationError(
                 "Attribute name must be a string."
             ) from None
 
+        # superfluous/pedantic since __init__ only allows valid keys but why not
         if key not in STS_CLIENT_CONFIG_PARAMETERS:
             raise BRSValidationError(
                 f"'{key}' is not a valid attribute for STSClientConfig."
