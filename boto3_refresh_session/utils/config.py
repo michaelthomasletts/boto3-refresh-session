@@ -172,6 +172,14 @@ class AssumeRoleConfig(BaseConfig):
                 f"'{key}' must be a 6-digit numeric string."
             ) from None
 
+        # ensuring RoleArn is at least a 20 characters long str
+        if key == "RoleArn" and not (
+            isinstance(value, str) and len(value) >= 20
+        ):
+            raise BRSValidationError(
+                f"'{key}' must be a string with at least 20 characters."
+            ) from None
+
 
 class STSClientConfig(BaseConfig):
     """Configuration for boto3 STS Client.
