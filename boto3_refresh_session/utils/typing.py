@@ -100,12 +100,12 @@ RegistryKey = TypeVar("RegistryKey", bound=str)
 class Identity(TypedDict, total=False):
     """Metadata for the current caller identity."""
 
-    Account: str
-    Arn: str
-    UserId: str
     method: str
     source: str
-    ResponseMetadata: dict[str, Any]
+    Account: NotRequired[str]
+    Arn: NotRequired[str]
+    UserId: NotRequired[str]
+    ResponseMetadata: NotRequired[dict[str, Any]]
 
 
 class TemporaryCredentials(TypedDict):
