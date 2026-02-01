@@ -29,6 +29,12 @@ boto3-refresh-session is available on PyPI.
     # with pip + iot as an extra
     pip install boto3-refresh-session[iot]
 
+.. note:: 
+
+    Versions 7.2.4 through 7.2.14 were deleted from PyPI and GitHub tags due to a critical packaging issue. 
+    Users with versions in that range should upgrade to v7.2.15+.
+    Refer to the :ref:`changelog <changelog>` for more details.
+
 Authorization
 -------------
 
