@@ -64,6 +64,7 @@ uv run ruff format --check .
 boto3-refresh-session employs a consistent docstring standard and online documentation. Adding and editing methods and classes generally requires edits to docstrings and online documentation. The following information should help you add and edit docstrings and online documentation.
 
 - boto3-refresh-session uses [numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html) for docstrings.
+- boto3-refresh-session also employs `.pyi` files to improve the typing experience. Evaluate whether `.pyi` additions or edits are necessary for your changes.
 - The [official documentation](https://michaelthomasletts.com/boto3-refresh-session/) is generated using `sphinx` and `pydata-sphinx-theme`.
 - Documentation configurations can be found in `docs/conf.py`.  
 - `autosummary_generate` is **deliberately** deactivated in `docs/conf.py`! RST files are customarily written *manually* in this project; this provides granular control over resultant documentation.
