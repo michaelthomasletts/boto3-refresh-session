@@ -11,7 +11,7 @@ import os
 import re
 import shlex
 import subprocess
-from typing import Callable
+from typing import Any, Callable
 
 from ..exceptions import BRSConfigurationError, BRSValidationError, BRSWarning
 from ..utils import (
@@ -60,7 +60,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
         Optional keyword arguments for the :class:`STS.Client` object. Do not
         provide values for ``service_name`` as they are unnecessary. Default
         is None.
-    mfa_token_provider : Callable[[], str] | list[str] | str, optional
+    mfa_token_provider : Callable[..., str] | list[str] | str, optional
         An optional callable *or* CLI command *or* list of command arguments
         that returns a string representing a fresh MFA token code. If provided,
         this will be called or run during each credential refresh to obtain a
@@ -68,7 +68,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
         When using this parameter, ``SerialNumber`` must be provided in
         ``assume_role_kwargs``. Callables and lists of command arguments are
         most recommended. Default is None.
-    mfa_token_provider_kwargs : dict, optional
+    mfa_token_provider_kwargs : dict[str, Any], optional
         Optional keyword arguments to pass to the ``mfa_token_provider``
         callable *or*, when ``mfa_token_provider`` is a command string or list
         of command arguments, these keyword arguments are forwarded to
@@ -113,6 +113,19 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
     ----------
     client_cache : ClientCache
         The client cache used to store and retrieve cached clients.
+    credentials : TemporaryCredentials
+        The current temporary AWS credentials.
+
+    Methods
+    -------
+    client(*args, **kwargs) -> boto3.client
+        Creates a Boto3 client for the specified service.
+    get_identity() -> Identity
+        Returns metadata about the current caller identity.
+    refreshable_credentials() -> TemporaryCredentials
+        Returns the current temporary AWS credentials.
+    whoami() -> Identity
+        Alias for :meth:`get_identity`.
 
     See Also
     --------
@@ -156,8 +169,8 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
         self,
         assume_role_kwargs: AssumeRoleParams | AssumeRoleConfig,
         sts_client_kwargs: STSClientParams | STSClientConfig | None = None,
-        mfa_token_provider: Callable[[], str] | list[str] | str | None = None,
-        mfa_token_provider_kwargs: dict | None = None,
+        mfa_token_provider: Callable[..., str] | list[str] | str | None = None,
+        mfa_token_provider_kwargs: dict[str, Any] | None = None,
         **kwargs,
     ):
         # initializing asssume_role_kwargs attribute
@@ -173,7 +186,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
                     "'assume_role_kwargs' must be an instance of "
                     "'AssumeRoleConfig' or a dictionary!",
                     param="assume_role_kwargs",
-                )
+                ) from None
 
         # initializing sts_client_kwargs attribute
         match sts_client_kwargs:
@@ -188,7 +201,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
                     "'sts_client_kwargs' must be an instance of "
                     "'STSClientConfig' or a dictionary!",
                     param="sts_client_kwargs",
-                )
+                ) from None
 
         # ensuring 'refresh_method' is not set manually
         if "refresh_method" in kwargs:
@@ -238,7 +251,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
                 "'SerialNumber' must be provided in 'assume_role_kwargs' "
                 "when using 'mfa_token_provider'!",
                 param="SerialNumber",
-            )
+            ) from None
 
         # ensure SerialNumber and TokenCode are set in the absence of
         # mfa_token_provider
@@ -258,7 +271,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
                 "'assume_role_kwargs' when 'mfa_token_provider' is not set "
                 "and 'SerialNumber' or 'TokenCode' is missing!",
                 param="SerialNumber/TokenCode",
-            )
+            ) from None
 
         # warn if TokenCode provided with mfa_token_provider
         if (
@@ -384,7 +397,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
                 "MFA token command is empty.",
                 param="mfa_token_provider",
                 value=command,
-            )
+            ) from None
 
         try:
             # splitting command into list for subprocess
@@ -407,7 +420,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
                 "MFA token command is empty.",
                 param="mfa_token_provider",
                 value=command,
-            )
+            ) from None
 
         # ensuring all kwargs are valid for subprocess.run
         for kwarg in kwargs:
@@ -415,7 +428,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
                 raise BRSConfigurationError(
                     f"Invalid keyword argument '{kwarg}' for subprocess.run.",
                     param="mfa_token_provider_kwargs",
-                )
+                ) from None
 
         # preventing restricted subprocess.run kwargs
         if "stdout" in kwargs or "stderr" in kwargs:
@@ -423,26 +436,26 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
                 "'stdout' and 'stderr' are not supported in "
                 "'mfa_token_provider_kwargs'.",
                 param="mfa_token_provider_kwargs",
-            )
+            ) from None
 
         if kwargs.get("shell", False):
             raise BRSConfigurationError(
                 "'shell' parameter in 'mfa_token_provider_kwargs' is not "
                 "allowed for security reasons.",
                 param="mfa_token_provider_kwargs",
-            )
+            ) from None
         if kwargs.get("executable", False):
             raise BRSConfigurationError(
                 "'executable' parameter in 'mfa_token_provider_kwargs' is not "
                 "allowed for security reasons.",
                 param="mfa_token_provider_kwargs",
-            )
+            ) from None
         if kwargs.get("preexec_fn", False):
             raise BRSConfigurationError(
                 "'preexec_fn' parameter in 'mfa_token_provider_kwargs' is not "
                 "allowed for security reasons.",
                 param="mfa_token_provider_kwargs",
-            )
+            ) from None
 
         # adding default timeout of 30 seconds if not provided
         kwargs["timeout"] = kwargs.get("timeout", 30)
@@ -513,5 +526,5 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
                 param="mfa_token_provider",
                 value=command,
                 details={"stderr": completed.stderr},
-            )
+            ) from None
         return match[-1]

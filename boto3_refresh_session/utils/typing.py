@@ -8,8 +8,6 @@ from __future__ import annotations
 
 __all__ = [
     "AssumeRoleParams",
-    "CustomCredentialsMethod",
-    "CustomCredentialsMethodArgs",
     "Identity",
     "Method",
     "PublicMethod",
@@ -20,13 +18,11 @@ __all__ = [
 ]
 
 import importlib.util
-from datetime import datetime
 from typing import (
+    TYPE_CHECKING,
     Any,
     List,
     Literal,
-    Mapping,
-    Protocol,
     TypeAlias,
     TypedDict,
     TypeVar,
@@ -37,11 +33,26 @@ try:
 except ImportError:
     from typing_extensions import NotRequired
 
-# checking if iot extra is installed
-if _IOT_EXTRA_INSTALLED := (
-    importlib.util.find_spec("awscrt") is not None
-    and importlib.util.find_spec("awsiot") is not None
-):
+from botocore.config import Config
+
+
+def _iot_extra_installed() -> bool:
+    """Determines whether the 'iot' extra is installed.
+
+    Returns
+    -------
+    bool
+        ``True`` if the 'iot' extra is installed, ``False`` otherwise.
+    """
+
+    return (
+        importlib.util.find_spec("awscrt") is not None
+        and importlib.util.find_spec("awsiot") is not None
+    )
+
+
+# checking whether 'iot' extra is installed or we're in a type-checking context
+if _IOT_EXTRA_INSTALLED := True if TYPE_CHECKING else _iot_extra_installed():
     __all__ += [
         "IoTAuthenticationMethod",
         "PublicIoTAuthenticationMethod",
@@ -56,7 +67,7 @@ if _IOT_EXTRA_INSTALLED := (
     PublicIoTAuthenticationMethod: TypeAlias = Literal["x509"]
 
     #: Type alias for all currently available credential refresh methods.
-    Method: TypeAlias = Literal[
+    Method: TypeAlias = Literal[  # type: ignore[misc]
         "custom",
         "iot",
         "sts",
@@ -65,28 +76,36 @@ if _IOT_EXTRA_INSTALLED := (
     ]
 
     #: Public type alias for currently available credential refresh methods.
-    PublicMethod: TypeAlias = Literal["custom", "iot", "sts"]
+    PublicMethod: TypeAlias = Literal["custom", "iot", "sts"]  # type: ignore[misc]
 
     #: Type alias for all refresh method names.
-    RefreshMethod: TypeAlias = Literal["custom", "iot-x509", "sts-assume-role"]
+    RefreshMethod: TypeAlias = Literal["custom", "iot-x509", "sts-assume-role"]  # type: ignore[misc]
 
     #: Type alias for acceptable transports
     Transport: TypeAlias = Literal["x509", "ws"]
 else:
     #: Type alias for currently available credential refresh methods.
-    Method: TypeAlias = Literal["custom", "sts", "__sentinel__"]
+    Method: TypeAlias = Literal["custom", "sts", "__sentinel__"]  # type: ignore[misc]
 
     #: Public type alias for currently available credential refresh methods.
-    PublicMethod: TypeAlias = Literal["custom", "sts"]
+    PublicMethod: TypeAlias = Literal["custom", "sts"]  # type: ignore[misc]
 
     #: Type alias for all refresh method names.
-    RefreshMethod: TypeAlias = Literal["custom", "sts-assume-role"]
+    RefreshMethod: TypeAlias = Literal["custom", "sts-assume-role"]  # type: ignore[misc]
 
 #: Type alias for all currently registered credential refresh methods.
 RegistryKey = TypeVar("RegistryKey", bound=str)
 
-#: Type alias for values returned by get_identity
-Identity: TypeAlias = dict[str, Any]
+
+class Identity(TypedDict, total=False):
+    """Metadata for the current caller identity."""
+
+    Account: str
+    Arn: str
+    UserId: str
+    method: str
+    source: str
+    ResponseMetadata: dict[str, Any]
 
 
 class TemporaryCredentials(TypedDict):
@@ -95,18 +114,7 @@ class TemporaryCredentials(TypedDict):
     access_key: str
     secret_key: str
     token: str
-    expiry_time: datetime | str
-
-
-class _CustomCredentialsMethod(Protocol):
-    def __call__(self, **kwargs: Any) -> TemporaryCredentials: ...
-
-
-#: Type alias for custom credential retrieval methods.
-CustomCredentialsMethod: TypeAlias = _CustomCredentialsMethod
-
-#: Type alias for custom credential method arguments.
-CustomCredentialsMethodArgs: TypeAlias = Mapping[str, Any]
+    expiry_time: str
 
 
 class Tag(TypedDict):
@@ -148,7 +156,7 @@ class STSClientParams(TypedDict):
     aws_access_key_id: NotRequired[str]
     aws_secret_access_key: NotRequired[str]
     aws_session_token: NotRequired[str]
-    config: NotRequired[Any]
+    config: NotRequired[Config]
     aws_account_id: NotRequired[str]
 
 

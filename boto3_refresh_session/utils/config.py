@@ -160,7 +160,7 @@ class AssumeRoleConfig(BaseConfig):
         if key not in ASSUME_ROLE_CONFIG_PARAMETERS:
             raise BRSValidationError(
                 f"'{key}' is not a valid attribute for AssumeRoleConfig."
-            )
+            ) from None
 
         # ensuring TokenCode is a 6-digit numeric string
         if (
@@ -170,7 +170,7 @@ class AssumeRoleConfig(BaseConfig):
         ):
             raise BRSValidationError(
                 f"'{key}' must be a 6-digit numeric string."
-            )
+            ) from None
 
 
 class STSClientConfig(BaseConfig):
@@ -258,15 +258,19 @@ class STSClientConfig(BaseConfig):
                     )
                     value = "sts"
             else:
-                raise BRSValidationError("'service_name' must be a string.")
+                raise BRSValidationError(
+                    "'service_name' must be a string."
+                ) from None
 
         super().__setitem__(key, value)
 
     def _validate(self, key: str, value: Any) -> None:
         if not isinstance(key, str):
-            raise BRSValidationError("Attribute name must be a string.")
+            raise BRSValidationError(
+                "Attribute name must be a string."
+            ) from None
 
         if key not in STS_CLIENT_CONFIG_PARAMETERS:
             raise BRSValidationError(
                 f"'{key}' is not a valid attribute for STSClientConfig."
-            )
+            ) from None
