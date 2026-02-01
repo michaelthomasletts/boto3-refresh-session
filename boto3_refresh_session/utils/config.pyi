@@ -16,6 +16,14 @@ For additional information on AWS specifications, refer to the
 
 from __future__ import annotations
 
+from botocore.config import Config
+
+from boto3_refresh_session.utils.typing import (
+    PolicyDescriptorType,
+    ProvidedContext,
+    Tag,
+)
+
 class AssumeRoleConfig:
     """Configuration for AWS STS AssumeRole API.
 
@@ -64,6 +72,23 @@ class AssumeRoleConfig:
     `API Reference for AssumeRole <https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html>`_.
     """
 
+    def __init__(
+        self,
+        *,
+        RoleArn: str,
+        RoleSessionName: str | None = None,
+        PolicyArns: list[PolicyDescriptorType] | None = None,
+        Policy: str | None = None,
+        DurationSeconds: int | None = None,
+        ExternalId: str | None = None,
+        SerialNumber: str | None = None,
+        TokenCode: str | None = None,
+        Tags: list[Tag] | None = None,
+        TransitiveTagKeys: list[str] | None = None,
+        SourceIdentity: str | None = None,
+        ProvidedContexts: list[ProvidedContext] | None = None,
+    ): ...
+
 class STSClientConfig:
     """Configuration for boto3 STS Client.
 
@@ -105,3 +130,19 @@ class STSClientConfig:
     ``service_name`` is enforced to be 'sts'. If a different value is
     provided, it will be overridden to 'sts' with a warning.
     """
+
+    def __init__(
+        self,
+        *,
+        service_name: str | None = None,
+        region_name: str | None = None,
+        api_version: str | None = None,
+        use_ssl: bool | None = None,
+        verify: bool | str | None = None,
+        endpoint_url: str | None = None,
+        aws_access_key_id: str | None = None,
+        aws_secret_access_key: str | None = None,
+        aws_session_token: str | None = None,
+        config: Config | None = None,
+        aws_account_id: str | None = None,
+    ): ...
