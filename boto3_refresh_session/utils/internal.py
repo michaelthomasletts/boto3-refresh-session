@@ -75,12 +75,17 @@ class CredentialProvider(ABC):
     def get_identity(self) -> Identity: ...
 
 
-class Registry(Generic[RegistryKey]):
+T_Registry = TypeVar("T_Registry", bound="Registry[Any, Any]")
+
+
+class Registry(Generic[RegistryKey, T_Registry]):
     """Gives any hierarchy a class-level registry."""
 
-    registry: ClassVar[dict[str, type]] = {}
+    registry: ClassVar[dict[str, type[Any]]] = {}
 
-    def __init_subclass__(cls, *, registry_key: RegistryKey, **kwargs: Any):
+    def __init_subclass__(
+        cls: type[T_Registry], *, registry_key: RegistryKey, **kwargs: Any
+    ):
         super().__init_subclass__(**kwargs)
 
         if registry_key in cls.registry:
@@ -92,10 +97,10 @@ class Registry(Generic[RegistryKey]):
             cls.registry[registry_key] = cls
 
     @classmethod
-    def items(cls) -> dict[str, type]:
+    def items(cls: type[T_Registry]) -> dict[str, type[T_Registry]]:
         """Typed accessor for introspection / debugging."""
 
-        return dict(cls.registry)
+        return cast(dict[str, type[T_Registry]], dict(cls.registry))
 
 
 # defining this here instead of utils to avoid circular imports lol
@@ -187,6 +192,19 @@ class BRSSession(Session):
     ----------
     client_cache : ClientCache
         The client cache used to store and retrieve cached clients.
+    credentials : TemporaryCredentials
+        The current temporary AWS security credentials.
+
+    Methods
+    -------
+    client(*args, **kwargs) -> BaseClient
+        Creates a low-level service client by name.
+    get_identity() -> Identity
+        Returns metadata about the identity assumed.
+    refreshable_credentials() -> TemporaryCredentials
+        The current temporary AWS security credentials.
+    whoami() -> Identity
+        Alias for :meth:`get_identity`.
 
     Other Parameters
     ----------------
@@ -353,7 +371,7 @@ class BRSSession(Session):
 
 
 class BaseRefreshableSession(
-    Registry[Method],
+    Registry[Method, "BaseRefreshableSession"],
     CredentialProvider,
     BRSSession,
     registry_key="__sentinel__",
@@ -390,7 +408,7 @@ if (
     __all__ += ["AWSCRTResponse", "BaseIoTRefreshableSession"]
 
     class BaseIoTRefreshableSession(
-        Registry[IoTAuthenticationMethod],
+        Registry[IoTAuthenticationMethod, "BaseIoTRefreshableSession"],
         CredentialProvider,
         BRSSession,
         registry_key="__iot_sentinel__",
@@ -408,7 +426,9 @@ if (
             self.headers = None
             self.body = bytearray()
 
-        def on_response(self, http_stream, status_code, headers, **kwargs):
+        def on_response(
+            self, http_stream, status_code, headers, **kwargs
+        ):  # type : ignore[no-untyped-def]
             """Process awscrt.io response."""
 
             self.status_code = status_code

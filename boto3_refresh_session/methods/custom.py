@@ -6,11 +6,12 @@
 
 __all__ = ["CustomRefreshableSession"]
 
+from datetime import datetime
+from typing import Any, Callable
+
 from ..exceptions import BRSCredentialError, BRSWarning
 from ..utils import (
     BaseRefreshableSession,
-    CustomCredentialsMethod,
-    CustomCredentialsMethodArgs,
     Identity,
     TemporaryCredentials,
     refreshable_session,
@@ -31,11 +32,11 @@ class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
 
     Parameters
     ----------
-    custom_credentials_method: CustomCredentialsMethod
+    custom_credentials_method: Callable[..., TemporaryCredentials]
         Required. Accepts a callable object that returns temporary AWS
         security credentials. That object must return a dictionary containing
         'access_key', 'secret_key', 'token', and 'expiry_time' when called.
-    custom_credentials_method_args : CustomCredentialsMethodArgs, optional
+    custom_credentials_method_args : dict[str, Any], optional
         Optional keyword arguments for the function passed to the
         ``custom_credentials_method`` parameter.
     defer_refresh : bool, optional
@@ -66,7 +67,7 @@ class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
 
     Other Parameters
     ----------------
-    kwargs : dict
+    kwargs : dict[str, Any], optional
         Optional keyword arguments for the :class:`boto3.session.Session`
         object.
 
@@ -74,6 +75,19 @@ class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
     ----------
     client_cache : ClientCache
         The client cache used to store and retrieve cached clients.
+    credentials : TemporaryCredentials
+        The temporary AWS security credentials.
+
+    Methods
+    -------
+    client(*args, **kwargs) -> boto3.client
+        Creates a Boto3 client for the specified service.
+    get_identity() -> Identity
+        Returns metadata about the current caller identity.
+    refreshable_credentials() -> TemporaryCredentials
+        Returns the current temporary AWS credentials.
+    whoami() -> Identity
+        Alias for :meth:`get_identity`.
 
     Examples
     --------
@@ -100,10 +114,8 @@ class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
 
     def __init__(
         self,
-        custom_credentials_method: CustomCredentialsMethod,
-        custom_credentials_method_args: (
-            CustomCredentialsMethodArgs | None
-        ) = None,
+        custom_credentials_method: Callable[..., TemporaryCredentials],
+        custom_credentials_method_args: dict[str, Any] | None = None,
         **kwargs,
     ):
         if "refresh_method" in kwargs:
@@ -117,10 +129,10 @@ class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
         super().__init__(refresh_method="custom", **kwargs)
 
         # initializing various other attributes
-        self._custom_get_credentials: CustomCredentialsMethod = (
+        self._custom_get_credentials: Callable[..., TemporaryCredentials] = (
             custom_credentials_method
         )
-        self._custom_get_credentials_args: CustomCredentialsMethodArgs = (
+        self._custom_get_credentials_args: dict[str, Any] = (
             custom_credentials_method_args
             if custom_credentials_method_args is not None
             else {}
@@ -138,6 +150,16 @@ class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
                 "required key-value pairs.",
                 details={"missing": sorted(missing)},
             )
+
+        expiry_time = credentials.get("expiry_time")
+        if isinstance(expiry_time, datetime):
+            credentials["expiry_time"] = expiry_time.isoformat()
+        elif not isinstance(expiry_time, str):
+            raise BRSCredentialError(
+                "'expiry_time' must be an ISO 8601 string.",
+                param="expiry_time",
+                value=expiry_time,
+            ) from None
 
         return credentials
 

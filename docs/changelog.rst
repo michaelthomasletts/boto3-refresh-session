@@ -68,6 +68,7 @@ Refer to the `PR <https://github.com/michaelthomasletts/boto3-refresh-session/pu
 
 v7.1.12
 -------
+
 LRU caching has been added to ``ClientCache`` which previously did not have an eviction strategy. 
 To disable client caching altogether, set ``cache_clients=False`` when initializing ``RefreshableSession`` (it's set to True by default).
 To adjust the default maximum size of the client cache (which is 10), set the ``client_cache_max_size`` parameter when initializing ``RefreshableSession``.
@@ -84,8 +85,14 @@ This change was made to reduce the number of dependencies for users who do not r
 
 v7.2.12
 -------
+
 ``mfa_token_provider`` now supports CLI commands as a way to retrieve MFA tokens, in addition to callables. 
 A ``whoami()`` method was also added to ``RefreshableSession`` to retrieve the AWS identity of the current session as an alternative to ``get_identity()``.
 
 The first feature allows users to specify a command (as a string or list of strings) that will be executed to obtain the MFA token.
 The command is run using :py:func:`subprocess.run`, and any keyword arguments provided via ``mfa_token_provider_kwargs`` are forwarded to :py:func:`subprocess.run`.
+
+v7.2.13
+-------
+
+Typing hints and aliases significantly improved to enhance code clarity and developer experience.

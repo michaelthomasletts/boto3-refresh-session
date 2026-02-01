@@ -8,10 +8,15 @@ from __future__ import annotations
 
 __all__ = ["RefreshableSession"]
 
-from typing import get_args
+from typing import TYPE_CHECKING, Literal, get_args, overload
 
 from .exceptions import BRSValidationError
 from .utils import BaseRefreshableSession, PublicMethod
+
+if TYPE_CHECKING:
+    from .methods.custom import CustomRefreshableSession
+    from .methods.iot.core import IoTRefreshableSession
+    from .methods.sts import STSRefreshableSession
 
 
 class RefreshableSession:
@@ -27,8 +32,8 @@ class RefreshableSession:
     .. tip::
 
         For additional information on required and optional parameters for each
-        ``method``, refer to the
-        `refresh strategies documentation <../index.html#refresh-strategies>`_.
+        ``method``, refer to the `refresh strategies documentation
+        <../index.html#refresh-strategies>`_.
         For additional details on client caching, refer to the
         :ref:`client caching usage documentation <cachedocs>` or
         :ref:`API docs <cache>` for technical information. For additional
@@ -70,7 +75,7 @@ class RefreshableSession:
 
     Other Parameters
     ----------------
-    **kwargs : dict
+    **kwargs : dict[str, Any], optional
         Additional keyword arguments forwarded to the constructor of the
         selected session class.
 
@@ -78,6 +83,19 @@ class RefreshableSession:
     ----------
     client_cache : ClientCache
         The client cache used to store and retrieve cached clients.
+    credentials : TemporaryCredentials
+        The temporary AWS security credentials.
+
+    Methods
+    -------
+    client(*args, **kwargs) -> boto3.client
+        Creates a Boto3 client for the specified service.
+    get_identity() -> Identity
+        Returns metadata about the current caller identity.
+    refreshable_credentials() -> TemporaryCredentials
+        Returns the current temporary AWS credentials.
+    whoami() -> Identity
+        Alias for :meth:`get_identity`.
 
     See Also
     --------
@@ -127,7 +145,27 @@ class RefreshableSession:
     ... )
     """
 
+    @overload
     def __new__(
+        cls, method: Literal["sts"] = "sts", **kwargs
+    ) -> "STSRefreshableSession": ...
+
+    @overload
+    def __new__(
+        cls, method: Literal["custom"], **kwargs
+    ) -> "CustomRefreshableSession": ...
+
+    @overload
+    def __new__(
+        cls, method: Literal["iot"], **kwargs
+    ) -> "IoTRefreshableSession": ...
+
+    @overload
+    def __new__(
+        cls, method: PublicMethod = "sts", **kwargs
+    ) -> BaseRefreshableSession: ...
+
+    def __new__(  # type: ignore[reportIncompatibleMethodOverride]
         cls, method: PublicMethod = "sts", **kwargs
     ) -> BaseRefreshableSession:
         if method not in (methods := cls.get_available_methods()):
@@ -140,7 +178,7 @@ class RefreshableSession:
                 "boto3-refresh-session[iot]",
                 param="method",
                 value=method,
-            )
+            ) from None
 
         return BaseRefreshableSession.registry[method](**kwargs)
 

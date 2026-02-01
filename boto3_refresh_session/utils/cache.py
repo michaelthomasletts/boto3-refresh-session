@@ -7,6 +7,7 @@
 __all__ = ["ClientCache", "ClientCacheKey"]
 
 from collections import OrderedDict
+from collections.abc import Iterator
 from threading import RLock
 from typing import Any
 
@@ -255,7 +256,7 @@ class ClientCache:
         with self._lock:
             return key in self._cache
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[ClientCacheKey]:
         with self._lock:
             return iter(tuple(self._cache.keys()))
 
@@ -268,15 +269,19 @@ class ClientCache:
             else:
                 raise BRSCacheNotFoundError(
                     "The client you requested has not been cached."
-                )
+                ) from None
 
     def __setitem__(self, key: ClientCacheKey, obj: BaseClient) -> None:
         if not isinstance(key, ClientCacheKey):
-            raise BRSCacheError("Cache key must be of type 'ClientCacheKey'.")
+            raise BRSCacheError(
+                "Cache key must be of type 'ClientCacheKey'."
+            ) from None
 
         with self._lock:
             if key in self._cache:
-                raise BRSCacheExistsError("Client already exists in cache.")
+                raise BRSCacheExistsError(
+                    "Client already exists in cache."
+                ) from None
 
             # setting the object
             self._cache[key] = obj
@@ -290,7 +295,9 @@ class ClientCache:
     def __delitem__(self, key: ClientCacheKey) -> None:
         with self._lock:
             if key not in self._cache:
-                raise BRSCacheNotFoundError("Client not found in cache.")
+                raise BRSCacheNotFoundError(
+                    "Client not found in cache."
+                ) from None
             del self._cache[key]
 
     def keys(self) -> tuple[ClientCacheKey, ...]:
@@ -354,7 +361,9 @@ class ClientCache:
 
         with self._lock:
             if (obj := self._cache.get(key)) is None:
-                raise BRSCacheNotFoundError("Client not found in cache.")
+                raise BRSCacheNotFoundError(
+                    "Client not found in cache."
+                ) from None
             del self._cache[key]
             return obj
 

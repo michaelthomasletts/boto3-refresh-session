@@ -392,6 +392,55 @@ def test_custom_refreshable_credentials_stubbed(monkeypatch):
     assert "expiry_time" in creds
 
 
+def test_custom_credentials_datetime_expiry_normalized(monkeypatch):
+    """Normalizes datetime expiry_time values to ISO strings."""
+
+    _set_dummy_env(monkeypatch)
+    expiry = datetime(2024, 1, 1, tzinfo=timezone.utc)
+
+    def custom_credentials_method():
+        return {
+            "access_key": "AKIAEXAMPLE123456",
+            "secret_key": "secret",
+            "token": "token",
+            "expiry_time": expiry,
+        }
+
+    session = RefreshableSession(
+        method="custom",
+        custom_credentials_method=custom_credentials_method,
+        region_name="us-east-1",
+        defer_refresh=True,
+    )
+
+    creds = session._get_credentials()
+    assert creds["expiry_time"] == expiry.isoformat()
+
+
+def test_custom_credentials_invalid_expiry_type_raises(monkeypatch):
+    """Raises BRSCredentialError for non-string expiry_time values."""
+
+    _set_dummy_env(monkeypatch)
+
+    def custom_credentials_method():
+        return {
+            "access_key": "AKIAEXAMPLE123456",
+            "secret_key": "secret",
+            "token": "token",
+            "expiry_time": 123,
+        }
+
+    session = RefreshableSession(
+        method="custom",
+        custom_credentials_method=custom_credentials_method,
+        region_name="us-east-1",
+        defer_refresh=True,
+    )
+
+    with pytest.raises(BRSCredentialError, match="expiry_time"):
+        session._get_credentials()
+
+
 def test_client_cache_reuses_client(monkeypatch):
     """Reuses the same cached client for equivalent inputs."""
 
