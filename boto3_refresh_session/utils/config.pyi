@@ -1,0 +1,107 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+"""Configurations for AWS STS AssumeRole and STS Client.
+
+The following configuration classes do not validate most user inputs except
+'TokenCode' in `AssumeRoleConfig` and `service_name` in `STSClientConfig`.
+It is the user's responsibility to ensure that the provided values conform
+to AWS and boto specifications. The purpose of these configurations is to
+provide a structured way to manage parameters when working with AWS STS.
+
+For additional information on AWS specifications, refer to the
+`API Reference for AssumeRole <https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html>`_.
+"""
+
+from __future__ import annotations
+
+class AssumeRoleConfig:
+    """Configuration for AWS STS AssumeRole API.
+
+    Attributes
+    ----------
+    RoleArn : str
+        The Amazon Resource Name (ARN) of the role to assume.
+    RoleSessionName : str, optional
+        An identifier for the assumed role session.
+    PolicyArns : list of PolicyDescriptorType, optional
+        The Amazon Resource Names (ARNs) of the IAM managed policies to
+        use as managed session policies.
+    Policy : str, optional
+        An IAM policy in JSON format to use as an inline session policy.
+    DurationSeconds : int, optional
+        The duration, in seconds, of the role session.
+    ExternalId : str, optional
+        A unique identifier that might be required when you assume a role
+        in another account.
+    SerialNumber : str, optional
+        The identification number of the MFA device.
+    TokenCode : str, optional
+        The value provided by the MFA device. Must be a 6-digit numeric
+        string.
+    Tags : list of Tag, optional
+        A list of session tags.
+    TransitiveTagKeys : list of str, optional
+        A list of keys for session tags that you want to pass to the role
+        session.
+    SourceIdentity : str, optional
+        A unique identifier that is passed in the AssumeRole call.
+    ProvidedContexts : list of ProvidedContext, optional
+        A list of context keys and values for the session.
+
+    Notes
+    -----
+    Values can be accessed via dot-notation (e.g., ``config.RoleArn``)
+    or dictionary-style access (e.g., ``config['RoleArn']``).
+
+    Accessing a valid but unset attribute (e.g., ``SerialNumber``) via
+    dot-notation returns ``None`` instead of raising an error. While this
+    behavior is convenient, it may surprise users accustomed to seeing
+    ``AttributeError`` exceptions in similar contexts.
+
+    For additional information on AWS specifications, refer to the
+    `API Reference for AssumeRole <https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html>`_.
+    """
+
+class STSClientConfig:
+    """Configuration for boto3 STS Client.
+
+    Attributes
+    ----------
+    service_name : str, optional
+        The name of the AWS service. Defaults to 'sts'.
+    region_name : str, optional
+        The AWS region name.
+    api_version : str, optional
+        The API version to use.
+    use_ssl : bool, optional
+        Whether to use SSL.
+    verify : bool or str, optional
+        Whether to verify SSL certificates or a path to a CA bundle.
+    endpoint_url : str, optional
+        The complete URL to use for the constructed client.
+    aws_access_key_id : str, optional
+        The AWS access key ID.
+    aws_secret_access_key : str, optional
+        The AWS secret access key.
+    aws_session_token : str, optional
+        The AWS session token.
+    config : botocore.config.Config, optional
+        Advanced client configuration options.
+    aws_account_id : str, optional
+        The AWS account ID associated with the credentials.
+
+    Notes
+    -----
+    Values can be accessed via dot-notation (e.g., ``config.RoleArn``)
+    or dictionary-style access (e.g., ``config['RoleArn']``).
+
+    Accessing a valid but unset attribute (e.g., ``SerialNumber``) via
+    dot-notation returns ``None`` instead of raising an error. While this
+    behavior is convenient, it may surprise users accustomed to seeing
+    ``AttributeError`` exceptions in similar contexts.
+
+    ``service_name`` is enforced to be 'sts'. If a different value is
+    provided, it will be overridden to 'sts' with a warning.
+    """
