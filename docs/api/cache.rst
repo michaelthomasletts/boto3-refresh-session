@@ -46,6 +46,10 @@ To retrieve a particular client from the cache, instantiate :class:`ClientCacheK
     # clear the cache if you like
     session.client_cache.clear()
 
+.. tip::
+
+   Refer to the `client caching documentation <../usage.html#cache>`_ for additional details on usage.
+
 Cache
 -----
 

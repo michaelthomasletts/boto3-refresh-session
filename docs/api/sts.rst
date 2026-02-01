@@ -14,6 +14,11 @@ in the background.
 
 .. versionadded:: 1.1.0
 
+.. tip::
+
+    For additional details on configuring MFA, refer to the `MFA usage documentation <../usage.html#mfa>`_.
+    For additional details on client caching, refer to the `client caching documentation <../usage.html#cache>`_.
+
 Examples
 --------
 >>> from boto3_refresh_session import AssumeRoleConfig, RefreshableSession

@@ -223,15 +223,16 @@ class BRSSession(Session):
     def __post_init__(self):
         if not self.defer_refresh:
             self._credentials = RefreshableCredentials.create_from_metadata(
-                metadata=self._get_credentials(),
-                refresh_using=self._get_credentials,
+                metadata=self._get_credentials(),  # type: ignore[arg-type]
+                refresh_using=self._get_credentials,  # type: ignore[arg-type]
                 method=self.refresh_method,
                 advisory_timeout=self.advisory_timeout,
                 mandatory_timeout=self.mandatory_timeout,
             )
         else:
             self._credentials = DeferredRefreshableCredentials(
-                refresh_using=self._get_credentials, method=self.refresh_method
+                refresh_using=self._get_credentials,  # type: ignore[arg-type]
+                method=self.refresh_method,  # type: ignore[arg-type]
             )
 
         # without this, boto3 won't use the refreshed credentials properly in
@@ -324,7 +325,7 @@ class BRSSession(Session):
             "access_key": frozen_creds.access_key,
             "secret_key": frozen_creds.secret_key,
             "token": frozen_creds.token,
-            "expiry_time": creds._expiry_time.isoformat(),
+            "expiry_time": creds._expiry_time.isoformat(),  # type: ignore[arg-type]
         }
 
     @property
@@ -332,6 +333,23 @@ class BRSSession(Session):
         """The current temporary AWS security credentials."""
 
         return self.refreshable_credentials()
+
+    def whoami(self) -> Identity:
+        """Returns metadata about the identity assumed.
+
+        .. versionadded:: 7.2.12
+
+        .. note::
+
+            This method is an alternative to ``get_identity()``.
+
+        Returns
+        -------
+        Identity
+            Dict containing caller identity according to AWS STS.
+        """
+
+        return self.get_identity()  # type: ignore[arg-type]
 
 
 class BaseRefreshableSession(

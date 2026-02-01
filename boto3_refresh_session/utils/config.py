@@ -16,6 +16,7 @@ For additional information on AWS specifications, refer to the
 
 __all__ = ["AssumeRoleConfig", "STSClientConfig"]
 
+import re
 from abc import ABC, abstractmethod
 from typing import Any
 
@@ -161,10 +162,11 @@ class AssumeRoleConfig(BaseConfig):
                 f"'{key}' is not a valid attribute for AssumeRoleConfig."
             )
 
+        # ensuring TokenCode is a 6-digit numeric string
         if (
             key == "TokenCode"
-            and isinstance(value, str)
-            and (len(value) != 6 or not value.isdigit())
+            and value is not None
+            and not (isinstance(value, str) and re.fullmatch(r"\d{6}", value))
         ):
             raise BRSValidationError(
                 f"'{key}' must be a 6-digit numeric string."

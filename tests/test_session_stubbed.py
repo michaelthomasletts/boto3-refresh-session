@@ -165,6 +165,7 @@ def test_refreshable_session_positional_assume_role_config_without_method():
 
 
 def test_registry_tracks_method_and_refresh_method(monkeypatch):
+    """Registers available refresh methods and their refresh_method values."""
     _set_dummy_env(monkeypatch)
 
     expected_methods = {"custom", "sts"}

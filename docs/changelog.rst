@@ -81,3 +81,11 @@ v7.2.0
 
 As of v7.2.0, ``boto3-refresh-session`` requires explicitly installing "iot" as an extra dependency in order to use IoT features, i.e. ``pip install boto3-refresh-session[iot]``.
 This change was made to reduce the number of dependencies for users who do not require IoT functionality.
+
+v7.2.12
+-------
+``mfa_token_provider`` now supports CLI commands as a way to retrieve MFA tokens, in addition to callables. 
+A ``whoami()`` method was also added to ``RefreshableSession`` to retrieve the AWS identity of the current session as an alternative to ``get_identity()``.
+
+The first feature allows users to specify a command (as a string or list of strings) that will be executed to obtain the MFA token.
+The command is run using :py:func:`subprocess.run`, and any keyword arguments provided via ``mfa_token_provider_kwargs`` are forwarded to :py:func:`subprocess.run`.

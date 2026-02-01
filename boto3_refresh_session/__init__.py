@@ -2,6 +2,10 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+"""A simple Python package for refreshing the temporary security credentials
+in a boto3.session.Session object automatically.
+"""
+
 __all__ = []
 
 import importlib.util
@@ -15,17 +19,17 @@ from .utils import cache, config
 from .utils.cache import *
 from .utils.config import *
 
-# checking if iot extra is installed
+# checking if iot extra is installed or not
 if (
     importlib.util.find_spec("awscrt") is not None
     and importlib.util.find_spec("awsiot") is not None
 ):
     from .methods.iot import *
 
-__all__.extend(cache.__all__)
-__all__.extend(config.__all__)
-__all__.extend(session.__all__)
-__all__.extend(exceptions.__all__)
+__all__ += cache.__all__
+__all__ += config.__all__
+__all__ += session.__all__
+__all__ += exceptions.__all__
 __version__ = "7.2.11"
 __title__ = "boto3-refresh-session"
 __author__ = "Mike Letts"

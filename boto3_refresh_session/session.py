@@ -24,8 +24,16 @@ class RefreshableSession:
     Use ``RefreshableSession(method="...")`` to construct an instance using
     the desired method.
 
-    For additional information on required parameters, refer to the See Also
-    section below.
+    .. tip::
+
+        For additional information on required and optional parameters for each
+        ``method``, refer to the
+        `refresh strategies documentation <../index.html#refresh-strategies>`_.
+        For additional details on client caching, refer to the
+        :ref:`client caching usage documentation <cachedocs>` or
+        :ref:`API docs <cache>` for technical information. For additional
+        details on configuring MFA, refer to the
+        :ref:`MFA usage documentation <mfa>`.
 
     Parameters
     ----------

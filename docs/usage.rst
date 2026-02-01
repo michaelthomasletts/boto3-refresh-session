@@ -135,19 +135,32 @@ This behavior is inherited by boto3-refresh-session when eager refresh is enable
 
     The vast majority of use cases will not require modification of advisory or mandatory timeouts, but they are available for edge cases where precise control over refresh timing is necessary.
 
+.. _mfa:
+
 MFA
 ---
 
-If your role assumption requires MFA, you must provide an MFA token provider callable via the ``mfa_token_provider`` parameter.
-This callable should return a valid MFA token string when called.
-If that callable requires arguments, you can provide them via the ``mfa_token_provider_kwargs`` parameter.
-Below is an example of using an MFA token provider which calls Yubikey.
+If your role assumption requires MFA, you must provide a token provider via ``mfa_token_provider``. 
+It accepts a ``callable`` (recommended), a ``list[str]`` of command arguments (also recommended), or a command ``str`` (least recommended).
+
+- **Callable**: Called during each refresh. 
+  Arguments are passed via ``mfa_token_provider_kwargs``. 
+  You are responsible for writing the callable.
+- **list[str] | str**: Treated as a CLI command and executed via :py:func:`subprocess.run`. 
+  Keyword arguments passed via ``mfa_token_provider_kwargs`` are forwarded to :py:func:`subprocess.run`.
+
+Below are examples for a callable and direct CLI invocation.
 
 .. tip::
 
-    Be sure to provide ``SerialNumber`` in ``assume_role_kwargs`` when using MFA!
-    Because ``mfa_token_provider`` is a callable, you should not provide ``TokenCode`` in ``assume_role_kwargs``; it will be supplied automatically by the callable you provided.
-    If you run into latency issues then you may want to pass a ``Config`` with retries to the internal STS client via the ``sts_client_kwargs`` parameter.
+    Be sure to provide ``SerialNumber`` in ``assume_role_kwargs`` when using MFA. 
+    If you provide ``mfa_token_provider``, any ``TokenCode`` you set in ``assume_role_kwargs`` will be ignored and overwritten on each refresh.
+    If you run into latency issues, pass a ``Config`` with retries to the internal STS client via ``sts_client_kwargs``.
+
+.. note::
+
+    Token output is parsed to the **last** 6-digit numeric token found in stdout when ``mfa_token_provider`` is a CLI command. 
+    The token must be a standalone 6-digit string (adjacent characters cause an error).
 
 .. code-block:: python
 
@@ -155,8 +168,8 @@ Below is an example of using an MFA token provider which calls Yubikey.
     import subprocess
     from typing import Sequence
 
-    
-    def mfa_token_provider(cmd: Sequence[str], timeout: float):
+    # example MFA token provider as a callable
+    def mfa_token_provider(cmd: Sequence[str], timeout: float) -> str:
         p = subprocess.run(
             list(cmd),
             check=False,
@@ -165,33 +178,50 @@ Below is an example of using an MFA token provider which calls Yubikey.
             timeout=timeout,
         )
         return (p.stdout or "").strip()
-    
 
-    mfa_token_provider_kwargs = {
-        "cmd": ["ykman", "oath", "code", "--single", "AWS-prod"],  # example token source
-        "timeout": 3.0,
-    }
 
     session = RefreshableSession(
         assume_role_kwargs=AssumeRoleConfig(
             RoleArn="<your-role-arn>",
             RoleSessionName="<your-role-session-name>",
-            SerialNumber="arn:aws:iam::<your-aws-account-id>:mfa/<your-mfa-device-name>",            
+            SerialNumber="arn:aws:iam::<account-id>:mfa/<device-name>",
         ),
         mfa_token_provider=mfa_token_provider,
-        mfa_token_provider_kwargs=mfa_token_provider_kwargs,
+        mfa_token_provider_kwargs={
+            # "ykman oath code --single AWS-prod" is equivalent to the cmd below
+            "cmd": ["ykman", "oath", "code", "--single", "AWS-prod"],
+            "timeout": 3.0,
+        },
+    )
+
+    # or, pass a CLI command directly (list[str] or str)
+    session = RefreshableSession(
+        assume_role_kwargs=AssumeRoleConfig(
+            RoleArn="<your-role-arn>",
+            RoleSessionName="<your-role-session-name>",
+            SerialNumber="arn:aws:iam::<account-id>:mfa/<device-name>",
+        ),
+        mfa_token_provider=["ykman", "oath", "code", "--single", "AWS-prod"],
+        mfa_token_provider_kwargs={"timeout": 20},
     )
 
 .. warning::
 
-    It is highly recommended to use the ``mfa_token_provider`` callable instead of passing ``TokenCode`` and ``SerialNumber`` directly.
-    Without ``mfa_token_provider``, you will be responsible for updating ``TokenCode`` yourself. 
-    It is extremely difficult to imagine a scenario where that is easy or practical.
+    It is highly recommended to use ``mfa_token_provider`` instead of passing ``TokenCode`` directly. 
+    Without ``mfa_token_provider``, you must refresh ``TokenCode`` yourself, which will be cumbersome.
 
 .. warning::
 
-    Erroneous ``TokenCode`` values (i.e. non 6-digit numeric strings) will raise errors during construction of the ``TokenCode`` attribute in ``assume_role_kwargs``.
-    While this is advantageous for catching mistakes early, be sure your ``mfa_token_provider`` callable always returns valid values and adjust your implementation accordingly.
+    Erroneous ``TokenCode`` values (i.e. non 6-digit numeric strings) will raise errors during construction of ``assume_role_kwargs``. 
+    Ensure your token provider returns valid tokens.
+
+.. warning::
+
+    For security, the ``shell``, ``executable``, and ``preexec_fn`` :py:func:`subprocess.run` parameters are blocked by default. 
+    You may enable them with ``allow_shell``, ``allow_executable``, and ``allow_preexec_fn``, but use extreme caution. 
+    ``stdout`` and ``stderr`` overrides are not supported.
+
+.. _cachedocs:
 
 Client Caching
 --------------
