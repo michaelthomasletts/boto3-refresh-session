@@ -94,9 +94,9 @@ The command is run using :py:func:`subprocess.run`, and any keyword arguments pr
 
 .. warning::
 
-    Versions v7.2.4 through v7.2.13 contained a bug where library code was not included during installation due to an issue with the ``pyproject.toml`` configuration.
+    Versions v7.2.4 through v7.2.14 contained a bug where library code was not included during installation due to an issue with the ``pyproject.toml`` configuration.
     Users of these versions may encounter ``ModuleNotFoundError`` when attempting to use the library.
-    It is strongly recommended to upgrade to v7.2.14 or later to resolve this issue.
+    It is strongly recommended to upgrade to v7.2.15 or later to resolve this issue.
 
 v7.2.13
 -------
@@ -105,13 +105,15 @@ Typing hints and aliases significantly improved to enhance code clarity and deve
 
 .. warning::
 
-    Versions v7.2.4 through v7.2.13 contained a bug where library code was not included during installation due to an issue with the ``pyproject.toml`` configuration.
+    Versions v7.2.4 through v7.2.14 contained a bug where library code was not included during installation due to an issue with the ``pyproject.toml`` configuration.
     Users of these versions may encounter ``ModuleNotFoundError`` when attempting to use the library.
-    It is strongly recommended to upgrade to v7.2.14 or later to resolve this issue.
+    It is strongly recommended to upgrade to v7.2.15 or later to resolve this issue.
 
-v7.2.14
+v7.2.15
 -------
-This version resolved a bug which appeared beginning v7.2.4.
+This version resolved a bug which appeared beginning v7.2.4 and ending v7.2.14.
 This bug appeared when boto3-refresh-session transitioned from ``poetry`` to ``uv``. 
-Specifically, v7.2.14 updates ``include`` in ``pyproject.toml`` to ensure that library code appears during installation. 
-Versions 7.2.4 through 7.2.13 were affected by this issue.
+Specifically, v7.2.15 updates ``include`` in ``pyproject.toml`` to ensure that library code appears during installation. 
+Users who installed versions 7.2.4 through 7.2.14 will observe ``ModuleNotFoundError`` when attempting to use the library.
+Upgrading to v7.2.15 or later will resolve this issue.
+v7.2.4 through v7.2.14 were yanked from PyPI and GitHub tags within that range were deleted.
