@@ -16,10 +16,6 @@ def _session():
     session = cast(
         STSRefreshableSession, object.__new__(STSRefreshableSession)
     )
-    session.allow_shell = False
-    session.allow_executable = False
-    session.allow_preexec_fn = False
-    session.default_mfa_token_provider_timeout = 30
     return session
 
 
@@ -158,38 +154,27 @@ def test_mfa_token_from_command_rejects_invalid_kwarg():
 
 
 def test_mfa_token_from_command_rejects_shell_by_default():
-    """Blocks shell execution unless explicitly enabled."""
+    """Rejects shell execution for security."""
     session = _session()
 
     with pytest.raises(BRSConfigurationError):
         session._mfa_token_from_command("echo 123456", shell=True)
 
 
-def test_mfa_token_from_command_allows_shell_when_enabled(monkeypatch):
-    """Allows shell execution when explicitly enabled."""
+def test_mfa_token_from_command_rejects_executable_kwarg():
+    """Rejects executable overrides for security."""
     session = _session()
-    session.allow_shell = True
-    _mock_run_with_stdout(monkeypatch, "123456")
 
-    token = session._mfa_token_from_command("echo 123456", shell=True)
-    assert token == "123456"
+    with pytest.raises(BRSConfigurationError):
+        session._mfa_token_from_command("echo 123456", executable="/bin/sh")
 
 
-def test_mfa_token_from_command_uses_default_timeout(monkeypatch):
-    """Applies the default timeout when none is provided."""
+def test_mfa_token_from_command_rejects_preexec_fn_kwarg():
+    """Rejects preexec_fn hooks for security."""
     session = _session()
-    captured: dict[str, object] = {}
 
-    def fake_run(*args, **kwargs):
-        captured.update(kwargs)
-        return subprocess.CompletedProcess(
-            args[0], 0, stdout="123456", stderr=""
-        )
-
-    monkeypatch.setattr(sts_module.subprocess, "run", fake_run)
-
-    session._mfa_token_from_command(["echo", "123456"])
-    assert captured["timeout"] == session.default_mfa_token_provider_timeout
+    with pytest.raises(BRSConfigurationError):
+        session._mfa_token_from_command("echo 123456", preexec_fn=lambda: None)
 
 
 def test_token_code_validation_accepts_six_digits():

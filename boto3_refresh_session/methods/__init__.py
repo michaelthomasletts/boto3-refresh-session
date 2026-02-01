@@ -10,8 +10,8 @@ from . import custom, sts
 from .custom import *
 from .sts import *
 
-__all__.extend(custom.__all__)
-__all__.extend(sts.__all__)
+__all__ += custom.__all__
+__all__ += sts.__all__
 
 # checking if iot extra is installed
 if (
@@ -21,4 +21,4 @@ if (
     from . import iot
     from .iot import *
 
-    __all__.extend(iot.__all__)
+    __all__ += iot.__all__

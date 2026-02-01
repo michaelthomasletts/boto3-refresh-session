@@ -217,9 +217,7 @@ Below are examples for a callable and direct CLI invocation.
 
 .. warning::
 
-    For security, the ``shell``, ``executable``, and ``preexec_fn`` :py:func:`subprocess.run` parameters are blocked by default. 
-    You may enable them with ``allow_shell``, ``allow_executable``, and ``allow_preexec_fn``, but use extreme caution. 
-    ``stdout`` and ``stderr`` overrides are not supported.
+    For security, the ``stdout``, ``stderr``, ``shell``, ``executable``, and ``preexec_fn`` :py:func:`subprocess.run` parameters are blocked and will raise an error if provided in ``mfa_token_provider_kwargs``.
 
 .. _cachedocs:
 

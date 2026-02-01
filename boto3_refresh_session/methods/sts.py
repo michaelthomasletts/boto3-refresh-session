@@ -72,7 +72,11 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
         Optional keyword arguments to pass to the ``mfa_token_provider``
         callable *or*, when ``mfa_token_provider`` is a command string or list
         of command arguments, these keyword arguments are forwarded to
-        :py:func:`subprocess.run`. Default is None.
+        :py:func:`subprocess.run`. The ``stdout``, ``stderr``, ``shell``,
+        ``executable``, and ``preexec_fn`` parameters are not allowed for
+        security reasons when ``mfa_token_provider`` is a command string or
+        list of command arguments forwarded to :py:func:`subprocess.run`.
+        Default is None.
     defer_refresh : bool, optional
         If ``True`` then temporary credentials are not automatically refreshed
         until they are explicitly needed. If ``False`` then temporary
@@ -98,22 +102,6 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
     client_cache_max_size : int, optional
         The maximum number of clients to store in the client cache. Only
         applicable if ``cache_clients`` is ``True``. Defaults to 10.
-    allow_shell : bool
-        Whether to allow the 'shell' parameter in ``mfa_token_provider_kwargs``
-        for MFA subprocess execution. Default is ``False`` for security
-        reasons. USE THIS ARGUMENT WITH CAUTION!!!
-    allow_executable : bool
-        Whether to allow the 'executable' parameter in
-        ``mfa_token_provider_kwargs`` for MFA subprocess execution. Default is
-        ``False`` for security reasons. USE THIS ARGUMENT WITH CAUTION!!!
-    allow_preexec_fn : bool
-        Whether to allow the 'preexec_fn' parameter in
-        ``mfa_token_provider_kwargs`` for MFA subprocess execution. Default is
-        ``False`` for security reasons. USE THIS ARGUMENT WITH CAUTION!!!
-    default_mfa_token_provider_timeout : int
-        The default timeout (in seconds) to apply to the MFA subprocess
-        execution if no timeout is provided in ``mfa_token_provider_kwargs``.
-        Default is 30 seconds.
 
     Other Parameters
     ----------------
@@ -170,20 +158,8 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
         sts_client_kwargs: STSClientParams | STSClientConfig | None = None,
         mfa_token_provider: Callable[[], str] | list[str] | str | None = None,
         mfa_token_provider_kwargs: dict | None = None,
-        allow_shell: bool | None = None,
-        allow_executable: bool | None = None,
-        allow_preexec_fn: bool | None = None,
-        default_mfa_token_provider_timeout: int | None = None,
         **kwargs,
     ):
-        # default restrictions on subprocess parameters for security
-        self.allow_shell = False or allow_shell
-        self.allow_executable = False or allow_executable
-        self.allow_preexec_fn = False or allow_preexec_fn
-        self.default_mfa_token_provider_timeout = (
-            30 or default_mfa_token_provider_timeout
-        )  # seconds
-
         # initializing asssume_role_kwargs attribute
         match assume_role_kwargs:
             case AssumeRoleConfig():
@@ -366,16 +342,11 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
         .. note::
             The use of certain subprocess parameters such as 'shell',
             'executable', and 'preexec_fn' are restricted for security
-            reasons. You may permit their use at your own risk by modifying
-            the ``allow_shell``, ``allow_executable``, and-or
-            ``allow_preexec_fn`` attributes. ``stdout`` and ``stderr``
-            are not supported and will raise an error if provided no matter
-            what.
+            reasons.  ``stdout`` and ``stderr`` are also restricted
 
         .. note::
             A default timeout of 30 seconds is applied to the command execution
-            unless overridden by the ``timeout`` keyword argument or by
-            modifying the ``default_mfa_token_provider_timeout`` attribute.
+            unless overridden by the ``timeout`` keyword argument.
 
         Parameters
         ----------
@@ -386,16 +357,12 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
         Other Parameters
         ----------------
         **kwargs : dict, optional
-            Keyword arguments to pass to :py:func:`subprocess.run`. ``stdout``
-            and ``stderr`` are not supported and will raise an error if
-            provided. ``check``, ``capture_output``, and ``text`` are set to
-            ``True`` automatically. ``shell``, ``executable``, and
-            ``preexec_fn`` are restricted for security reasons unless
-            explicitly allowed by modifying the ``allow_shell``,
-            ``allow_executable``, and ``allow_preexec_fn`` attributes. A
-            default timeout is applied unless overridden by the ``timeout``
-            keyword argument or by modifying the
-            ``default_mfa_token_provider_timeout`` attribute.
+            Keyword arguments to pass to :py:func:`subprocess.run`. ``stdout``,
+            ``stderr``, ``shell``, ``executable``, and ``preexec_fn`` are
+            restricted and will raise an error if provided. ``check``,
+            ``capture_output``, and ``text`` are set to ``True`` automatically.
+            A default timeout is applied unless overridden by the ``timeout``
+            keyword argument.
 
         Returns
         -------
@@ -442,14 +409,6 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
                 value=command,
             )
 
-        # validating unsupported subprocess.run kwargs
-        if "stdout" in kwargs or "stderr" in kwargs:
-            raise BRSConfigurationError(
-                "'stdout' and 'stderr' are not supported in "
-                "'mfa_token_provider_kwargs'.",
-                param="mfa_token_provider_kwargs",
-            )
-
         # ensuring all kwargs are valid for subprocess.run
         for kwarg in kwargs:
             if kwarg not in SUBPROCESS_ALLOWED_PARAMETERS:
@@ -458,35 +417,38 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
                     param="mfa_token_provider_kwargs",
                 )
 
-        # ensuring required subprocess.run kwargs are set
-        kwargs.update({"check": True, "capture_output": True, "text": True})
+        # preventing restricted subprocess.run kwargs
+        if "stdout" in kwargs or "stderr" in kwargs:
+            raise BRSConfigurationError(
+                "'stdout' and 'stderr' are not supported in "
+                "'mfa_token_provider_kwargs'.",
+                param="mfa_token_provider_kwargs",
+            )
 
-        # validating restricted subprocess.run kwargs
-        if not self.allow_shell and kwargs.get("shell", False):
+        if kwargs.get("shell", False):
             raise BRSConfigurationError(
                 "'shell' parameter in 'mfa_token_provider_kwargs' is not "
-                "allowed for security reasons. To use 'shell', modify the "
-                "'allow_shell' attribute at your own risk.",
+                "allowed for security reasons.",
                 param="mfa_token_provider_kwargs",
             )
-        if not self.allow_executable and kwargs.get("executable", False):
+        if kwargs.get("executable", False):
             raise BRSConfigurationError(
                 "'executable' parameter in 'mfa_token_provider_kwargs' is not "
-                "allowed for security reasons. To use 'executable', modify "
-                "the 'allow_executable' attribute at your own risk.",
+                "allowed for security reasons.",
                 param="mfa_token_provider_kwargs",
             )
-        if not self.allow_preexec_fn and kwargs.get("preexec_fn", False):
+        if kwargs.get("preexec_fn", False):
             raise BRSConfigurationError(
                 "'preexec_fn' parameter in 'mfa_token_provider_kwargs' is not "
-                "allowed for security reasons. To use 'preexec_fn', modify "
-                "the 'allow_preexec_fn' attribute at your own risk.",
+                "allowed for security reasons.",
                 param="mfa_token_provider_kwargs",
             )
 
-        # adding default timeout if not provided
-        if "timeout" not in kwargs:
-            kwargs["timeout"] = self.default_mfa_token_provider_timeout
+        # adding default timeout of 30 seconds if not provided
+        kwargs["timeout"] = kwargs.get("timeout", 30)
+
+        # ensuring required subprocess.run kwargs are set
+        kwargs.update({"check": True, "capture_output": True, "text": True})
 
         try:
             # running command to obtain MFA token

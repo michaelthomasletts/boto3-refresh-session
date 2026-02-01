@@ -11,8 +11,8 @@ from .constants import *
 from .internal import *
 from .typing import *
 
-__all__.extend(cache.__all__)
-__all__.extend(config.__all__)
-__all__.extend(constants.__all__)
-__all__.extend(internal.__all__)
-__all__.extend(typing.__all__)
+__all__ += cache.__all__
+__all__ += config.__all__
+__all__ += constants.__all__
+__all__ += internal.__all__
+__all__ += typing.__all__

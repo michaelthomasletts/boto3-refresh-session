@@ -18,4 +18,4 @@ if (
     from .core import IoTRefreshableSession
     from .x509 import IOTX509RefreshableSession
 
-    __all__.extend(core.__all__)
+    __all__ += core.__all__
