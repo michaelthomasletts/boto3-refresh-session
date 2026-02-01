@@ -162,6 +162,16 @@ class AssumeRoleConfig(BaseConfig):
                 f"'{key}' is not a valid attribute for AssumeRoleConfig."
             ) from None
 
+        if key == "RoleArn":
+            if not isinstance(value, str):
+                raise BRSValidationError(
+                    "'RoleArn' must be a string."
+                ) from None
+            if len(value) < 20:
+                raise BRSValidationError(
+                    "'RoleArn' must be at least 20 characters long."
+                ) from None
+
         # ensuring TokenCode is a 6-digit numeric string
         if (
             key == "TokenCode"

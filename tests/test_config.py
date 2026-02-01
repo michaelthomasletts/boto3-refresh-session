@@ -47,6 +47,38 @@ def test_assume_role_config_validation():
         _ = config.NotAKey
 
 
+@pytest.mark.parametrize(
+    "value",
+    [
+        123,
+        12.34,
+        {},
+        [],
+        object(),
+    ],
+)
+def test_assume_role_config_rolearn_requires_string(value):
+    """Rejects non-string RoleArn values."""
+    with pytest.raises(BRSValidationError):
+        AssumeRoleConfig(RoleArn=value)
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        "",
+        "short",
+        "arn:aws:iam::1",
+        "arn:aws:iam::123456",
+    ],
+)
+def test_assume_role_config_rolearn_min_length(value):
+    """Rejects RoleArn values shorter than 20 characters."""
+    assert len(value) < 20
+    with pytest.raises(BRSValidationError):
+        AssumeRoleConfig(RoleArn=value)
+
+
 def test_assume_role_config_setdefault_validates():
     """Validates keys provided via setdefault."""
     config = AssumeRoleConfig(
