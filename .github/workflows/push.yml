@@ -5,9 +5,8 @@ on:
     branches: [ main ]
     paths:
       - "boto3_refresh_session/**"
+      - "docs/**"
       - "README.md"
-      - "docs/brs.png"
-      - "docs/changelog.rst"
       - NOTICE
       - pyproject.toml
       - LICENSE
@@ -95,6 +94,22 @@ jobs:
         with:
           token: ${{ secrets.GH_PAT }}
 
+      - name: Detect changed paths
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            docs_or_code:
+              - "docs/**"
+              - "boto3_refresh_session/**"
+            release:
+              - "boto3_refresh_session/**"
+              - "README.md"
+              - "docs/brs.png"
+              - "NOTICE"
+              - "LICENSE"
+              - "pyproject.toml"
+
       - name: Set up Python
         uses: actions/setup-python@v5
         id: setup-python
@@ -119,6 +134,7 @@ jobs:
           uv sync --frozen --extra dev --extra iot
 
       - name: Determine Version Part to Update
+        if: steps.changes.outputs.release == 'true'
         run: |
           VERSION_TYPE="patch"
           MESSAGE=$(git log -1 --pretty=%B)
@@ -139,11 +155,13 @@ jobs:
           echo "VERSION_TYPE=$VERSION_TYPE" >> $GITHUB_ENV
 
       - name: Bump Version
+        if: steps.changes.outputs.release == 'true'
         run: |
           uv run make bump-version "$VERSION_TYPE"
           echo "'make bump-version $VERSION_TYPE' completed"
 
       - name: Verify uv.lock
+        if: steps.changes.outputs.release == 'true'
         run: |
           if ! uv lock --check; then
             echo "uv.lock out of date; regenerating."
@@ -151,6 +169,7 @@ jobs:
           fi
 
       - name: Commit Version Bump
+        if: steps.changes.outputs.release == 'true'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -163,11 +182,13 @@ jobs:
           fi
 
       - name: Sync Local Repo to Latest
+        if: steps.changes.outputs.release == 'true'
         run: |
           git fetch origin main --tags
           git reset --hard origin/main
 
       - name: Create Tag
+        if: steps.changes.outputs.release == 'true'
         run: |
           VERSION="$NEW_VERSION"
           if [ -z "$VERSION" ]; then
@@ -182,6 +203,7 @@ jobs:
           fi
 
       - name: Build Wheel and Publish to PyPI
+        if: steps.changes.outputs.release == 'true'
         env:
           UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
         run: |
@@ -189,12 +211,14 @@ jobs:
           uv publish
 
       - name: Build Documentation
+        if: steps.changes.outputs.docs_or_code == 'true'
         run: |
           source .venv/bin/activate
           cd docs/ && make clean && cd ..
           sphinx-build docs docs/_build
 
       - name: Deploy to GitHub Pages
+        if: steps.changes.outputs.docs_or_code == 'true'
         uses: peaceiris/actions-gh-pages@v3
         with:
           publish_branch: gh-pages
