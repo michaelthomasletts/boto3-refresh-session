@@ -65,6 +65,7 @@ select = ["E", "F", "W", "I"]
 split-on-trailing-comma = true
 
 [tool.ruff.lint.per-file-ignores]
+"**/*.pyi" = ["ALL"]
 "**/__init__.py" = ["F401", "F403"]
 "tests/test_session_stubbed.py" = ["E501"]
 "boto3_refresh_session/utils/config.py" = ["E501"]
