@@ -355,7 +355,7 @@ class BRSSession(Session):
     def whoami(self) -> Identity:
         """Returns metadata about the identity assumed.
 
-        .. versionadded:: 7.2.12
+        .. versionadded:: 7.2.15
 
         .. note::
 

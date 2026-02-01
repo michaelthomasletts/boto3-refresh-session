@@ -338,7 +338,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
         """Private method which runs a CLI command in order to obtain an MFA
         token.
 
-        .. versionadded:: 7.2.12
+        .. versionadded:: 7.2.15
 
         .. tip::
             This method does not perform retries. Users who want retries
