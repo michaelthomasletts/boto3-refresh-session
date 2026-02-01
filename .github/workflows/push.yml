@@ -7,6 +7,7 @@ on:
       - "boto3_refresh_session/**"
       - "README.md"
       - "docs/brs.png"
+      - "docs/changelog.rst"
       - NOTICE
       - pyproject.toml
       - LICENSE
