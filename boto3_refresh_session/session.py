@@ -24,8 +24,9 @@ class RefreshableSession:
     Use ``RefreshableSession(method="...")`` to construct an instance using
     the desired method.
 
-    For additional information on required parameters, refer to the See Also
-    section below.
+    For additional information on required and optional parameters for each
+    ``method``, refer to the
+    `refresh strategies documentation <../index.html#refresh-strategies>`_.
 
     Parameters
     ----------

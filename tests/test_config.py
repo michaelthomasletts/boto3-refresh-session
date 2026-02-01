@@ -5,6 +5,7 @@ from boto3_refresh_session.utils import AssumeRoleConfig, STSClientConfig
 
 
 def test_assume_role_config_behaves_like_dict():
+    """Supports dict-style and attribute-style access for config values."""
     config = AssumeRoleConfig(
         RoleArn="arn:aws:iam::123456789012:role/TestRole",
         RoleSessionName="unit-test",
@@ -30,6 +31,7 @@ def test_assume_role_config_behaves_like_dict():
 
 
 def test_assume_role_config_validation():
+    """Rejects invalid keys and invalid TokenCode values."""
     config = AssumeRoleConfig(
         RoleArn="arn:aws:iam::123456789012:role/TestRole",
         RoleSessionName="unit-test",
@@ -46,6 +48,7 @@ def test_assume_role_config_validation():
 
 
 def test_assume_role_config_setdefault_validates():
+    """Validates keys provided via setdefault."""
     config = AssumeRoleConfig(
         RoleArn="arn:aws:iam::123456789012:role/TestRole",
         RoleSessionName="unit-test",
@@ -59,6 +62,7 @@ def test_assume_role_config_setdefault_validates():
 
 
 def test_assume_role_config_setdefault_does_not_overwrite():
+    """Preserves existing values when using setdefault."""
     config = AssumeRoleConfig(
         RoleArn="arn:aws:iam::123456789012:role/TestRole",
         RoleSessionName="unit-test",
@@ -70,6 +74,7 @@ def test_assume_role_config_setdefault_does_not_overwrite():
 
 
 def test_assume_role_config_none_removes_key():
+    """Removes a key when assigned None and keeps attribute access None."""
     config = AssumeRoleConfig(
         RoleArn="arn:aws:iam::123456789012:role/TestRole",
         RoleSessionName="unit-test",
@@ -83,6 +88,7 @@ def test_assume_role_config_none_removes_key():
 
 
 def test_assume_role_config_pop_and_popitem():
+    """Supports pop and popitem for mutable config values."""
     config = AssumeRoleConfig(
         RoleArn="arn:aws:iam::123456789012:role/TestRole",
         RoleSessionName="unit-test",
@@ -101,6 +107,7 @@ def test_assume_role_config_pop_and_popitem():
 
 
 def test_sts_client_config_service_name_normalizes():
+    """Normalizes service_name to sts and warns on overrides."""
     config = STSClientConfig()
     assert config["service_name"] == "sts"
 
@@ -113,6 +120,7 @@ def test_sts_client_config_service_name_normalizes():
 
 
 def test_sts_client_config_dot_notation_returns_none():
+    """Returns None for unset attributes via dot-notation."""
     config = STSClientConfig(region_name="us-east-1")
 
     assert config.region_name == "us-east-1"

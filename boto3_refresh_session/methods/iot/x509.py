@@ -64,6 +64,11 @@ class IOTX509RefreshableSession(
         "iot" as an extra dependency in order to use IoT features, i.e.
         ``pip install boto3-refresh-session[iot]``.
 
+    .. tip::
+
+        For additional details on client caching, refer to the
+        :ref:`client caching documentation <cachedocs>`.
+
     Parameters
     ----------
     endpoint : str

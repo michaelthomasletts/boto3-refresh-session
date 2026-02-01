@@ -24,6 +24,11 @@ class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
     by the user. Useful for users with highly sophisticated or idiosyncratic
     authentication flows.
 
+    .. tip::
+
+        For additional details on client caching, refer to the
+        :ref:`client caching documentation <cachedocs>`.
+
     Parameters
     ----------
     custom_credentials_method: CustomCredentialsMethod

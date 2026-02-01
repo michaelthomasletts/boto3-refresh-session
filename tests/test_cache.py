@@ -8,6 +8,7 @@ from boto3_refresh_session.utils.cache import ClientCache, ClientCacheKey
 
 
 def test_client_cache_key_normalizes_config() -> None:
+    """Normalizes equivalent botocore Config values for cache keys."""
     config_a = Config(retries={"max_attempts": 2, "mode": "standard"})
     config_b = Config(retries={"mode": "standard", "max_attempts": 2})
 
@@ -19,6 +20,7 @@ def test_client_cache_key_normalizes_config() -> None:
 
 
 def test_client_cache_evicts_lru() -> None:
+    """Evicts least-recently-used entries when max size is exceeded."""
     cache = ClientCache(max_size=2)
     obj_a = object()
     obj_b = object()
@@ -40,6 +42,7 @@ def test_client_cache_evicts_lru() -> None:
 
 
 def test_client_cache_call_inserts() -> None:
+    """Inserts an entry when invoking the cache as a callable."""
     cache = ClientCache(max_size=10)
     obj = object()
     args = ("s3",)
@@ -53,6 +56,7 @@ def test_client_cache_call_inserts() -> None:
 
 
 def test_client_cache_str_includes_entries() -> None:
+    """Includes cached client entries in the string representation."""
     cache = ClientCache(max_size=10)
     cache(object(), "s3")
 

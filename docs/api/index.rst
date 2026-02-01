@@ -64,6 +64,10 @@ Cache
 boto3-refresh-session caches boto clients to avoid redundant client creation. 
 Learn more about the caching mechanism below.
 
+.. tip::
+
+   Refer to the `client caching documentation <../usage.html#cache>`_ for additional details.
+
 - :ref:`cache` - LRU cache for boto3-refresh-session
 
 Configs

@@ -103,6 +103,7 @@ intersphinx_mapping = {
         "https://boto3.amazonaws.com/v1/documentation/api/latest/",
         None,
     ),
+    "python": ("https://docs.python.org/3", None),
 }
 extlinks = {
     "botocore": (

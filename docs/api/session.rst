@@ -9,6 +9,8 @@ This module provides the main interface for constructing refreshable boto3 sessi
 
 The ``RefreshableSession`` class serves as a factory that dynamically selects the appropriate 
 credential refresh strategy based on the ``method`` parameter, e.g., ``sts``.
+For additional information on required and optional parameters for each ``method``, refer to the
+`refresh strategies documentation <../index.html#refresh-strategies>`_.
 
 Users can interact with AWS services just like they would with a normal :class:`boto3.session.Session`, 
 with the added benefit of automatic credential refreshing.
