@@ -8,7 +8,7 @@ from __future__ import annotations
 
 __all__ = ["IoTRefreshableSession"]
 
-from typing import TYPE_CHECKING, Literal, get_args, overload
+from typing import get_args
 
 from ...exceptions import BRSValidationError
 from ...utils import (
@@ -17,26 +17,8 @@ from ...utils import (
     PublicIoTAuthenticationMethod,
 )
 
-if TYPE_CHECKING:
-    from .x509 import IOTX509RefreshableSession
-
 
 class IoTRefreshableSession(BaseRefreshableSession, registry_key="iot"):  # type: ignore[misc]
-    # overloading __new__ to return correct subclass per authentication_method
-    @overload
-    def __new__(
-        cls,
-        authentication_method: Literal["x509"] = "x509",
-        **kwargs,
-    ) -> "IOTX509RefreshableSession": ...
-
-    @overload
-    def __new__(  # type: ignore[reportIncompatibleMethodOverride]
-        cls,
-        authentication_method: PublicIoTAuthenticationMethod = "x509",
-        **kwargs,
-    ) -> BaseIoTRefreshableSession: ...
-
     def __new__(
         cls,
         authentication_method: PublicIoTAuthenticationMethod = "x509",

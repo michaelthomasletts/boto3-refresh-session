@@ -6,34 +6,29 @@
 
 from __future__ import annotations
 
-__all__ = ["RefreshableSession"]
+from typing import Any, Literal, overload
 
-from typing import get_args
+from botocore.client import BaseClient
 
-from .exceptions import BRSValidationError
+from .methods.custom import CustomRefreshableSession
+from .methods.iot.core import IoTRefreshableSession
+from .methods.sts import STSRefreshableSession
 from .utils import BaseRefreshableSession, PublicMethod
-
+from .utils.cache import ClientCache
+from .utils.typing import Identity, TemporaryCredentials
 
 class RefreshableSession:
     """Factory class for constructing refreshable boto3 sessions using various
     authentication methods, e.g. STS.
 
-    This class provides a unified interface for creating boto3 sessions whose
-    credentials are automatically refreshed in the background.
-
-    Use ``RefreshableSession(method="...")`` to construct an instance using
-    the desired method.
-
-    .. tip::
-
-        For additional information on required and optional parameters for each
-        ``method``, refer to the `refresh strategies documentation
-        <../index.html#refresh-strategies>`_.
-        For additional details on client caching, refer to the
-        :ref:`client caching usage documentation <cachedocs>` or
-        :ref:`API docs <cache>` for technical information. For additional
-        details on configuring MFA, refer to the
-        :ref:`MFA usage documentation <mfa>`.
+    For additional information on required and optional parameters for each
+    ``method``, refer to the `refresh strategies documentation
+    <https://michaelthomasletts.com/boto3-refresh-session/api/index.html#refresh-strategies>`_.
+    For additional details on client caching, refer to the
+    `client caching usage documentation <https://michaelthomasletts.com/boto3-refresh-session/usage.html#client-caching>`_
+    or `API docs <https://michaelthomasletts.com/boto3-refresh-session/api/cache.html>`_ for technical information. For additional
+    details on configuring MFA, refer to the
+    `MFA usage documentation <https://michaelthomasletts.com/boto3-refresh-session/usage.html#mfa>`_.
 
     Parameters
     ----------
@@ -140,32 +135,101 @@ class RefreshableSession:
     ... )
     """
 
-    def __new__(  # type: ignore[reportIncompatibleMethodOverride]
-        cls, method: PublicMethod = "sts", **kwargs
-    ) -> BaseRefreshableSession:
-        if method not in (methods := cls.get_available_methods()):
-            raise BRSValidationError(
-                f"{method!r} is an invalid method parameter. "
-                "Available methods are "
-                f"{', '.join(repr(meth) for meth in methods)}. "
-                "If you are trying to use method='iot', ensure you have "
-                "installed the 'iot' extra via pip install "
-                "boto3-refresh-session[iot]",
-                param="method",
-                value=method,
-            ) from None
+    client_cache: ClientCache
+    """The client cache used to store and retrieve cached clients."""
 
-        return BaseRefreshableSession.registry[method](**kwargs)
+    @property
+    def credentials(self) -> TemporaryCredentials:
+        """The current temporary AWS security credentials."""
 
-    @classmethod
-    def get_available_methods(cls) -> list[str]:
-        """Lists all currently available credential refresh methods.
+        ...
+
+    def client(self, *args: Any, **kwargs: Any) -> BaseClient:
+        """Creates a low-level service client by name.
+
+        Parameters
+        ----------
+        *args : Any
+            Positional arguments for :meth:`boto3.session.Session.client`.
+        **kwargs : Any
+            Keyword arguments for :meth:`boto3.session.Session.client`.
 
         Returns
         -------
-        list[str]
-            A list of all currently available credential refresh methods,
-            e.g. 'sts', 'custom'.
+        BaseClient
+            A low-level service client.
+
+        Notes
+        -----
+        This method overrides the default
+        :meth:`boto3.session.Session.client` method. If client caching is
+        enabled, it will return a cached client instance for the given
+        service and parameters. Else, it will create and return a new client
+        instance.
         """
 
-        return list(get_args(PublicMethod))
+        ...
+
+    def get_identity(self) -> Identity:
+        """Returns metadata about the current caller identity.
+
+        Returns
+        -------
+        Identity
+            Dict containing caller identity metadata.
+        """
+
+        ...
+
+    def refreshable_credentials(self) -> TemporaryCredentials:
+        """The current temporary AWS security credentials.
+
+        Returns
+        -------
+        TemporaryCredentials
+            Temporary AWS security credentials containing:
+                access_key : str
+                    AWS access key identifier.
+                secret_key : str
+                    AWS secret access key.
+                token : str
+                    AWS session token.
+                expiry_time : str
+                    Expiration timestamp in ISO 8601 format.
+        """
+
+        ...
+
+    def whoami(self) -> Identity:
+        """Returns metadata about the identity assumed.
+
+        .. versionadded:: 7.2.15
+
+        .. note::
+
+            This method is an alternative to ``get_identity()``.
+
+        Returns
+        -------
+        Identity
+            Dict containing caller identity according to AWS STS.
+        """
+
+        ...
+
+    @overload
+    def __new__(
+        cls, method: Literal["sts"] = "sts", **kwargs: Any
+    ) -> STSRefreshableSession: ...
+    @overload
+    def __new__(
+        cls, method: Literal["custom"], **kwargs: Any
+    ) -> CustomRefreshableSession: ...
+    @overload
+    def __new__(
+        cls, method: Literal["iot"], **kwargs: Any
+    ) -> IoTRefreshableSession: ...
+    @overload
+    def __new__(
+        cls, method: PublicMethod = "sts", **kwargs: Any
+    ) -> BaseRefreshableSession: ...
