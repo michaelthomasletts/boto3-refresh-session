@@ -107,7 +107,7 @@ wheels = [
 
 [[package]]
 name = "boto3-refresh-session"
-version = "7.2.18"
+version = "7.2.19"
 source = { editable = "." }
 dependencies = [
     { name = "boto3" },
