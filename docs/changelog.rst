@@ -92,7 +92,26 @@ A ``whoami()`` method was also added to ``RefreshableSession`` to retrieve the A
 The first feature allows users to specify a command (as a string or list of strings) that will be executed to obtain the MFA token.
 The command is run using :py:func:`subprocess.run`, and any keyword arguments provided via ``mfa_token_provider_kwargs`` are forwarded to :py:func:`subprocess.run`.
 
+.. warning::
+
+    Versions v7.2.4 through v7.2.13 contained a bug where library code was not included during installation due to an issue with the ``pyproject.toml`` configuration.
+    Users of these versions may encounter ``ModuleNotFoundError`` when attempting to use the library.
+    It is strongly recommended to upgrade to v7.2.14 or later to resolve this issue.
+
 v7.2.13
 -------
 
 Typing hints and aliases significantly improved to enhance code clarity and developer experience.
+
+.. warning::
+
+    Versions v7.2.4 through v7.2.13 contained a bug where library code was not included during installation due to an issue with the ``pyproject.toml`` configuration.
+    Users of these versions may encounter ``ModuleNotFoundError`` when attempting to use the library.
+    It is strongly recommended to upgrade to v7.2.14 or later to resolve this issue.
+
+v7.2.14
+-------
+This version resolved a bug which appeared beginning v7.2.4.
+This bug appeared when boto3-refresh-session transitioned from ``poetry`` to ``uv``. 
+Specifically, v7.2.14 updates ``include`` in ``pyproject.toml`` to ensure that library code appears during installation. 
+Versions 7.2.4 through 7.2.13 were affected by this issue.

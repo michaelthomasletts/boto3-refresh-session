@@ -13,10 +13,15 @@ from typing import TYPE_CHECKING, Literal, get_args, overload
 from .exceptions import BRSValidationError
 from .utils import BaseRefreshableSession, PublicMethod
 
+# importing for IDEs and type checkers
 if TYPE_CHECKING:
+    from botocore.client import BaseClient
+
     from .methods.custom import CustomRefreshableSession
     from .methods.iot.core import IoTRefreshableSession
     from .methods.sts import STSRefreshableSession
+    from .utils.cache import ClientCache
+    from .utils.typing import Identity, TemporaryCredentials
 
 
 class RefreshableSession:
@@ -42,7 +47,7 @@ class RefreshableSession:
 
     Parameters
     ----------
-    method : PublicMethod
+    method : Literal["sts", "custom", "iot"], optional
         The authentication and refresh method to use for the session. Must
         match a registered method name. Options include "sts", "custom", and
         "iot". "iot" requires explicitly installing the "iot" extra, i.e.
@@ -145,25 +150,57 @@ class RefreshableSession:
     ... )
     """
 
-    @overload
-    def __new__(
-        cls, method: Literal["sts"] = "sts", **kwargs
-    ) -> "STSRefreshableSession": ...
+    # detailed type information for IDEs and type checkers
+    if TYPE_CHECKING:
+        client_cache: ClientCache
 
-    @overload
-    def __new__(
-        cls, method: Literal["custom"], **kwargs
-    ) -> "CustomRefreshableSession": ...
+        # adding methods and properties for IDEs and type checkers
+        @property
+        def credentials(self) -> TemporaryCredentials:
+            """The current temporary AWS security credentials."""
 
-    @overload
-    def __new__(
-        cls, method: Literal["iot"], **kwargs
-    ) -> "IoTRefreshableSession": ...
+            ...
 
-    @overload
-    def __new__(
-        cls, method: PublicMethod = "sts", **kwargs
-    ) -> BaseRefreshableSession: ...
+        def client(self, *args, **kwargs) -> BaseClient:
+            """Creates a low-level service client by name."""
+
+            ...
+
+        def get_identity(self) -> Identity:
+            """Returns metadata about the identity assumed."""
+
+            ...
+
+        def refreshable_credentials(self) -> TemporaryCredentials:
+            """The current temporary AWS security credentials."""
+
+            ...
+
+        def whoami(self) -> Identity:
+            """Alias for :meth:`get_identity`."""
+
+            ...
+
+        # overloads for precise return type based on 'method' argument
+        @overload
+        def __new__(
+            cls, method: Literal["sts"] = "sts", **kwargs
+        ) -> "STSRefreshableSession": ...
+
+        @overload
+        def __new__(
+            cls, method: Literal["custom"], **kwargs
+        ) -> "CustomRefreshableSession": ...
+
+        @overload
+        def __new__(
+            cls, method: Literal["iot"], **kwargs
+        ) -> "IoTRefreshableSession": ...
+
+        @overload
+        def __new__(
+            cls, method: PublicMethod = "sts", **kwargs
+        ) -> BaseRefreshableSession: ...
 
     def __new__(  # type: ignore[reportIncompatibleMethodOverride]
         cls, method: PublicMethod = "sts", **kwargs
