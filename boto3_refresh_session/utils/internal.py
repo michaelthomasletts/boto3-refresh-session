@@ -28,15 +28,13 @@ credential construction, wiring the botocore session to those credentials, and
 client caching with normalized cache keys. It acts as the base implementation
 for session mechanics.
 
-`BaseRefreshableSession` and `BaseIoTRefreshableSession` combine `Registry`,
-`CredentialProvider`, and `BRSSession` to create abstract roots for method
-families. They do not implement credential retrieval themselves, but provide a
-common surface and registration behavior for subclasses like STS or IoT X.509.
+Method-specific classes (STS, custom, IoT X.509) inherit directly from
+`Registry`, `CredentialProvider`, and `BRSSession`, which keeps the hierarchy
+shallow and the registration mechanics explicit.
 """
 
 __all__ = [
     "BRSSession",
-    "BaseRefreshableSession",
     "CredentialProvider",
     "Registry",
     "refreshable_session",
@@ -45,7 +43,7 @@ __all__ = [
 import importlib.util
 from abc import ABC, abstractmethod
 from functools import wraps
-from typing import Any, Callable, ClassVar, Generic, TypeVar, cast
+from typing import Any, ClassVar, Generic, TypeVar
 
 from boto3.session import Session
 from botocore.client import BaseClient
@@ -58,7 +56,6 @@ from ..exceptions import BRSCacheError, BRSWarning
 from .cache import ClientCache, ClientCacheKey
 from .typing import (
     Identity,
-    Method,
     RefreshMethod,
     RegistryKey,
     TemporaryCredentials,
@@ -79,7 +76,14 @@ T_Registry = TypeVar("T_Registry", bound="Registry[Any, Any]")
 
 
 class Registry(Generic[RegistryKey, T_Registry]):
-    """Gives any hierarchy a class-level registry."""
+    """Lightweight class-level registry for mapping ``RefreshableSession``
+    to refresh method implementations.
+
+    Attributes
+    ----------
+    registry : ClassVar[dict[str, type[Any]]]
+        The class-level registry mapping keys to classes.
+    """
 
     registry: ClassVar[dict[str, type[Any]]] = {}
 
@@ -93,14 +97,7 @@ class Registry(Generic[RegistryKey, T_Registry]):
                 f"{registry_key!r} already registered. Overwriting."
             )
 
-        if "sentinel" not in registry_key:
-            cls.registry[registry_key] = cls
-
-    @classmethod
-    def items(cls: type[T_Registry]) -> dict[str, type[T_Registry]]:
-        """Typed accessor for introspection / debugging."""
-
-        return cast(dict[str, type[T_Registry]], dict(cls.registry))
+        cls.registry[registry_key] = cls
 
 
 # defining this here instead of utils to avoid circular imports lol
@@ -113,7 +110,8 @@ BRSSessionType = type[T_BRSSession]
 def refreshable_session(
     cls: BRSSessionType,
 ) -> BRSSessionType:
-    """Wraps cls.__init__ so self.__post_init__ runs after init (if present).
+    """Wraps cls.__init__ of subclasses so self.__post_init__ runs after init
+    (if present).
 
     In plain English: this is essentially a post-initialization hook.
 
@@ -123,22 +121,9 @@ def refreshable_session(
         The decorated class.
     """
 
-    init = getattr(cls, "__init__", None)
+    init = cls.__init__
 
-    # synthesize __init__ if undefined in the class
-    if init in (None, object.__init__):
-
-        def __init__(self, *args, **kwargs):
-            super(cls, self).__init__(*args, **kwargs)
-            post = getattr(self, "__post_init__", None)
-            if callable(post) and not getattr(self, "_post_inited", False):
-                post()
-                setattr(self, "_post_inited", True)
-
-        cls.__init__ = __init__  # type: ignore[assignment]
-        return cls
-
-    # avoids double wrapping
+    # avoiding double wrapping
     if getattr(init, "__post_init_wrapped__", False):
         return cls
 
@@ -146,12 +131,17 @@ def refreshable_session(
     def wrapper(self, *args, **kwargs):
         init(self, *args, **kwargs)
         post = getattr(self, "__post_init__", None)
+
+        # calling __post_init__ if it exists
         if callable(post) and not getattr(self, "_post_inited", False):
             post()
-            setattr(self, "_post_inited", True)
+            self._post_inited = True
 
+    # flagging wrapper to avoid double wrapping
     wrapper.__post_init_wrapped__ = True  # type: ignore[attr-defined]
-    cls.__init__ = cast(Callable[..., None], wrapper)
+
+    # assigning the wrapper to __init__
+    cls.__init__ = wrapper
     return cls
 
 
@@ -370,32 +360,6 @@ class BRSSession(Session):
         return self.get_identity()  # type: ignore[arg-type]
 
 
-class BaseRefreshableSession(
-    Registry[Method, "BaseRefreshableSession"],
-    CredentialProvider,
-    BRSSession,
-    registry_key="__sentinel__",
-):
-    """Abstract base class for implementing refreshable AWS sessions.
-
-    Provides a common interface and factory registration mechanism
-    for subclasses that generate temporary credentials using various
-    AWS authentication methods (e.g., STS).
-
-    Subclasses must implement ``_get_credentials()`` and ``get_identity()``.
-    They should also register themselves using the ``method=...`` argument
-    to ``__init_subclass__``.
-
-    Parameters
-    ----------
-    registry : dict[str, type[BaseRefreshableSession]]
-        Class-level registry mapping method names to registered session types.
-    """
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-
 # checking if iot extra is installed
 if (
     importlib.util.find_spec("awscrt") is not None
@@ -403,18 +367,7 @@ if (
 ):
     from awscrt.http import HttpHeaders
 
-    from .typing import IoTAuthenticationMethod
-
-    __all__ += ["AWSCRTResponse", "BaseIoTRefreshableSession"]
-
-    class BaseIoTRefreshableSession(
-        Registry[IoTAuthenticationMethod, "BaseIoTRefreshableSession"],
-        CredentialProvider,
-        BRSSession,
-        registry_key="__iot_sentinel__",
-    ):
-        def __init__(self, **kwargs):
-            super().__init__(**kwargs)
+    __all__ += ["AWSCRTResponse"]
 
     class AWSCRTResponse:
         """Lightweight response collector for awscrt HTTP."""
@@ -426,9 +379,7 @@ if (
             self.headers = None
             self.body = bytearray()
 
-        def on_response(
-            self, http_stream, status_code, headers, **kwargs
-        ):  # type : ignore[no-untyped-def]
+        def on_response(self, http_stream, status_code, headers, **kwargs):
             """Process awscrt.io response."""
 
             self.status_code = status_code

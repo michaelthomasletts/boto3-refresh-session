@@ -11,7 +11,7 @@ __all__ = ["RefreshableSession"]
 from typing import get_args
 
 from .exceptions import BRSValidationError
-from .utils import BaseRefreshableSession, PublicMethod
+from .utils import Method, Registry
 
 
 class RefreshableSession:
@@ -141,8 +141,8 @@ class RefreshableSession:
     """
 
     def __new__(  # type: ignore[reportIncompatibleMethodOverride]
-        cls, method: PublicMethod = "sts", **kwargs
-    ) -> BaseRefreshableSession:
+        cls, method: Method = "sts", **kwargs
+    ):
         if method not in (methods := cls.get_available_methods()):
             raise BRSValidationError(
                 f"{method!r} is an invalid method parameter. "
@@ -155,7 +155,7 @@ class RefreshableSession:
                 value=method,
             ) from None
 
-        return BaseRefreshableSession.registry[method](**kwargs)
+        return Registry.registry[method](**kwargs)
 
     @classmethod
     def get_available_methods(cls) -> list[str]:
@@ -165,7 +165,7 @@ class RefreshableSession:
         -------
         list[str]
             A list of all currently available credential refresh methods,
-            e.g. 'sts', 'custom'.
+            e.g. 'sts', 'custom', etc.
         """
 
-        return list(get_args(PublicMethod))
+        return list(get_args(Method))

@@ -14,8 +14,7 @@ if (
     importlib.util.find_spec("awscrt") is not None
     and importlib.util.find_spec("awsiot") is not None
 ):
-    from . import core
-    from .core import IoTRefreshableSession
+    from . import x509
     from .x509 import IOTX509RefreshableSession
 
-    __all__ += core.__all__
+    __all__ += x509.__all__

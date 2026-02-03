@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import tomlkit
+import tomlkit  # type: ignore
 
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE = "boto3_refresh_session"

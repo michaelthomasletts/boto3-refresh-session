@@ -18,8 +18,10 @@ from ..utils import (
     SUBPROCESS_ALLOWED_PARAMETERS,
     AssumeRoleConfig,
     AssumeRoleParams,
-    BaseRefreshableSession,
+    BRSSession,
+    CredentialProvider,
     Identity,
+    Registry,
     STSClientConfig,
     STSClientParams,
     TemporaryCredentials,
@@ -28,7 +30,9 @@ from ..utils import (
 
 
 @refreshable_session
-class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
+class STSRefreshableSession(
+    Registry, CredentialProvider, BRSSession, registry_key="sts"
+):
     """A :class:`boto3.session.Session` object that automatically refreshes
     temporary AWS credentials using an IAM role that is assumed via STS.
 
@@ -203,14 +207,6 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
                     param="sts_client_kwargs",
                 ) from None
 
-        # ensuring 'refresh_method' is not set manually
-        if "refresh_method" in kwargs:
-            BRSWarning.warn(
-                "'refresh_method' cannot be set manually. "
-                "Reverting to 'sts-assume-role'."
-            )
-            del kwargs["refresh_method"]
-
         # setting 'RoleSessionName' if not provided
         self.assume_role_kwargs.RoleSessionName = self.assume_role_kwargs.get(
             "RoleSessionName", "boto3-refresh-session"
@@ -284,6 +280,14 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
                 "refresh."
             )
 
+        # ensure 'refresh_method' is not set manually
+        if "refresh_method" in kwargs:
+            BRSWarning.warn(
+                "'refresh_method' cannot be set manually. "
+                "Reverting to 'sts-assume-role'."
+            )
+            del kwargs["refresh_method"]
+
         # initializing BRSSession
         super().__init__(refresh_method="sts-assume-role", **kwargs)
 
@@ -297,7 +301,7 @@ class STSRefreshableSession(BaseRefreshableSession, registry_key="sts"):
             case abc.Callable() if self.mfa_token_provider is not None:
                 self.assume_role_kwargs.TokenCode = self.mfa_token_provider(
                     **self.mfa_token_provider_kwargs
-                )  # type: ignore[call-arg]
+                )
             # CLI command (str) provided
             case str() | list() if self.mfa_token_provider is not None:
                 self.assume_role_kwargs.TokenCode = (

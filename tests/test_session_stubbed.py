@@ -15,10 +15,7 @@ from boto3_refresh_session.exceptions import (
     BRSCredentialError,
     BRSValidationError,
 )
-from boto3_refresh_session.utils import (
-    AssumeRoleConfig,
-    BaseRefreshableSession,
-)
+from boto3_refresh_session.utils import AssumeRoleConfig, Registry
 from boto3_refresh_session.utils.typing import Method
 
 if IOT_AVAILABLE := (
@@ -28,8 +25,6 @@ if IOT_AVAILABLE := (
     from boto3_refresh_session.methods.iot.x509 import (
         IOTX509RefreshableSession,
     )
-    from boto3_refresh_session.utils import BaseIoTRefreshableSession
-    from boto3_refresh_session.utils.typing import IoTAuthenticationMethod
 
 skip_iot = pytest.mark.skipif(
     not IOT_AVAILABLE, reason="iot extra not installed"
@@ -52,7 +47,7 @@ def _stubbed_sts_client(monkeypatch):
     stubber = Stubber(sts_client)
     stubber.activate()
 
-    original_client = boto3.session.Session.client
+    original_client = boto3.session.Session.client  # type: ignore
 
     def client_override(self, *args, **kwargs):
         service_name = args[0] if args else kwargs.get("service_name")
@@ -60,7 +55,7 @@ def _stubbed_sts_client(monkeypatch):
             return sts_client
         return original_client(self, *args, **kwargs)
 
-    monkeypatch.setattr(boto3.session.Session, "client", client_override)
+    monkeypatch.setattr(boto3.session.Session, "client", client_override)  # type: ignore
     return stubber
 
 
@@ -135,7 +130,7 @@ def test_sts_get_identity_stubbed(monkeypatch):
     )
     try:
         identity = session.get_identity()
-        assert identity["Account"] == "123456789012"
+        assert identity.get("Account") == "123456789012"
     finally:
         stubber.deactivate()
 
@@ -149,7 +144,7 @@ def test_refreshable_session_positional_assume_role_config_rejected():
     )
 
     with pytest.raises(TypeError):
-        RefreshableSession("sts", config)
+        RefreshableSession("sts", config)  # type: ignore
 
 
 def test_refreshable_session_positional_assume_role_config_without_method():
@@ -161,7 +156,7 @@ def test_refreshable_session_positional_assume_role_config_without_method():
     )
 
     with pytest.raises(BRSValidationError):
-        RefreshableSession(config)
+        RefreshableSession(config)  # type: ignore[arg-type]
 
 
 def test_registry_tracks_method_and_refresh_method(monkeypatch):
@@ -173,21 +168,10 @@ def test_registry_tracks_method_and_refresh_method(monkeypatch):
         expected_methods.add("iot")
 
     assert set(RefreshableSession.get_available_methods()) == expected_methods
-    assert {"custom", "sts"}.issubset(BaseRefreshableSession.registry.keys())
-    assert "__sentinel__" not in BaseRefreshableSession.registry
+    registry_keys = set(Registry.registry.keys())
+    assert registry_keys == expected_methods
     method_args = set(get_args(Method))
-    assert "__sentinel__" in method_args
-
-    if IOT_AVAILABLE:
-        assert "iot" in BaseRefreshableSession.registry
-        assert "iot" in method_args
-        assert "x509" in BaseIoTRefreshableSession.registry
-        assert "__iot_sentinel__" not in BaseIoTRefreshableSession.registry
-        assert "__iot_sentinel__" in get_args(IoTAuthenticationMethod)
-    else:
-        assert "iot" not in BaseRefreshableSession.registry
-        assert "iot" not in method_args
-        assert "__iot_sentinel__" not in method_args
+    assert method_args == expected_methods
 
     sts_session = RefreshableSession(
         method="sts",
@@ -198,7 +182,7 @@ def test_registry_tracks_method_and_refresh_method(monkeypatch):
         region_name="us-east-1",
         defer_refresh=True,
     )
-    assert sts_session.refresh_method == "sts-assume-role"
+    assert sts_session.refresh_method == "sts-assume-role"  # type: ignore
 
     def custom_credentials_method():
         return {
@@ -216,12 +200,11 @@ def test_registry_tracks_method_and_refresh_method(monkeypatch):
         region_name="us-east-1",
         defer_refresh=True,
     )
-    assert custom_session.refresh_method == "custom"
+    assert custom_session.refresh_method == "custom"  # type: ignore
 
     if IOT_AVAILABLE:
         iot_session = RefreshableSession(
             method="iot",
-            authentication_method="x509",
             endpoint="abc.credentials.iot.us-east-1.amazonaws.com",
             role_alias="TestRoleAlias",
             certificate=b"dummy-cert",
@@ -229,7 +212,7 @@ def test_registry_tracks_method_and_refresh_method(monkeypatch):
             region_name="us-east-1",
             defer_refresh=True,
         )
-        assert iot_session.refresh_method == "iot-x509"
+        assert iot_session.refresh_method == "iot-x509"  # type: ignore
 
 
 def test_session_get_credentials_uses_refreshable(monkeypatch):
@@ -266,7 +249,7 @@ def test_session_get_credentials_uses_refreshable(monkeypatch):
     )
 
     try:
-        frozen = session.get_credentials().get_frozen_credentials()
+        frozen = session.get_credentials().get_frozen_credentials()  # type: ignore[attr-defined]
         assert frozen.access_key == "AKIAEXAMPLE123456"
         assert frozen.secret_key == "secret"
         assert frozen.token == "token"
@@ -342,12 +325,13 @@ def test_iot_refreshable_credentials_stubbed(monkeypatch):
         }
 
     monkeypatch.setattr(
-        IOTX509RefreshableSession, "_get_credentials", fake_get_credentials
+        IOTX509RefreshableSession,  # type: ignore[reportPossiblyUnboundVariable]
+        "_get_credentials",
+        fake_get_credentials,
     )
 
     session = RefreshableSession(
         method="iot",
-        authentication_method="x509",
         endpoint="abc.credentials.iot.us-east-1.amazonaws.com",
         role_alias="TestRoleAlias",
         certificate=b"dummy-cert",
@@ -591,7 +575,6 @@ def test_iot_invalid_endpoint_raises(monkeypatch):
     with pytest.raises(BRSValidationError):
         RefreshableSession(
             method="iot",
-            authentication_method="x509",
             endpoint="bad-endpoint",
             role_alias="TestRoleAlias",
             certificate=b"dummy-cert",
@@ -609,7 +592,6 @@ def test_iot_missing_private_key_raises(monkeypatch):
     with pytest.raises(BRSConfigurationError):
         RefreshableSession(
             method="iot",
-            authentication_method="x509",
             endpoint="abc.credentials.iot.us-east-1.amazonaws.com",
             role_alias="TestRoleAlias",
             certificate=b"dummy-cert",
@@ -627,7 +609,6 @@ def test_iot_invalid_certificate_path_raises(monkeypatch):
     with pytest.raises(BRSValidationError):
         RefreshableSession(
             method="iot",
-            authentication_method="x509",
             endpoint="abc.credentials.iot.us-east-1.amazonaws.com",
             role_alias="TestRoleAlias",
             certificate="nope-cert.pem",

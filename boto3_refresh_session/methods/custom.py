@@ -11,15 +11,19 @@ from typing import Any, Callable
 
 from ..exceptions import BRSCredentialError, BRSWarning
 from ..utils import (
-    BaseRefreshableSession,
+    BRSSession,
+    CredentialProvider,
     Identity,
+    Registry,
     TemporaryCredentials,
     refreshable_session,
 )
 
 
 @refreshable_session
-class CustomRefreshableSession(BaseRefreshableSession, registry_key="custom"):
+class CustomRefreshableSession(
+    Registry, CredentialProvider, BRSSession, registry_key="custom"
+):
     """A :class:`boto3.session.Session` object that automatically refreshes
     temporary credentials returned by a custom credential getter provided
     by the user. Useful for users with highly sophisticated or idiosyncratic

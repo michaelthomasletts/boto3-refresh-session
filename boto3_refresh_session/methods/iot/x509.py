@@ -41,19 +41,24 @@ from ...exceptions import (
 from ...utils import (
     PKCS11,
     AWSCRTResponse,
+    BRSSession,
+    CredentialProvider,
     Identity,
+    Registry,
     TemporaryCredentials,
     Transport,
     refreshable_session,
 )
-from .core import BaseIoTRefreshableSession
 
 _TEMP_PATHS: list[str] = []
 
 
 @refreshable_session
 class IOTX509RefreshableSession(
-    BaseIoTRefreshableSession, registry_key="x509"
+    Registry,
+    BRSSession,
+    CredentialProvider,
+    registry_key="iot",
 ):
     """A :class:`boto3.session.Session` object that automatically refreshes
     temporary credentials returned by the IoT Core credential provider.
@@ -180,8 +185,16 @@ class IOTX509RefreshableSession(
         awscrt_log_level: LogLevel | None = None,
         **kwargs,
     ):
+        # ensuring 'refresh_method' is not set manually
+        if "refresh_method" in kwargs:
+            BRSWarning.warn(
+                "'refresh_method' cannot be set manually. "
+                "Reverting to 'sts-assume-role'."
+            )
+            del kwargs["refresh_method"]
+
         # initializing BRSSession
-        super().__init__(refresh_method="iot-x509", **kwargs)
+        super().__init__(refresh_method="iot-x509", **kwargs)  # type: ignore[arg-type]
 
         # logging
         if awscrt_log_level:
@@ -331,10 +344,10 @@ class IOTX509RefreshableSession(
 
         tls_ctx_opt = TlsContextOptions.create_client_with_mtls_pkcs11(
             pkcs11_lib=Pkcs11Lib(file=self.pkcs11["pkcs11_lib"]),
-            user_pin=self.pkcs11["user_pin"],
-            slot_id=self.pkcs11["slot_id"],
-            token_label=self.pkcs11["token_label"],
-            private_key_label=self.pkcs11["private_key_label"],
+            user_pin=self.pkcs11.get("user_pin"),
+            slot_id=self.pkcs11.get("slot_id"),  # type: ignore[arg-type]
+            token_label=self.pkcs11.get("token_label"),  # type: ignore[arg-type]
+            private_key_label=self.pkcs11.get("private_key_label"),  # type: ignore[arg-type]
             cert_file_contents=self.certificate,
         )
 
@@ -599,9 +612,9 @@ class IOTX509RefreshableSession(
                     endpoint=endpoint,
                     client_bootstrap=bootstrap,
                     pkcs11_lib=Pkcs11Lib(file=pkcs11["pkcs11_lib"]),
-                    user_pin=pkcs11.get("user_pin"),
-                    slot_id=pkcs11.get("slot_id"),
-                    token_label=pkcs11.get("token_label"),
+                    user_pin=pkcs11.get("user_pin"),  # type: ignore[arg-type]
+                    slot_id=pkcs11.get("slot_id"),  # type: ignore[arg-type]
+                    token_label=pkcs11.get("token_label"),  # type: ignore[arg-type]
                     private_key_object=pkcs11.get("private_key_label"),
                     cert_filepath=cert_path,
                     ca_filepath=ca_path,

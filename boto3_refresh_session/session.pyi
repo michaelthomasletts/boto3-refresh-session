@@ -6,16 +6,18 @@
 
 from __future__ import annotations
 
+__all__ = ["RefreshableSession"]
+
 from typing import Any, Literal, overload
 
 from botocore.client import BaseClient
 
 from .methods.custom import CustomRefreshableSession
-from .methods.iot.core import IoTRefreshableSession
+from .methods.iot import IOTX509RefreshableSession
 from .methods.sts import STSRefreshableSession
-from .utils import BaseRefreshableSession, PublicMethod
+from .utils import Method
 from .utils.cache import ClientCache
-from .utils.typing import Identity, TemporaryCredentials
+from .utils.typing import Identity, TemporaryCredentials, Transport, PKCS11
 
 class RefreshableSession:
     """Factory class for constructing refreshable boto3 sessions using various
@@ -217,6 +219,82 @@ class RefreshableSession:
 
         ...
 
+    def mqtt(
+        self,
+        *,
+        endpoint: str,
+        client_id: str,
+        transport: Transport = "x509",
+        certificate: str | bytes | None = None,
+        private_key: str | bytes | None = None,
+        ca: str | bytes | None = None,
+        pkcs11: PKCS11 | None = None,
+        region: str | None = None,
+        keep_alive_secs: int = 60,
+        clean_start: bool = True,
+        port: int | None = None,
+        use_alpn: bool = False,
+    ) -> Any:
+        """Establishes an MQTT connection using the specified parameters.
+
+        .. versionadded:: 5.1.0
+
+        Parameters
+        ----------
+        endpoint: str
+            The MQTT endpoint to connect to.
+        client_id: str
+            The client ID to use for the MQTT connection.
+        transport: Transport
+            The transport protocol to use (e.g., "x509" or "ws").
+        certificate: str | bytes | None, optional
+            The client certificate to use for the connection. Defaults to the
+            session certificate.
+        private_key: str | bytes | None, optional
+            The private key to use for the connection. Defaults to the
+            session private key.
+        ca: str | bytes | None, optional
+            The CA certificate to use for the connection. Defaults to the
+            session CA certificate.
+        pkcs11: PKCS11 | None, optional
+            PKCS#11 configuration for hardware-backed keys. Defaults to the
+            session PKCS#11 configuration.
+        region: str | None, optional
+            The AWS region to use for the connection. Defaults to the
+            session region.
+        keep_alive_secs: int, optional
+            The keep-alive interval for the MQTT connection. Default is 60
+            seconds.
+        clean_start: bool, optional
+            Whether to start a clean session. Default is True.
+        port: int | None, optional
+            The port to use for the MQTT connection. Default is 8883 if not
+            using ALPN, otherwise 443.
+        use_alpn: bool, optional
+            Whether to use ALPN for the connection. Default is False.
+
+        Returns
+        -------
+        awscrt.mqtt.Connection
+            The established MQTT connection.
+        """
+
+        ...
+
+    @classmethod
+    def get_available_methods(cls) -> list[str]:
+        """Lists all currently available credential refresh methods.
+
+        Returns
+        -------
+        list[str]
+            A list of all currently available credential refresh methods,
+            e.g. 'sts', 'custom'.
+        """
+
+        ...
+
+    def _get_credentials(self) -> TemporaryCredentials: ...
     @overload
     def __new__(
         cls, method: Literal["sts"] = "sts", **kwargs: Any
@@ -228,8 +306,8 @@ class RefreshableSession:
     @overload
     def __new__(
         cls, method: Literal["iot"], **kwargs: Any
-    ) -> IoTRefreshableSession: ...
+    ) -> IOTX509RefreshableSession: ...
     @overload
     def __new__(
-        cls, method: PublicMethod = "sts", **kwargs: Any
-    ) -> BaseRefreshableSession: ...
+        cls, method: Method = "sts", **kwargs: Any
+    ) -> STSRefreshableSession: ...

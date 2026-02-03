@@ -11,10 +11,23 @@ to AWS and boto specifications. The purpose of these configurations is to
 provide a structured way to manage parameters when working with AWS STS.
 
 For additional information on AWS specifications, refer to the
-`API Reference for AssumeRole <https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html>`_.
+[API Reference for AssumeRole](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html).
 """
 
 from __future__ import annotations
+
+__all__ = ["AssumeRoleConfig", "STSClientConfig"]
+
+from abc import ABC, abstractmethod
+from collections.abc import (
+    Iterable,
+    Iterator,
+    ItemsView,
+    KeysView,
+    MutableMapping,
+    ValuesView,
+)
+from typing import Any
 
 from botocore.config import Config
 
@@ -24,7 +37,40 @@ from boto3_refresh_session.utils.typing import (
     Tag,
 )
 
-class AssumeRoleConfig:
+class BaseConfig(ABC, MutableMapping[str, Any]):
+    """Base configuration class."""
+
+    def __init__(self, **kwargs: Any) -> None: ...
+    def __contains__(self, key: object) -> bool: ...
+    def __delitem__(self, key: str) -> None: ...
+    def __getitem__(self, key: str) -> Any: ...
+    def __setitem__(self, key: str, value: Any) -> None: ...
+    def __iter__(self) -> Iterator[str]: ...
+    def __len__(self) -> int: ...
+    def __reversed__(self) -> Iterator[str]: ...
+    def __or__(self, other: dict[str, Any]) -> dict[str, Any]: ...
+    def __ror__(self, other: dict[str, Any]) -> dict[str, Any]: ...
+    def __ior__(self, other: dict[str, Any]) -> BaseConfig: ...
+    def __getattr__(self, name: str) -> Any: ...
+    def __setattr__(self, name: str, value: Any) -> None: ...
+    def clear(self) -> None: ...
+    def copy(self) -> dict[str, Any]: ...
+    @classmethod
+    def fromkeys(
+        cls, iterable: Iterable[str], value: Any = ...
+    ) -> dict[str, Any]: ...
+    def get(self, key: str, default: Any = ...) -> Any: ...
+    def items(self) -> ItemsView[str, Any]: ...
+    def keys(self) -> KeysView[str]: ...
+    def pop(self, key: str, default: Any = ...) -> Any: ...
+    def popitem(self) -> tuple[str, Any]: ...
+    def update(self, *args: Any, **kwargs: Any) -> None: ...
+    def setdefault(self, key: str, default: Any = None) -> Any: ...
+    def values(self) -> ValuesView[Any]: ...
+    @abstractmethod
+    def _validate(self, key: str, value: Any) -> None: ...
+
+class AssumeRoleConfig(BaseConfig):
     """Configuration for AWS STS AssumeRole API.
 
     Attributes
@@ -60,16 +106,16 @@ class AssumeRoleConfig:
 
     Notes
     -----
-    Values can be accessed via dot-notation (e.g., ``config.RoleArn``)
-    or dictionary-style access (e.g., ``config['RoleArn']``).
+    Values can be accessed via dot-notation (e.g., `config.RoleArn`)
+    or dictionary-style access (e.g., `config['RoleArn']`).
 
-    Accessing a valid but unset attribute (e.g., ``SerialNumber``) via
-    dot-notation returns ``None`` instead of raising an error. While this
+    Accessing a valid but unset attribute (e.g., `SerialNumber`) via
+    dot-notation returns `None` instead of raising an error. While this
     behavior is convenient, it may surprise users accustomed to seeing
-    ``AttributeError`` exceptions in similar contexts.
+    `AttributeError` exceptions in similar contexts.
 
     For additional information on AWS specifications, refer to the
-    `API Reference for AssumeRole <https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html>`_.
+    [API Reference for AssumeRole](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html).
     """
 
     def __init__(
@@ -87,9 +133,10 @@ class AssumeRoleConfig:
         TransitiveTagKeys: list[str] | None = None,
         SourceIdentity: str | None = None,
         ProvidedContexts: list[ProvidedContext] | None = None,
-    ): ...
+    ) -> None: ...
+    def _validate(self, key: str, value: Any) -> None: ...
 
-class STSClientConfig:
+class STSClientConfig(BaseConfig):
     """Configuration for boto3 STS Client.
 
     Attributes
@@ -119,15 +166,15 @@ class STSClientConfig:
 
     Notes
     -----
-    Values can be accessed via dot-notation (e.g., ``config.RoleArn``)
-    or dictionary-style access (e.g., ``config['RoleArn']``).
+    Values can be accessed via dot-notation (e.g., `config.RoleArn`)
+    or dictionary-style access (e.g., `config['RoleArn']`).
 
-    Accessing a valid but unset attribute (e.g., ``SerialNumber``) via
-    dot-notation returns ``None`` instead of raising an error. While this
+    Accessing a valid but unset attribute (e.g., `SerialNumber`) via
+    dot-notation returns `None` instead of raising an error. While this
     behavior is convenient, it may surprise users accustomed to seeing
-    ``AttributeError`` exceptions in similar contexts.
+    `AttributeError` exceptions in similar contexts.
 
-    ``service_name`` is enforced to be 'sts'. If a different value is
+    `service_name` is enforced to be 'sts'. If a different value is
     provided, it will be overridden to 'sts' with a warning.
     """
 
@@ -145,4 +192,6 @@ class STSClientConfig:
         aws_session_token: str | None = None,
         config: Config | None = None,
         aws_account_id: str | None = None,
-    ): ...
+    ) -> None: ...
+    def __setitem__(self, key: str, value: Any) -> None: ...
+    def _validate(self, key: str, value: Any) -> None: ...

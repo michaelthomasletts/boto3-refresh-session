@@ -30,11 +30,11 @@ def test_client_cache_evicts_lru() -> None:
     key_b = ClientCacheKey("sts")
     key_c = ClientCacheKey("ec2")
 
-    cache[key_a] = obj_a
-    cache[key_b] = obj_b
+    cache[key_a] = obj_a  # type: ignore[index]
+    cache[key_b] = obj_b  # type: ignore[index]
 
     assert cache.get(key_a) is obj_a
-    cache[key_c] = obj_c
+    cache[key_c] = obj_c  # type: ignore[index]
 
     assert key_b not in cache
     assert key_a in cache
@@ -48,7 +48,7 @@ def test_client_cache_call_inserts() -> None:
     args = ("s3",)
     kwargs = {"region_name": "us-west-2"}
 
-    cache(obj, *args, **kwargs)
+    cache(obj, *args, **kwargs)  # type: ignore[call-arg]
     key = ClientCacheKey(*args, **kwargs)
 
     assert key in cache
@@ -58,7 +58,7 @@ def test_client_cache_call_inserts() -> None:
 def test_client_cache_str_includes_entries() -> None:
     """Includes cached client entries in the string representation."""
     cache = ClientCache(max_size=10)
-    cache(object(), "s3")
+    cache(object(), "s3")  # type: ignore[call-arg]
 
     output = str(cache)
     assert output.startswith("ClientCache:")
