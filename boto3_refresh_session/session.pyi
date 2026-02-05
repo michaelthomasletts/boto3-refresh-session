@@ -4,7 +4,7 @@
 
 """Public factory for constructing refreshable boto3 sessions."""
 
-from typing import Any, Callable, Dict, Literal, List, Mapping, overload
+from typing import Any, Callable, Dict, Literal, List, overload
 
 from awscrt.io import LogLevel
 
@@ -23,8 +23,8 @@ class RefreshableSession:
         cls,
         method: Literal["sts"] = "sts",
         *,
-        assume_role_kwargs: AssumeRoleConfig | Mapping[str, Any],
-        sts_client_kwargs: STSClientConfig | Mapping[str, Any] | None = None,
+        assume_role_kwargs: AssumeRoleConfig | Dict[str, Any],
+        sts_client_kwargs: STSClientConfig | Dict[str, Any] | None = None,
         mfa_token_provider: Callable[[], str] | None = None,
         defer_refresh: bool = True,
         advisory_timeout: int = 900,
