@@ -114,7 +114,7 @@ extlinks = {
 }
 
 
-def linkcode_resolve(domain, info):
+def linkcode_resolve(domain, info) -> None:
     """Resolves 'source' link in documentation."""
 
     if domain != "py":

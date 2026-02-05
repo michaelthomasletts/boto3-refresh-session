@@ -15,9 +15,10 @@ from .exceptions import *
 from .methods.custom import *
 from .methods.sts import *
 from .session import *
-from .utils import cache, config
+from .utils import cache, config, typing
 from .utils.cache import *
 from .utils.config import *
+from .utils.typing import *
 
 # checking if iot extra is installed or not
 if (
@@ -30,6 +31,7 @@ __all__ += cache.__all__
 __all__ += config.__all__
 __all__ += session.__all__
 __all__ += exceptions.__all__
+__all__ += typing.__all__
 __version__ = "7.3.0"
 __title__ = "boto3-refresh-session"
 __author__ = "Mike Letts"

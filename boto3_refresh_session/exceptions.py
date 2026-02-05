@@ -18,7 +18,7 @@ __all__ = [
 ]
 
 import warnings
-from typing import Any
+from typing import Any, Dict
 
 
 class BRSError(Exception):
@@ -32,7 +32,7 @@ class BRSError(Exception):
         A short machine-friendly code for the error.
     status_code : int, optional
         An HTTP status code, if applicable.
-    details : dict[str, Any], optional
+    details : Dict[str, Any], optional
         Extra structured metadata for debugging or logging.
     param : str, optional
         The parameter name related to the error.
@@ -46,10 +46,10 @@ class BRSError(Exception):
         *,
         code: str | int | None = None,
         status_code: int | None = None,
-        details: dict[str, Any] | None = None,
+        details: Dict[str, Any] | None = None,
         param: str | None = None,
         value: Any | None = None,
-    ):
+    ) -> None:
         self.message = "" if message is None else message
         self.code = code
         self.status_code = status_code
@@ -133,7 +133,7 @@ class BRSWarning(UserWarning):
         The message to raise.
     """
 
-    def __init__(self, message: str | None = None):
+    def __init__(self, message: str | None = None) -> None:
         self.message = "" if message is None else message
         super().__init__(self.message)
 
@@ -144,7 +144,7 @@ class BRSWarning(UserWarning):
         return f"{self.__class__.__name__}({self.message!r})"
 
     @classmethod
-    def warn(cls, message: str, *, stacklevel: int = 2):
+    def warn(cls, message: str, *, stacklevel: int = 2) -> None:
         """Emits a BRSWarning with a consistent stacklevel."""
 
         warnings.warn(cls(message), stacklevel=stacklevel)
