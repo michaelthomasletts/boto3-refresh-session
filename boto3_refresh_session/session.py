@@ -6,16 +6,29 @@
 
 from __future__ import annotations
 
-from boto3_refresh_session.methods.custom import CustomRefreshableSession
-from boto3_refresh_session.methods.iot.x509 import IOTX509RefreshableSession
-from boto3_refresh_session.methods.sts import STSRefreshableSession
-
 __all__ = ["RefreshableSession"]
 
-from typing import List, get_args
+from typing import List, TypeAlias, get_args
 
 from .exceptions import BRSValidationError
+from .methods.custom import CustomRefreshableSession
+from .methods.sts import STSRefreshableSession
 from .utils import Method, Registry
+from .utils.typing import _IOT_EXTRA_INSTALLED
+
+# defining this here instead of utils.typing to avoid circular imports
+if not _IOT_EXTRA_INSTALLED:
+    RefreshableSessionType: TypeAlias = (  # type: ignore
+        STSRefreshableSession | CustomRefreshableSession  # type: ignore
+    )
+else:
+    from .methods.iot.x509 import IOTX509RefreshableSession
+
+    RefreshableSessionType: TypeAlias = (  # type: ignore
+        STSRefreshableSession  # type: ignore
+        | CustomRefreshableSession  # type: ignore
+        | IOTX509RefreshableSession
+    )
 
 
 class RefreshableSession:
@@ -150,11 +163,7 @@ class RefreshableSession:
     # actual implementation
     def __new__(  # type: ignore[reportIncompatibleMethodOverride]
         cls, method: Method = "sts", **kwargs
-    ) -> (
-        STSRefreshableSession
-        | CustomRefreshableSession  # type: ignore
-        | IOTX509RefreshableSession
-    ):
+    ) -> RefreshableSessionType:
         if method not in (methods := cls.get_available_methods()):
             raise BRSValidationError(
                 f"{method!r} is an invalid method parameter. "
