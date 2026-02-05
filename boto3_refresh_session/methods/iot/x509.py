@@ -11,7 +11,7 @@ import re
 from atexit import register
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import cast, get_args
+from typing import Any, Dict, cast, get_args
 from urllib.parse import ParseResult, urlparse
 
 from awscrt import auth, io
@@ -93,17 +93,17 @@ class IOTX509RefreshableSession(
         represents the file path to the private key, while ``bytes``
         represents the actual private key data. Optional only if ``pkcs11``
         is provided. Default is None.
-    pkcs11 : PKCS11, optional
+    pkcs11 : PKCS11 | Dict[str, Any], optional
         The PKCS#11 library to use when requesting temporary credentials. If
         provided, ``private_key`` must be None.
     ca : str | bytes | None, optional
         The CA certificate to use when verifying the IoT Core endpoint. ``str``
         represents the file path to the CA certificate, while ``bytes``
         represents the actual CA certificate data. Default is None.
-    verify_peer : bool, optional
+    verify_peer : bool = True, optional
         Whether to verify the CA certificate when establishing the TLS
         connection. Default is True.
-    timeout : float | int | None, optional
+    timeout : float | int | None = 10.0, optional
         The timeout for the TLS connection in seconds. Default is 10.0.
     duration_seconds : int | None, optional
         The duration for which the temporary credentials are valid, in
@@ -112,35 +112,35 @@ class IOTX509RefreshableSession(
     awscrt_log_level : awscrt.LogLevel | None, optional
         The logging level for the AWS CRT library, e.g.
         ``awscrt.LogLevel.INFO``. Default is None.
-    defer_refresh : bool, optional
+    defer_refresh : bool = True, optional
         If ``True`` then temporary credentials are not automatically refreshed
         until they are explicitly needed. If ``False`` then temporary
         credentials refresh immediately upon expiration. It is highly
         recommended that you use ``True``. Default is ``True``.
-    advisory_timeout : int, optional
+    advisory_timeout : int = 900, optional
         USE THIS ARGUMENT WITH CAUTION!!!
 
         Botocore will attempt to refresh credentials early according to
         this value (in seconds), but will continue using the existing
         credentials if refresh fails. Default is 15 minutes (900 seconds).
-    mandatory_timeout : int, optional
+    mandatory_timeout : int = 600, optional
         USE THIS ARGUMENT WITH CAUTION!!!
 
         Botocore requires a successful refresh before continuing. If
         refresh fails in this window (in seconds), API calls may fail.
         Default is 10 minutes (600 seconds).
-    cache_clients : bool, optional
+    cache_clients : bool = True, optional
         If ``True`` then clients created by this session will be cached and
         reused for subsequent calls to :meth:`client()` with the same
         parameter signatures. Due to the memory overhead of clients, the
         default is ``True`` in order to protect system resources.
-    client_cache_max_size : int, optional
+    client_cache_max_size : int = 10, optional
         The maximum number of clients to store in the client cache. Only
         applicable if ``cache_clients`` is ``True``. Defaults to 10.
 
     Other Parameters
     ----------------
-    kwargs : dict, optional
+    kwargs : Any, optional
         Optional keyword arguments for the :class:`boto3.session.Session`
         object.
 
@@ -177,14 +177,14 @@ class IOTX509RefreshableSession(
         certificate: str | bytes,
         thing_name: str | None = None,
         private_key: str | bytes | None = None,
-        pkcs11: PKCS11 | None = None,
+        pkcs11: PKCS11 | Dict[str, Any] | None = None,
         ca: str | bytes | None = None,
         verify_peer: bool = True,
         timeout: float | int | None = None,
         duration_seconds: int | None = None,
         awscrt_log_level: LogLevel | None = None,
-        **kwargs,
-    ):
+        **kwargs: Any,
+    ) -> None:
         # ensuring 'refresh_method' is not set manually
         if "refresh_method" in kwargs:
             BRSWarning.warn(
@@ -415,7 +415,9 @@ class IOTX509RefreshableSession(
         ) from None
 
     @staticmethod
-    def _validate_pkcs11(pkcs11: PKCS11) -> PKCS11:
+    def _validate_pkcs11(
+        pkcs11: PKCS11 | Dict[str, Any],
+    ) -> PKCS11:
         if "pkcs11_lib" not in pkcs11:
             raise BRSConfigurationError(
                 "PKCS#11 library path must be provided as 'pkcs11_lib'"
@@ -433,7 +435,7 @@ class IOTX509RefreshableSession(
         pkcs11.setdefault("slot_id", None)
         pkcs11.setdefault("token_label", None)
         pkcs11.setdefault("private_key_label", None)
-        return pkcs11
+        return cast(PKCS11, pkcs11)
 
     @staticmethod
     def _read_maybe_path_to_bytes(
@@ -465,7 +467,7 @@ class IOTX509RefreshableSession(
 
     @staticmethod
     @register
-    def _cleanup_tempfiles():
+    def _cleanup_tempfiles() -> None:
         for p in _TEMP_PATHS:
             try:
                 Path(p).unlink(missing_ok=True)
@@ -481,7 +483,7 @@ class IOTX509RefreshableSession(
         certificate: str | bytes | None = None,
         private_key: str | bytes | None = None,
         ca: str | bytes | None = None,
-        pkcs11: PKCS11 | None = None,
+        pkcs11: PKCS11 | Dict[str, Any] | None = None,
         region: str | None = None,
         keep_alive_secs: int = 60,
         clean_start: bool = True,
@@ -509,21 +511,21 @@ class IOTX509RefreshableSession(
         ca: str | bytes | None, optional
             The CA certificate to use for the connection. Defaults to the
             session CA certificate.
-        pkcs11: PKCS11 | None, optional
+        pkcs11: PKCS11 | Dict[str, Any] | None, optional
             PKCS#11 configuration for hardware-backed keys. Defaults to the
             session PKCS#11 configuration.
         region: str | None, optional
             The AWS region to use for the connection. Defaults to the
             session region.
-        keep_alive_secs: int, optional
+        keep_alive_secs: int = 60, optional
             The keep-alive interval for the MQTT connection. Default is 60
             seconds.
-        clean_start: bool, optional
+        clean_start: bool = True, optional
             Whether to start a clean session. Default is True.
         port: int | None, optional
             The port to use for the MQTT connection. Default is 8883 if not
             using ALPN, otherwise 443.
-        use_alpn: bool, optional
+        use_alpn: bool = False, optional
             Whether to use ALPN for the connection. Default is False.
 
         Returns

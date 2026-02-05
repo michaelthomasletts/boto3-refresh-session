@@ -9,7 +9,7 @@ __all__ = ["ClientCache", "ClientCacheKey"]
 from collections import OrderedDict
 from collections.abc import Iterator
 from threading import RLock
-from typing import Any
+from typing import Any, Tuple
 
 from botocore.client import BaseClient
 from botocore.config import Config
@@ -28,6 +28,11 @@ def _freeze_value(value: Any) -> Any:
     ----------
     value : Any
         The value to freeze.
+
+    Returns
+    -------
+    Any
+        A hashable representation of the value.
     """
 
     match value:
@@ -57,6 +62,11 @@ def _config_cache_key(config: Config | None) -> Any:
     ----------
     config : Config | None
         The Config object to generate a cache key for.
+
+    Returns
+    -------
+    Any
+        A hashable representation of the Config object for use in cache keys.
     """
 
     if config is None:
@@ -78,6 +88,11 @@ def _format_label_value(value: Any) -> str:
     ----------
     value : Any
         The value to format.
+
+    Returns
+    -------
+    str
+        The formatted string representation of the value.
     """
 
     if isinstance(value, Config):
@@ -101,7 +116,7 @@ class ClientCacheKey:
 
     In order to interact with the cache, instances of this class should be
     created using the same arguments that would be used to initialize the
-    client.
+    boto3 client.
 
     Parameters
     ----------
@@ -135,6 +150,16 @@ class ClientCacheKey:
         return isinstance(other, ClientCacheKey) and self.key == other.key
 
     def _create(self, *args, **kwargs) -> None:
+        """Creates the cache key and label based on the provided arguments.
+
+        Parameters
+        ----------
+        *args : Any
+            Positional arguments used to create the cache key.
+        **kwargs : Any
+            Keyword arguments used to create the cache key.
+        """
+
         # creating a readable label for debugging purposes
         self.label: str = ", ".join(
             [
@@ -206,7 +231,7 @@ class ClientCache:
     methods may not be available.
     """
 
-    def __init__(self, max_size: int | None = None):
+    def __init__(self, max_size: int | None = None) -> None:
         self.max_size = abs(max_size if max_size is not None else 10)
         self._cache: OrderedDict[ClientCacheKey, BaseClient] = OrderedDict()
         self._lock = RLock()
@@ -300,19 +325,19 @@ class ClientCache:
                 ) from None
             del self._cache[key]
 
-    def keys(self) -> tuple[ClientCacheKey, ...]:
+    def keys(self) -> Tuple[ClientCacheKey, ...]:
         """Returns the keys in the cache."""
 
         with self._lock:
             return tuple(self._cache.keys())
 
-    def values(self) -> tuple[BaseClient, ...]:
+    def values(self) -> Tuple[BaseClient, ...]:
         """Returns the objects from the cache."""
 
         with self._lock:
             return tuple(self._cache.values())
 
-    def items(self) -> tuple[tuple[ClientCacheKey, BaseClient], ...]:
+    def items(self) -> Tuple[Tuple[ClientCacheKey, BaseClient], ...]:
         """Returns the items in the cache as (hash, BaseClient) tuples."""
 
         with self._lock:
@@ -331,6 +356,11 @@ class ClientCache:
         default : BaseClient | None, optional
             The default value to return if the key is not found. Defaults to
             None.
+
+        Returns
+        -------
+        BaseClient | None
+            The retrieved client object, or the default value if not found.
         """
 
         with self._lock:

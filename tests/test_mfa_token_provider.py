@@ -25,7 +25,7 @@ def _mock_run_with_stdout(monkeypatch, stdout, stderr=""):
             args[0], 0, stdout=stdout, stderr=stderr
         )
 
-    monkeypatch.setattr(sts_module.subprocess, "run", fake_run)
+    monkeypatch.setattr(sts_module.subprocess, "run", fake_run)  # type: ignore
 
 
 @pytest.mark.parametrize(
@@ -45,7 +45,7 @@ def test_mfa_token_from_command_rejects_invalid_stdout(monkeypatch, stdout):
     _mock_run_with_stdout(monkeypatch, stdout)
 
     with pytest.raises(BRSConfigurationError):
-        session._mfa_token_from_command("echo 123456")
+        session._mfa_token_from_command("echo 123456")  # type: ignore
 
 
 @pytest.mark.parametrize(
@@ -64,7 +64,7 @@ def test_mfa_token_from_command_extracts_last_code(
     session = _session()
     _mock_run_with_stdout(monkeypatch, stdout)
 
-    token = session._mfa_token_from_command(["echo", "123456"])
+    token = session._mfa_token_from_command(["echo", "123456"])  # type: ignore
     assert token == expected
 
 
@@ -75,10 +75,10 @@ def test_mfa_token_from_command_permission_denied(monkeypatch):
     def fake_run(*args, **kwargs):
         raise PermissionError("denied")
 
-    monkeypatch.setattr(sts_module.subprocess, "run", fake_run)
+    monkeypatch.setattr(sts_module.subprocess, "run", fake_run)  # type: ignore
 
     with pytest.raises(BRSConfigurationError) as exc:
-        session._mfa_token_from_command("echo 123456")
+        session._mfa_token_from_command("echo 123456")  # type: ignore
     assert "Permission denied" in str(exc.value)
 
 
@@ -89,10 +89,10 @@ def test_mfa_token_from_command_os_error(monkeypatch):
     def fake_run(*args, **kwargs):
         raise OSError(5, "boom")
 
-    monkeypatch.setattr(sts_module.subprocess, "run", fake_run)
+    monkeypatch.setattr(sts_module.subprocess, "run", fake_run)  # type: ignore
 
     with pytest.raises(BRSConfigurationError) as exc:
-        session._mfa_token_from_command("echo 123456")
+        session._mfa_token_from_command("echo 123456")  # type: ignore
     assert "Error occurred" in str(exc.value)
 
 
@@ -105,10 +105,10 @@ def test_mfa_token_from_command_timeout(monkeypatch):
             cmd=args[0], timeout=1, output="out", stderr="err"
         )
 
-    monkeypatch.setattr(sts_module.subprocess, "run", fake_run)
+    monkeypatch.setattr(sts_module.subprocess, "run", fake_run)  # type: ignore
 
     with pytest.raises(BRSConfigurationError) as exc:
-        session._mfa_token_from_command("echo 123456")
+        session._mfa_token_from_command("echo 123456")  # type: ignore
     assert "timed out" in str(exc.value)
 
 
@@ -121,10 +121,10 @@ def test_mfa_token_from_command_called_process_error(monkeypatch):
             2, args[0], output="out", stderr="err"
         )
 
-    monkeypatch.setattr(sts_module.subprocess, "run", fake_run)
+    monkeypatch.setattr(sts_module.subprocess, "run", fake_run)  # type: ignore
 
     with pytest.raises(BRSConfigurationError) as exc:
-        session._mfa_token_from_command("echo 123456")
+        session._mfa_token_from_command("echo 123456")  # type: ignore
     assert "failed" in str(exc.value)
 
 
@@ -134,7 +134,7 @@ def test_mfa_token_from_command_unbalanced_quotes(monkeypatch):
     _mock_run_with_stdout(monkeypatch, "123456")
 
     with pytest.raises(BRSConfigurationError):
-        session._mfa_token_from_command("echo '123456")
+        session._mfa_token_from_command("echo '123456")  # type: ignore
 
 
 def test_mfa_token_from_command_rejects_stdout_kwarg():
@@ -142,7 +142,7 @@ def test_mfa_token_from_command_rejects_stdout_kwarg():
     session = _session()
 
     with pytest.raises(BRSConfigurationError):
-        session._mfa_token_from_command("echo 123456", stdout=subprocess.PIPE)
+        session._mfa_token_from_command("echo 123456", stdout=subprocess.PIPE)  # type: ignore
 
 
 def test_mfa_token_from_command_rejects_invalid_kwarg():
@@ -150,7 +150,7 @@ def test_mfa_token_from_command_rejects_invalid_kwarg():
     session = _session()
 
     with pytest.raises(BRSConfigurationError):
-        session._mfa_token_from_command("echo 123456", not_a_kwarg=True)
+        session._mfa_token_from_command("echo 123456", not_a_kwarg=True)  # type: ignore
 
 
 def test_mfa_token_from_command_rejects_shell_by_default():
@@ -158,7 +158,7 @@ def test_mfa_token_from_command_rejects_shell_by_default():
     session = _session()
 
     with pytest.raises(BRSConfigurationError):
-        session._mfa_token_from_command("echo 123456", shell=True)
+        session._mfa_token_from_command("echo 123456", shell=True)  # type: ignore
 
 
 def test_mfa_token_from_command_rejects_executable_kwarg():
@@ -166,7 +166,7 @@ def test_mfa_token_from_command_rejects_executable_kwarg():
     session = _session()
 
     with pytest.raises(BRSConfigurationError):
-        session._mfa_token_from_command("echo 123456", executable="/bin/sh")
+        session._mfa_token_from_command("echo 123456", executable="/bin/sh")  # type: ignore
 
 
 def test_mfa_token_from_command_rejects_preexec_fn_kwarg():
@@ -174,7 +174,7 @@ def test_mfa_token_from_command_rejects_preexec_fn_kwarg():
     session = _session()
 
     with pytest.raises(BRSConfigurationError):
-        session._mfa_token_from_command("echo 123456", preexec_fn=lambda: None)
+        session._mfa_token_from_command("echo 123456", preexec_fn=lambda: None)  # type: ignore
 
 
 def test_token_code_validation_accepts_six_digits():

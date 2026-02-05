@@ -68,6 +68,7 @@ split-on-trailing-comma = true
 "**/*.pyi" = ["ALL"]
 "**/__init__.py" = ["F401", "F403"]
 "tests/test_session_stubbed.py" = ["E501"]
+"boto3_refresh_session/methods/custom.py" = ["E501"]
 "boto3_refresh_session/utils/config.py" = ["E501"]
 
 [tool.pytest.ini_options]

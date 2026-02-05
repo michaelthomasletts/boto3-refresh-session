@@ -18,7 +18,7 @@ __all__ = ["AssumeRoleConfig", "STSClientConfig"]
 
 import re
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Dict, List
 
 from botocore.config import Config
 
@@ -64,7 +64,7 @@ class BaseConfig(dict, ABC):
         for key, value in dict(*args, **kwargs).items():
             self.__setitem__(key, value)
 
-    def setdefault(self, key: str, default: Any = None):
+    def setdefault(self, key: str, default: Any = None) -> None:
         if key in self:
             return super().setdefault(key, default)
         self._validate(key, default)
@@ -127,17 +127,17 @@ class AssumeRoleConfig(BaseConfig):
         *,  # enforce keyword-only arguments
         RoleArn: str,
         RoleSessionName: str | None = None,
-        PolicyArns: list[PolicyDescriptorType] | None = None,
+        PolicyArns: List[PolicyDescriptorType | Dict[str, str]] | None = None,
         Policy: str | None = None,
         DurationSeconds: int | None = None,
         ExternalId: str | None = None,
         SerialNumber: str | None = None,
         TokenCode: str | None = None,
-        Tags: list[Tag] | None = None,
-        TransitiveTagKeys: list[str] | None = None,
+        Tags: List[Tag | Dict[str, str]] | None = None,
+        TransitiveTagKeys: List[str] | None = None,
         SourceIdentity: str | None = None,
-        ProvidedContexts: list[ProvidedContext] | None = None,
-    ):
+        ProvidedContexts: List[ProvidedContext | Dict[str, str]] | None = None,
+    ) -> None:
         super().__init__(
             RoleArn=RoleArn,
             RoleSessionName=RoleSessionName,
@@ -242,7 +242,7 @@ class STSClientConfig(BaseConfig):
         aws_session_token: str | None = None,
         config: Config | None = None,
         aws_account_id: str | None = None,
-    ):
+    ) -> None:
         super().__init__(
             service_name=service_name,
             region_name=region_name,
