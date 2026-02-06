@@ -40,7 +40,6 @@ __all__ = [
     "refreshable_session",
 ]
 
-import importlib.util
 from abc import ABC, abstractmethod
 from functools import wraps
 from typing import Any, ClassVar, Generic, TypeVar
@@ -54,7 +53,38 @@ from botocore.credentials import (
 
 from ..exceptions import BRSCacheError, BRSWarning
 from .cache import ClientCache, ClientCacheKey
+from .extras import IOT_EXTRA_INSTALLED
 from .typing import Identity, RefreshMethod, RegistryKey, TemporaryCredentials
+
+# checks if 'iot' extra is installed or we're in a type-checking context
+# defining this here instead of constants to avoid circular imports
+if IOT_EXTRA_INSTALLED:
+    from awscrt.http import HttpHeaders
+
+    __all__ += ["AWSCRTResponse"]
+
+    class AWSCRTResponse:
+        """Lightweight response collector for awscrt HTTP."""
+
+        def __init__(self) -> None:
+            """Initialize to default for when callbacks are called."""
+
+            self.status_code = None
+            self.headers = None
+            self.body = bytearray()
+
+        def on_response(
+            self, http_stream, status_code, headers, **kwargs
+        ) -> None:
+            """Process awscrt.io response."""
+
+            self.status_code = status_code
+            self.headers = HttpHeaders(headers)
+
+        def on_body(self, http_stream, chunk, **kwargs) -> None:
+            """Process awscrt.io body."""
+
+            self.body.extend(chunk)
 
 
 class CredentialProvider(ABC):
@@ -357,36 +387,3 @@ class BRSSession(Session):
         """
 
         return self.get_identity()  # type: ignore[arg-type]
-
-
-# checking if iot extra is installed
-if (
-    importlib.util.find_spec("awscrt") is not None
-    and importlib.util.find_spec("awsiot") is not None
-):
-    from awscrt.http import HttpHeaders
-
-    __all__ += ["AWSCRTResponse"]
-
-    class AWSCRTResponse:
-        """Lightweight response collector for awscrt HTTP."""
-
-        def __init__(self) -> None:
-            """Initialize to default for when callbacks are called."""
-
-            self.status_code = None
-            self.headers = None
-            self.body = bytearray()
-
-        def on_response(
-            self, http_stream, status_code, headers, **kwargs
-        ) -> None:
-            """Process awscrt.io response."""
-
-            self.status_code = status_code
-            self.headers = HttpHeaders(headers)
-
-        def on_body(self, http_stream, chunk, **kwargs) -> None:
-            """Process awscrt.io body."""
-
-            self.body.extend(chunk)

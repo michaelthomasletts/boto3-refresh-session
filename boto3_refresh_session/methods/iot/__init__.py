@@ -7,13 +7,10 @@ installation of the 'iot' extra."""
 
 __all__ = []
 
-import importlib.util
+from ...utils import IOT_EXTRA_INSTALLED
 
 # checking if iot extra is installed
-if (
-    importlib.util.find_spec("awscrt") is not None
-    and importlib.util.find_spec("awsiot") is not None
-):
+if IOT_EXTRA_INSTALLED:
     from . import x509
     from .x509 import IOTX509RefreshableSession
 
