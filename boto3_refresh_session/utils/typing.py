@@ -16,9 +16,7 @@ __all__ = [
     "TemporaryCredentials",
 ]
 
-import importlib.util
 from typing import (
-    TYPE_CHECKING,
     Any,
     List,
     Literal,
@@ -27,31 +25,18 @@ from typing import (
     TypeVar,
 )
 
+from botocore.config import Config
+
+from .extras import IOT_EXTRA_INSTALLED
+
 try:
     from typing import NotRequired  # type: ignore[import]
 except ImportError:
     from typing_extensions import NotRequired
 
-from botocore.config import Config
-
-
-def _iot_extra_installed() -> bool:
-    """Determines whether the 'iot' extra is installed.
-
-    Returns
-    -------
-    bool
-        ``True`` if the 'iot' extra is installed, ``False`` otherwise.
-    """
-
-    return (
-        importlib.util.find_spec("awscrt") is not None
-        and importlib.util.find_spec("awsiot") is not None
-    )
-
 
 # checking whether 'iot' extra is installed or we're in a type-checking context
-if _IOT_EXTRA_INSTALLED := True if TYPE_CHECKING else _iot_extra_installed():
+if IOT_EXTRA_INSTALLED:
     __all__ += ["PKCS11", "Transport"]
 
     #: Type alias for all currently available credential refresh methods.
@@ -64,6 +49,29 @@ if _IOT_EXTRA_INSTALLED := True if TYPE_CHECKING else _iot_extra_installed():
 
     #: Type alias for acceptable transports
     Transport: TypeAlias = Literal["x509", "ws"]
+
+    class PKCS11(TypedDict):
+        """Configuration for PKCS#11 library.
+
+        Attributes
+        ----------
+        pkcs11_lib : str
+            The path to the PKCS#11 library.
+        user_pin : str or None, optional
+            The user PIN for the PKCS#11 token.
+        slot_id : int or None, optional
+            The slot ID of the PKCS#11 token.
+        token_label : str or None, optional
+            The label of the PKCS#11 token.
+        private_key_label : str or None, optional
+            The label of the private key on the PKCS#11 token.
+        """
+
+        pkcs11_lib: str
+        user_pin: NotRequired[str | None]
+        slot_id: NotRequired[int | None]
+        token_label: NotRequired[str | None]
+        private_key_label: NotRequired[str | None]
 else:
     #: Type alias for currently available credential refresh methods.
     Method: TypeAlias = Literal["custom", "sts"]  # type: ignore
@@ -259,29 +267,3 @@ class STSClientParams(TypedDict):
     aws_session_token: NotRequired[str]
     config: NotRequired[Config]
     aws_account_id: NotRequired[str]
-
-
-if _IOT_EXTRA_INSTALLED:
-
-    class PKCS11(TypedDict):
-        """Configuration for PKCS#11 library.
-
-        Attributes
-        ----------
-        pkcs11_lib : str
-            The path to the PKCS#11 library.
-        user_pin : str or None, optional
-            The user PIN for the PKCS#11 token.
-        slot_id : int or None, optional
-            The slot ID of the PKCS#11 token.
-        token_label : str or None, optional
-            The label of the PKCS#11 token.
-        private_key_label : str or None, optional
-            The label of the private key on the PKCS#11 token.
-        """
-
-        pkcs11_lib: str
-        user_pin: NotRequired[str | None]
-        slot_id: NotRequired[int | None]
-        token_label: NotRequired[str | None]
-        private_key_label: NotRequired[str | None]

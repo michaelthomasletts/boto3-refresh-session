@@ -1,7 +1,11 @@
 import pytest
 
-from boto3_refresh_session.exceptions import BRSValidationError, BRSWarning
-from boto3_refresh_session.utils import AssumeRoleConfig, STSClientConfig
+from boto3_refresh_session import (
+    AssumeRoleConfig,
+    BRSValidationError,
+    BRSWarning,
+    STSClientConfig,
+)
 
 
 def test_assume_role_config_behaves_like_dict():

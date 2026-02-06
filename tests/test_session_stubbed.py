@@ -1,4 +1,3 @@
-import importlib.util
 from datetime import datetime, timedelta, timezone
 from threading import Barrier, Lock, Thread
 from time import sleep
@@ -9,25 +8,24 @@ import pytest
 from botocore.config import Config
 from botocore.stub import Stubber
 
-from boto3_refresh_session import RefreshableSession
-from boto3_refresh_session.exceptions import (
+from boto3_refresh_session import (
+    IOT_EXTRA_INSTALLED,
+    AssumeRoleConfig,
     BRSConfigurationError,
     BRSCredentialError,
     BRSValidationError,
+    Method,
+    RefreshableSession,
 )
-from boto3_refresh_session.utils import AssumeRoleConfig, Registry
-from boto3_refresh_session.utils.typing import Method
+from boto3_refresh_session.utils import Registry
 
-if IOT_AVAILABLE := (
-    importlib.util.find_spec("awscrt") is not None
-    and importlib.util.find_spec("awsiot") is not None
-):
+if IOT_EXTRA_INSTALLED:
     from boto3_refresh_session.methods.iot.x509 import (
         IOTX509RefreshableSession,
     )
 
 skip_iot = pytest.mark.skipif(
-    not IOT_AVAILABLE, reason="iot extra not installed"
+    not IOT_EXTRA_INSTALLED, reason="iot extra not installed"
 )
 
 
@@ -164,7 +162,7 @@ def test_registry_tracks_method_and_refresh_method(monkeypatch):
     _set_dummy_env(monkeypatch)
 
     expected_methods = {"custom", "sts"}
-    if IOT_AVAILABLE:
+    if IOT_EXTRA_INSTALLED:
         expected_methods.add("iot")
 
     assert set(RefreshableSession.get_available_methods()) == expected_methods
@@ -202,7 +200,7 @@ def test_registry_tracks_method_and_refresh_method(monkeypatch):
     )
     assert custom_session.refresh_method == "custom"  # type: ignore
 
-    if IOT_AVAILABLE:
+    if IOT_EXTRA_INSTALLED:
         iot_session = RefreshableSession(
             method="iot",
             endpoint="abc.credentials.iot.us-east-1.amazonaws.com",

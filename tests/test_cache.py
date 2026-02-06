@@ -4,7 +4,7 @@
 
 from botocore.config import Config
 
-from boto3_refresh_session.utils.cache import ClientCache, ClientCacheKey
+from boto3_refresh_session import ClientCache, ClientCacheKey
 
 
 def test_client_cache_key_normalizes_config() -> None:

@@ -13,11 +13,10 @@ from typing import List, TypeAlias, get_args
 from .exceptions import BRSValidationError
 from .methods.custom import CustomRefreshableSession
 from .methods.sts import STSRefreshableSession
-from .utils import Method, Registry
-from .utils.typing import _IOT_EXTRA_INSTALLED
+from .utils import IOT_EXTRA_INSTALLED, Method, Registry
 
 # defining this here instead of utils.typing to avoid circular imports
-if not _IOT_EXTRA_INSTALLED:
+if not IOT_EXTRA_INSTALLED:
     RefreshableSessionType: TypeAlias = (  # type: ignore
         STSRefreshableSession | CustomRefreshableSession  # type: ignore
     )

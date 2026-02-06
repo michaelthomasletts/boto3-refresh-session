@@ -10,14 +10,19 @@ __all__ = [
 
 import inspect
 import subprocess
+from typing import Set, Tuple
 
 from .typing import AssumeRoleParams, STSClientParams
 
 # config parameter names
-ASSUME_ROLE_CONFIG_PARAMETERS = tuple(AssumeRoleParams.__annotations__)
-STS_CLIENT_CONFIG_PARAMETERS = tuple(STSClientParams.__annotations__)
+ASSUME_ROLE_CONFIG_PARAMETERS: Tuple[str, ...] = tuple(
+    AssumeRoleParams.__annotations__
+)
+STS_CLIENT_CONFIG_PARAMETERS: Tuple[str, ...] = tuple(
+    STSClientParams.__annotations__
+)
 
 # subprocess.run parameter names
-SUBPROCESS_ALLOWED_PARAMETERS = set(
+SUBPROCESS_ALLOWED_PARAMETERS: Set[str] = set(
     inspect.signature(subprocess.run).parameters
 ) | set(inspect.signature(subprocess.Popen).parameters)

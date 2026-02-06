@@ -4,12 +4,12 @@ from typing import cast
 import pytest
 
 import boto3_refresh_session.methods.sts as sts_module
-from boto3_refresh_session.exceptions import (
+from boto3_refresh_session import (
+    AssumeRoleConfig,
     BRSConfigurationError,
     BRSValidationError,
+    STSRefreshableSession,
 )
-from boto3_refresh_session.methods.sts import STSRefreshableSession
-from boto3_refresh_session.utils import AssumeRoleConfig
 
 
 def _session():
