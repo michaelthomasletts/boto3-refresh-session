@@ -218,10 +218,28 @@ class ClientCache:
     ``ClientCache`` does not support ``fromkeys``, ``update``, ``setdefault``,
     the ``|=`` operator, or the ``|`` operator.
 
-    Parameters
+    Attributes
     ----------
     max_size : int, optional
         The maximum number of clients to store in the cache. Defaults to 10.
+
+    Methods
+    -------
+    pop(key: ClientCacheKey) -> BaseClient
+        Pops and returns the client associated with the given key.
+    clear() -> None
+        Clears all clients from the cache.
+    popitem() -> Tuple[ClientCacheKey, BaseClient]
+        Pops and returns the least recently used client as a (key, client)
+        tuple.
+    keys() -> Tuple[ClientCacheKey, ...]
+        Returns the keys in the cache.
+    values() -> Tuple[BaseClient, ...]
+        Returns the clients in the cache.
+    items() -> Tuple[Tuple[ClientCacheKey, BaseClient], ...]
+        Returns the items in the cache as (key, client) tuples.
+    get(key: ClientCacheKey, default: BaseClient = None) -> BaseClient | None
+        Gets the client associated with the given key, or returns the default.
 
     Raises
     ------
