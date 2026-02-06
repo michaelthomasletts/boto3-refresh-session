@@ -225,21 +225,23 @@ class ClientCache:
 
     Methods
     -------
-    pop(key: ClientCacheKey) -> BaseClient
-        Pops and returns the client associated with the given key.
     clear() -> None
         Clears all clients from the cache.
+    copy() -> ClientCache
+        Returns a shallow copy of the cache.
+    get(key: ClientCacheKey, default: BaseClient = None) -> BaseClient | None
+        Gets the client associated with the given key, or returns the default.
+    items() -> Tuple[Tuple[ClientCacheKey, BaseClient], ...]
+        Returns the items in the cache as (key, client) tuples.
+    keys() -> Tuple[ClientCacheKey, ...]
+        Returns the keys in the cache.
+    pop(key: ClientCacheKey) -> BaseClient
+        Pops and returns the client associated with the given key.
     popitem() -> Tuple[ClientCacheKey, BaseClient]
         Pops and returns the least recently used client as a (key, client)
         tuple.
-    keys() -> Tuple[ClientCacheKey, ...]
-        Returns the keys in the cache.
     values() -> Tuple[BaseClient, ...]
         Returns the clients in the cache.
-    items() -> Tuple[Tuple[ClientCacheKey, BaseClient], ...]
-        Returns the items in the cache as (key, client) tuples.
-    get(key: ClientCacheKey, default: BaseClient = None) -> BaseClient | None
-        Gets the client associated with the given key, or returns the default.
 
     Raises
     ------
