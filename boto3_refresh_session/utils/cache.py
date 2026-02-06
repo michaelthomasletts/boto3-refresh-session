@@ -197,15 +197,26 @@ class ClientCacheKey:
 
 
 class ClientCache:
-    """A thread-safe LRU cache for storing clients which can be used like a
-    dictionary.
+    """A thread-safe LRU cache for storing clients which can be used exactly
+    like a dictionary.
 
-    Clients stored in the cache must be hashable. The cache has a maximum size
+    Clients stored in this cache must be hashable. The cache has a maximum size
     attribute, and retrieved and newly added clients are marked as recently
     used. When the cache exceeds its maximum size, the least recently used
     client is evicted. When setting a client, use :class:`ClientCacheKey` for
     the key, not ``*args`` and ``**kwargs`` unless calling this class via
     ``__call__``.
+
+    Editing the max size of the cache after initialization is supported, and
+    will evict least recently used items until the cache size is within the
+    new limit if the new maximum size is less than the current number of items
+    in the cache.
+
+    Attempting to overwrite an existing client in the cache will raise an
+    error.
+
+    ``ClientCache`` does not support ``fromkeys``, ``update``, ``setdefault``,
+    the ``|=`` operator, or the ``|`` operator.
 
     Parameters
     ----------
@@ -224,17 +235,35 @@ class ClientCache:
     See Also
     --------
     boto3_refresh_session.utils.cache.ClientCacheKey
-
-    Notes
-    -----
-    This class does not inherit from ``dict``. Therefore, some dictionary
-    methods may not be available.
     """
 
     def __init__(self, max_size: int | None = None) -> None:
-        self.max_size = abs(max_size if max_size is not None else 10)
+        self._max_size = abs(max_size if max_size is not None else 10)
         self._cache: OrderedDict[ClientCacheKey, BaseClient] = OrderedDict()
         self._lock = RLock()
+
+    @property
+    def max_size(self) -> int:
+        """The maximum number of clients to store in the cache."""
+
+        return self._max_size
+
+    @max_size.setter
+    def max_size(self, value: int) -> None:
+        """Sets the maximum size of the cache. If the new maximum size is less
+        than the current number of items in the cache, the least recently used
+        items will be evicted until the cache size is within the new limit.
+
+        Parameters
+        ----------
+        value : int
+            The new maximum size for the cache.
+        """
+
+        with self._lock:
+            self._max_size = abs(value)
+            while len(self._cache) > self._max_size:
+                self._cache.popitem(last=False)
 
     def __call__(self, obj: BaseClient, *args, **kwargs) -> None:
         """Adds the given object to the cache using the provided arguments to
@@ -277,6 +306,10 @@ class ClientCache:
         with self._lock:
             return len(self._cache)
 
+    def __reversed__(self) -> Iterator[ClientCacheKey]:
+        with self._lock:
+            return iter(tuple(reversed(self._cache.keys())))
+
     def __contains__(self, key: ClientCacheKey) -> bool:
         with self._lock:
             return key in self._cache
@@ -300,6 +333,12 @@ class ClientCache:
         if not isinstance(key, ClientCacheKey):
             raise BRSCacheError(
                 "Cache key must be of type 'ClientCacheKey'."
+            ) from None
+
+        if not isinstance(obj, BaseClient):
+            raise BRSCacheError(
+                f"Cache value must be a boto3 client object, {type(obj)} "
+                "provided."
             ) from None
 
         with self._lock:
@@ -332,13 +371,14 @@ class ClientCache:
             return tuple(self._cache.keys())
 
     def values(self) -> Tuple[BaseClient, ...]:
-        """Returns the objects from the cache."""
+        """Returns the values from the cache."""
 
         with self._lock:
             return tuple(self._cache.values())
 
     def items(self) -> Tuple[Tuple[ClientCacheKey, BaseClient], ...]:
-        """Returns the items in the cache as (hash, BaseClient) tuples."""
+        """Returns the items in the cache as (ClientCacheKey, BaseClient)
+        tuples."""
 
         with self._lock:
             return tuple(self._cache.items())
@@ -346,22 +386,7 @@ class ClientCache:
     def get(
         self, key: ClientCacheKey, default: BaseClient | None = None
     ) -> BaseClient | None:
-        """Gets the object using the given key, or returns None if no
-        default is provided.
-
-        Parameters
-        ----------
-        key : ClientCacheKey
-            The key to retrieve the object for.
-        default : BaseClient | None, optional
-            The default value to return if the key is not found. Defaults to
-            None.
-
-        Returns
-        -------
-        BaseClient | None
-            The retrieved client object, or the default value if not found.
-        """
+        """Gets the object using the given key, or returns the default."""
 
         with self._lock:
             # move obj to end of cache to mark it as recently used
@@ -370,24 +395,7 @@ class ClientCache:
             return self._cache.get(key, default)
 
     def pop(self, key: ClientCacheKey) -> BaseClient:
-        """Pops and returns the object using the given key.
-
-        Parameters
-        ----------
-        key : ClientCacheKey
-            The key to pop the object for.
-
-        Returns
-        -------
-        BaseClient
-            The popped client object.
-
-        Raises
-        ------
-        BRSCacheNotFoundError
-            Raised when attempting to pop a client which does not exist in the
-            cache.
-        """
+        """Pops and returns the object associated with the given key."""
 
         with self._lock:
             if (obj := self._cache.get(key)) is None:
@@ -402,3 +410,21 @@ class ClientCache:
 
         with self._lock:
             self._cache.clear()
+
+    def popitem(self) -> Tuple[ClientCacheKey, BaseClient]:
+        """Pops and returns the least recently used item from the cache."""
+
+        with self._lock:
+            if not self._cache:
+                raise BRSCacheNotFoundError(
+                    "No clients found in cache."
+                ) from None
+            return self._cache.popitem(last=False)
+
+    def copy(self) -> "ClientCache":
+        """Returns a shallow copy of the cache."""
+
+        with self._lock:
+            new_cache = ClientCache(max_size=self.max_size)
+            new_cache._cache = self._cache.copy()
+            return new_cache
