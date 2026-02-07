@@ -1,7 +1,7 @@
 [project]
 name = "boto3-refresh-session"
 version = "7.3.8"
-description = "boto3-refresh-session is a drop-in replacement for boto3.session.Session. It automatically refreshes temporary AWS security credentials, caches clients, and natively supports MFA providers in boto3. It supports STS, IOT Core (X.509), and custom credential methods."
+description = "boto3-refresh-session is a drop-in replacement for boto3.Session. It automatically refreshes temporary AWS security credentials, caches clients, and natively supports MFA providers. It supports STS, IOT Core (X.509), and custom credential methods."
 authors = [
     {name = "Mike Letts",email = "lettsmt@gmail.com"}
 ]
@@ -9,7 +9,7 @@ license = { text = "MPL-2.0" }
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = ["boto3", "botocore", "typing-extensions"]
-keywords = ["boto3", "botocore", "boto", "aws", "sts", "credentials", "token", "refresh", "iot", "x509", "mqtt"]
+keywords = ["boto3", "botocore", "boto", "aws", "sts", "credentials", "token", "refresh", "iot", "x509", "mqtt", "AssumeRole", "mfa", "cache", "client cache", "client"]
 maintainers = [
   {name="Michael Letts", email="lettsmt@gmail.com"},
 ]
@@ -33,7 +33,7 @@ classifiers = [
 
 [project.urls]
 Repository = "https://github.com/michaelthomasletts/boto3-refresh-session"
-Documentation = "https://michaelthomasletts.github.io/boto3-refresh-session/index.html"
+Documentation = "https://michaelthomasletts.com/boto3-refresh-session"
 
 [build-system]
 requires = ["hatchling>=1.27.0"]
