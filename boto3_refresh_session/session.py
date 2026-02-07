@@ -160,7 +160,7 @@ class RefreshableSession:
     """
 
     # actual implementation
-    def __new__(  # type: ignore[reportIncompatibleMethodOverride]
+    def __new__(
         cls, method: Method = "sts", **kwargs
     ) -> RefreshableSessionType:
         if method not in (methods := cls.get_available_methods()):
