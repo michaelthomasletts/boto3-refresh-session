@@ -295,7 +295,7 @@ IoT Core X.509
 AWS IoT Core can vend temporary AWS credentials through the credentials provider when you connect with an X.509 certificate and a role alias. 
 boto3-refresh-session makes this flow seamless by automatically refreshing credentials over mTLS.
 boto3-refresh-session supports both PEM files and PKCS#11 modules for private key storage.
-For additional information on the exact parameters that ``RefreshableSession`` takes for IoT, check `this documentation <https://michaelthomasletts.com/boto3-refresh-session/modules/generated/boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession.html#boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession>`_.
+For additional information on the exact parameters that ``RefreshableSession`` takes for IoT, check `this documentation <https://michaelthomasletts.com/boto3-refresh-session/api/generated/boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession.html#boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession>`_.
 
 For PEM files:
 
