@@ -3,9 +3,9 @@
 Usage
 *****
 
-boto3-refresh-session is a drop-in replacement for :class:`boto3.session.Session` which automatically refreshes 
-temporary security credentials. It includes support for STS, IoT, and custom credential providers. 
-MFA and SSO support are included, and boto3-refresh-session also allows client caching! 
+boto3-refresh-session is a simple Python package with a drop-in replacement for :class:`boto3.session.Session` named :class:`boto3_refresh_session.session.RefreshableSession`. 
+It automatically refreshes temporary AWS credentials, caches clients, and natively supports MFA providers. 
+It also supports automatic temporary AWS security credential refresh for STS, IOT Core, and custom credential callables.
 
 Although boto3 already supports automatic temporary credential refresh via role assumption as configured in ``~/.aws/config``, there are 
 scenarios and edge cases where that is insufficient. Below are just a *few* examples:
@@ -15,6 +15,20 @@ scenarios and edge cases where that is insufficient. Below are just a *few* exam
 - Custom credential providers are required (e.g. IOT, external ID, etc.)
 
 boto3-refresh-session exists to fill those gaps (and others not listed above) while maintaining full compatibility with boto3.
+
+Although there are other tools available which address automatic temporary AWS credential refresh, boto3-refresh-session is ergonomically designed to feel like an extension of boto3 (with a few extra parameters) rather than a separate library.
+More, the available alternatives to boto3-refresh-session do not support the breadth of features that boto3-refresh-session does, such as client caching, MFA providers, or IoT Core X.509 credential refresh, among others.
+Even if you don't need automatic temporary AWS credential refresh, boto3-refresh-session's client caching feature may still be useful to you.
+
+The purpose of this page is to provide a usage guide for boto3-refresh-session.
+The following sections cover installation, initialization, refresh methods and behavior, MFA support, client caching, IoT Core X.509 support, and some miscellaneous features.
+Use these instructions as a guide to get started with boto3-refresh-session, but refer to the :ref:`API docs <api>` for comprehensive technical documentation of all features and parameters.
+If you have any questions or run into issues, please open an issue on GitHub or reach out to the maintainer directly.
+
+.. attention::
+
+    In the future, an async version of boto3-refresh-session may be released separately in order to support asynchronous applications and use cases.
+    If you are interested in this feature, please open an issue or reach out to the maintainer directly.
 
 Installation
 ------------
@@ -40,7 +54,7 @@ You can install extras for IoT support and development dependencies as needed.
     # with pip in editable mode (for contributors)
     uv pip install -e ".[dev,iot]"
 
-.. note:: 
+.. attention:: 
 
     Versions 7.2.4 through 7.2.14 were deleted from PyPI and GitHub tags due to a critical packaging issue. 
     Users with versions in that range should upgrade to v7.2.15+.
@@ -59,7 +73,7 @@ Initialization
 Everything in boto3 is ultimately built on the :class:`boto3.session.Session` object — including ``Client`` and ``Resource`` objects.  
 boto3-refresh-session extends this interface while adding automatic temporary credential refresh and some additional features.
 
-Creating a session with ``RefreshableSession`` is straightforward. 
+Creating a session with :class:`boto3_refresh_session.session.RefreshableSession` is straightforward. 
 Below is a basic example of creating a ``Client`` via STS role assumption.
 
 .. tip::
@@ -69,7 +83,7 @@ Below is a basic example of creating a ``Client`` via STS role assumption.
 
 .. tip::
     
-    You can also provide ``assume_role_kwargs`` as a simple dictionary instead of an ``AssumeRoleConfig`` object if you prefer.
+    You can also provide ``assume_role_kwargs`` as a simple dictionary instead of an :class:`boto3_refresh_session.utils.config.AssumeRoleConfig` object if you prefer.
     Both approaches are functionally equivalent!
 
 .. code-block:: python
@@ -85,14 +99,14 @@ Below is a basic example of creating a ``Client`` via STS role assumption.
 
     s3 = session.client('s3')
 
-``RefreshableSession`` can be initialized exactly like a normal :class:`boto3.session.Session` object. 
+:class:`boto3_refresh_session.session.RefreshableSession` can be initialized exactly like a normal :class:`boto3.session.Session` object. 
 It accepts every parameter which :class:`boto3.session.Session` does, in addition to parameters for STS role assumption, refresh behavior, timeout limits, MFA, and client caching.
 To illustrate, below is an example of creating a ``Client`` via STS role assumption with custom retry configuration and region specification.
 
 .. tip::
 
-    ``RefreshableSession`` also accepts a ``sts_client_kwargs`` parameter, which allows you to pass custom parameters to the internal STS client used for role assumption.
-    Like ``assume_role_kwargs``, ``sts_client_kwargs`` can be provided as either a dictionary or a ``STSClientConfig`` object.
+    :class:`boto3_refresh_session.session.RefreshableSession` also accepts a ``sts_client_kwargs`` parameter, which allows you to pass custom parameters to the internal STS client used for role assumption.
+    Like ``assume_role_kwargs``, ``sts_client_kwargs`` can be provided as either a dictionary or a :class:`boto3_refresh_session.utils.config.STSClientConfig` object.
     Check the :class:`STS.Client` documentation for available parameters.
 
 .. code-block:: python
@@ -110,15 +124,15 @@ To illustrate, below is an example of creating a ``Client`` via STS role assumpt
 .. tip::
 
     Attributes in ``assume_role_kwargs`` and ``sts_client_kwargs`` can be accessed using dot-notation *or* dictionary-style access.
-    Same goes for ``AssumeRoleConfig`` and ``STSClientConfig`` objects.
+    Same goes for :class:`boto3_refresh_session.utils.config.AssumeRoleConfig` and :class:`boto3_refresh_session.utils.config.STSClientConfig` objects.
 
-Credential Provider Methods
----------------------------
+Refresh Methods
+---------------
 
-``RefreshableSession`` uses STS by default.
+:class:`boto3_refresh_session.session.RefreshableSession` uses STS by default.
 To be more precise, if ``method`` is not specified, it defaults to ``"sts"``.
-If you want to use ``RefreshableSession`` with IoT or provide a custom credential provider instead then you must modulate the ``method`` parameter accordingly to ``"iot"`` or ``"custom"``. 
-Those methods require additional parameters; refer to the `modules reference <https://michaelthomasletts.com/boto3-refresh-session/api/index.html#refresh-strategies>`_ for more details.
+If you want to use :class:`boto3_refresh_session.session.RefreshableSession` with IoT or provide a custom credential provider instead then you must modulate the ``method`` parameter accordingly to ``"iot"`` or ``"custom"``. 
+Those methods require additional parameters; refer to the :ref:`API docs <api>` for more details.
 
 Refresh Behavior
 ----------------
@@ -172,7 +186,7 @@ Below are examples for a callable and direct CLI invocation.
 
     Be sure to provide ``SerialNumber`` in ``assume_role_kwargs`` when using MFA. 
     If you provide ``mfa_token_provider``, any ``TokenCode`` you set in ``assume_role_kwargs`` will be ignored and overwritten on each refresh.
-    If you run into latency issues, pass a ``Config`` with retries to the internal STS client via ``sts_client_kwargs``.
+    If you run into latency issues, pass a :class:`botocore.config.Config` with retries to the internal STS client via ``sts_client_kwargs``.
 
 .. note::
 
@@ -247,15 +261,15 @@ To do this, when ``cache_clients`` is enabled, ``Client`` objects created via th
 
 .. tip::
     
-    **boto3-refresh-session caches clients by default**; to disable client caching, set ``cache_clients=False`` when initializing ``RefreshableSession``.
+    **boto3-refresh-session caches clients by default**; to disable client caching, set ``cache_clients=False`` when initializing :class:`boto3_refresh_session.session.RefreshableSession`.
 
 .. tip:: 
     
-    To interact with the client cache directly, reference the ``RefreshableSession.client_cache`` attribute.
+    To interact with the client cache directly, reference the ``client_cache`` attribute.
 
 .. note::
     
-    In order to retrieve clients from the cache, you must use the ``ClientCacheKey`` object.
+    In order to retrieve clients from the cache, you must use the :class:`boto3_refresh_session.utils.cache.ClientCacheKey` object.
 
 .. code-block:: python
     
@@ -295,7 +309,7 @@ IoT Core X.509
 AWS IoT Core can vend temporary AWS credentials through the credentials provider when you connect with an X.509 certificate and a role alias. 
 boto3-refresh-session makes this flow seamless by automatically refreshing credentials over mTLS.
 boto3-refresh-session supports both PEM files and PKCS#11 modules for private key storage.
-For additional information on the exact parameters that ``RefreshableSession`` takes for IoT, check `this documentation <https://michaelthomasletts.com/boto3-refresh-session/api/generated/boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession.html#boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession>`_.
+For additional information on the exact parameters that :class:`boto3_refresh_session.session.RefreshableSession` takes for IoT, check the docs for :class:`boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession`.
 
 For PEM files:
 
@@ -354,19 +368,18 @@ For MQTT operations:
 Miscellaneous
 -------------
 
-To see which identity the session is currently using, call the ``get_caller_identity`` method:
+To see which identity the session is currently using, call the ``whoami`` method:
 
 .. code-block:: python
 
-    print(session.get_caller_identity())
-
+    print(session.whoami())
 .. tip::
 
-    The value returned by ``get_caller_identity`` when ``method="custom"`` is not especially informative. 
+    The value returned by ``whoami`` when ``method="custom"`` is not especially informative. 
     This is because custom credential providers vary widely, which this library cannot infer or anticipate in advance.
     Users employing ``method="custom"`` should implement their own identity verification logic as needed.
 
-To return the currently active temporary security credentials, call the ``refreshable_credentials`` method or ``credentials`` property:
+To return the currently active temporary security credentials, call the ``refreshable_credentials`` method or ``credentials`` attribute.
 
 .. code-block:: python
 
@@ -376,7 +389,7 @@ To return the currently active temporary security credentials, call the ``refres
     # credentials property
     print(session.credentials)
 
-If you wish to make ``RefreshableSession`` globally available in your application without needing to pass it around explicitly, cleverly update the default session in boto3 like so:
+If you wish to make :class:`boto3_refresh_session.session.RefreshableSession` globally available in your application without needing to pass it around explicitly, cleverly update the default session in boto3 like so:
 
 .. code-block:: python
 

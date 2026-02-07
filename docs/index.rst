@@ -1,16 +1,3 @@
-.. image:: brs.png
-   :align: center
-
-|
-
-.. toctree::
-   :maxdepth: 1
-   :hidden:
-
-   Usage <usage>
-   API <api/index>
-   Changelog <changelog>
-
 boto3-refresh-session
 ---------------------
 
@@ -18,12 +5,22 @@ boto3-refresh-session
 
 **License:** Mozilla Public License 2.0 (MPL-2.0)
 
-**Useful Links:**
-
-:ref:`Usage <usage>` |
-:ref:`API <api>` |
-:ref:`Changelog <changelog>`
-
 **Authors:** `Mike Letts <https://michaelthomasletts.github.io/>`_
 
-boto3-refresh-session is a simple Python package for refreshing the temporary security credentials in a :class:`boto3.session.Session` object automatically.
+boto3-refresh-session is a simple Python package with a drop-in replacement for :class:`boto3.session.Session` named :class:`boto3_refresh_session.session.RefreshableSession`. 
+It automatically refreshes temporary AWS credentials, caches clients, and natively supports MFA providers. 
+It also supports automatic temporary AWS security credential refresh for STS, IOT Core, and custom credential callables.
+
+For more information about using boto3-refresh-session, see the :ref:`Usage Guide <usage>`.
+For technical documentation of all features and parameters, see the :ref:`API docs <api>`.
+For a detailed list of changes, see the :ref:`Changelog <changelog>`.
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Sitemap
+   :name: sitemap
+   :hidden:
+
+   Usage <usage>
+   API <api/index>
+   Changelog <changelog>
