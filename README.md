@@ -85,10 +85,6 @@
 
 ## Features
 
-boto3-refresh-session is a simple Python package for automatically refreshing temporary AWS security credentials in a `boto3.session.Session object`. 
-
-It features:
-
 - A drop-in replacement for [boto3.session.Session](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html) named `RefreshableSession`
 - MFA support for STS
 - Optional boto3 client caching
