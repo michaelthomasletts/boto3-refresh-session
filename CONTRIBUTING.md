@@ -1,14 +1,6 @@
-<div align="center">
-  <img 
-    src="https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/docs/brs.png"
-    alt="logo"
-    style="width:30%;max-width:420px;height:auto;"
-  />
-</div>
+# boto3-refresh-session
 
-</br>
-
-<div align="center">
+<div align="left">
 
   <a href="https://pypi.org/project/boto3-refresh-session/">
     <img 
@@ -39,6 +31,8 @@
   </a>
 
 </div>
+
+</br>
 
 ## Requirements
 
