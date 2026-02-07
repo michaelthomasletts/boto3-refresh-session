@@ -1,12 +1,10 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/docs/brs.png" />
+  <img 
+    src="https://raw.githubusercontent.com/michaelthomasletts/boto3-refresh-session/refs/heads/main/docs/brs.png"
+    alt="logo"
+    style="width:30%;max-width:420px;height:auto;"
+  />
 </div>
-
-</br>
-
-<div align="center"><em>
-  A simple Python package for refreshing the temporary security credentials in a <code>boto3.session.Session</code> object automatically.
-</em></div>
 
 </br>
 
@@ -87,12 +85,15 @@
 
 ## Features
 
-- Drop-in replacement for `boto3.session.Session`
-- MFA support included for STS
-- SSO support via AWS profiles
-- Optionally caches boto3 clients
-- Supports automatic temporary credential refresh for STS, custom credential flows, and IoT Core (X.509)
-- [Tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [documented](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/)
+boto3-refresh-session is a simple Python package for automatically refreshing temporary AWS security credentials in a `boto3.session.Session object`. 
+
+It features:
+
+- A drop-in replacement for [boto3.session.Session](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html) named `RefreshableSession`
+- MFA support for STS
+- Optional boto3 client caching
+- Automatic temporary credential refresh for STS, IoT Core (X.509), and custom credential methods
+- [Thorough testing](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [regular updates](https://github.com/michaelthomasletts/boto3-refresh-session/commits/main/), [comprehensive documentation](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [publication to PyPI](https://pypi.org/project/boto3-refresh-session/)
 
 ## Recognition and Testimonials
 
@@ -102,9 +103,9 @@
 
 Recognized during AWS Community Day Midwest on June 5th, 2025 (the founder's birthday!).
 
-A testimonial from a Cyber Security Engineer at a FAANG company:
+A testimonial from an engineer at a FAANG company:
 
-> _Most of my work is on tooling related to AWS security, so I'm pretty choosy about boto3 credentials-adjacent code. I often opt to just write this sort of thing myself so I at least know that I can reason about it. But I found boto3-refresh-session to be very clean and intuitive [...] We're using the RefreshableSession class as part of a client cache construct [...] We're using AWS Lambda to perform lots of operations across several regions in hundreds of accounts, over and over again, all day every day. And it turns out that there's a surprising amount of overhead to creating boto3 clients (mostly deserializing service definition json), so we can run MUCH more efficiently if we keep a cache of clients, all equipped with automatically refreshing sessions._
+> _Most of my work is on tooling related to AWS security, so I'm pretty choosy about boto3 credentials-adjacent code. I often opt to just write this sort of thing myself so I at least know that I can reason about it. But I found boto3-refresh-session to be very clean and intuitive [...] We're using AWS Lambda to perform lots of operations across several regions in hundreds of accounts, over and over again, all day every day. And it turns out that there's a surprising amount of overhead to creating boto3 clients (mostly deserializing service definition json), so we can run MUCH more efficiently if we keep a cache of clients, all equipped with automatically refreshing sessions._
 
 ## Installation
 
@@ -116,11 +117,14 @@ pip install boto3-refresh-session
 
 # with pip + iot as an extra
 pip install boto3-refresh-session[iot]
+
+# installation for contributors
+pip install boto3-refresh-session[iot,dev]
 ```
 
 ## Usage
 
-Refer to the [official usage documentation](https://michaelthomasletts.com/boto3-refresh-session/usage.html) for guidance on how to use boto3-refresh-session.
+Refer to the [official usage documentation](https://michaelthomasletts.com/boto3-refresh-session/usage.html) for detailed guidance on how to use boto3-refresh-session.
 
 Refer to the [official API documentation](https://michaelthomasletts.com/boto3-refresh-session/api/index.html) for technical information about boto3-refresh-session.
 
