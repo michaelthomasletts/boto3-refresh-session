@@ -118,7 +118,7 @@ Credential Provider Methods
 ``RefreshableSession`` uses STS by default.
 To be more precise, if ``method`` is not specified, it defaults to ``"sts"``.
 If you want to use ``RefreshableSession`` with IoT or provide a custom credential provider instead then you must modulate the ``method`` parameter accordingly to ``"iot"`` or ``"custom"``. 
-Those methods require additional parameters; refer to the `modules reference <https://michaelthomasletts.com/boto3-refresh-session/modules/index.html>`_ for more details.
+Those methods require additional parameters; refer to the `modules reference <https://michaelthomasletts.com/boto3-refresh-session/api/index.html#refresh-strategies>`_ for more details.
 
 Refresh Behavior
 ----------------
