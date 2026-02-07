@@ -3,32 +3,10 @@
 Usage
 *****
 
-boto3-refresh-session is a simple Python package with a drop-in replacement for :class:`boto3.session.Session` named :class:`boto3_refresh_session.session.RefreshableSession`. 
-It automatically refreshes temporary AWS credentials, caches clients, and natively supports MFA providers. 
-It also supports automatic temporary AWS security credential refresh for STS, IOT Core, and custom credential callables.
-
-Although boto3 already supports automatic temporary credential refresh via role assumption as configured in ``~/.aws/config``, there are 
-scenarios and edge cases where that is insufficient. Below are just a *few* examples:
-
-- Profiles or configs are unavailable or impractical (e.g., containerized or serverless environments)
-- You need to explicitly assume roles in a program (not profiles or configs) and hand those credentials around without worrying about expiration
-- Custom credential providers are required (e.g. IOT, external ID, etc.)
-
-boto3-refresh-session exists to fill those gaps (and others not listed above) while maintaining full compatibility with boto3.
-
-Although there are other tools available which address automatic temporary AWS credential refresh, boto3-refresh-session is ergonomically designed to feel like an extension of boto3 (with a few extra parameters) rather than a separate library.
-More, the available alternatives to boto3-refresh-session do not support the breadth of features that boto3-refresh-session does, such as client caching, MFA providers, or IoT Core X.509 credential refresh, among others.
-Even if you don't need automatic temporary AWS credential refresh, boto3-refresh-session's client caching feature may still be useful to you.
-
 The purpose of this page is to provide a usage guide for boto3-refresh-session.
 The following sections cover installation, initialization, refresh methods and behavior, MFA support, client caching, IoT Core X.509 support, and some miscellaneous features.
 Use these instructions as a guide to get started with boto3-refresh-session, but refer to the :ref:`API docs <api>` for comprehensive technical documentation of all features and parameters.
 If you have any questions or run into issues, please open an issue on GitHub or reach out to the maintainer directly.
-
-.. attention::
-
-    In the future, an async version of boto3-refresh-session may be released separately in order to support asynchronous applications and use cases.
-    If you are interested in this feature, please open an issue or reach out to the maintainer directly.
 
 Installation
 ------------

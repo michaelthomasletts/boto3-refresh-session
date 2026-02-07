@@ -77,13 +77,18 @@
 
 </br>
 
-## Features
+boto3-refresh-session is a simple Python package with a drop-in replacement for `boto3.Session` named `RefreshableSession`.  It automatically refreshes temporary AWS credentials, caches clients, and natively supports MFA providers. It supports automatic temporary AWS security credential refresh for STS, IOT Core, and custom credential callables. And it is [thoroughly tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [regularly updated](https://github.com/michaelthomasletts/boto3-refresh-session/commits/main/), [comprehensively documentated](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/).
 
-- A drop-in replacement for [boto3.session.Session](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html) named `RefreshableSession`
-- MFA support for STS using custom token callables or CLI commands for token providers
-- Optional boto3 client caching
-- Automatic temporary credential refresh for STS, IoT Core (X.509), and custom credential callables
-- [Thorough testing](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [regular updates](https://github.com/michaelthomasletts/boto3-refresh-session/commits/main/), [comprehensive documentation](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [publication to PyPI](https://pypi.org/project/boto3-refresh-session/)
+Although boto3 already supports automatic temporary credential refresh via role assumption as configured in ``~/.aws/config``, there are 
+scenarios and edge cases where that is insufficient. Below are just a *few* examples:
+
+- Profiles or configs are unavailable or impractical (e.g., containerized or serverless environments)
+- You need to explicitly assume roles in a program (not profiles or configs) and hand those credentials around without worrying about expiration
+- Custom credential providers are required (e.g. IOT, external ID, etc.)
+
+boto3-refresh-session exists to fill those gaps (and others not listed) while maintaining full compatibility with boto3.
+
+Although there are other open source tools available which address automatic temporary AWS credential refresh, boto3-refresh-session is ergonomically designed to feel like an _extension_ of boto3 (with a few extra parameters) rather than a separate library with an unfamiliar API. More, the available alternatives to boto3-refresh-session do not support the breadth of features that boto3-refresh-session does, such as client caching, MFA providers, or IoT Core X.509 credential refresh, among others. Even if you don't need automatic temporary AWS credential refresh, boto3-refresh-session's client caching feature may still be useful to you.
 
 ## Recognition and Testimonials
 
