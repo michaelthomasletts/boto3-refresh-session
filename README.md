@@ -1,5 +1,3 @@
-# boto3-refresh-session
-
 <div align="left">
 
   <a href="https://pypi.org/project/boto3-refresh-session/">
@@ -76,8 +74,6 @@
 </div>
 
 </br>
-
-boto3-refresh-session is a simple Python package with a drop-in replacement for `boto3.Session` named `RefreshableSession`. It automatically refreshes temporary AWS credentials, caches clients, and natively supports MFA providers. It also supports automatic temporary AWS credential refresh for STS, IOT Core, and custom credential callables.
 
 ## Features
 
