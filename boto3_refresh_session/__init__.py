@@ -27,7 +27,7 @@ __all__ += typing.__all__
 __all__ += extras.__all__
 
 # package metadata
-__version__ = "7.3.6"
+__version__ = "7.3.7"
 __title__ = "boto3-refresh-session"
 __author__ = "Mike Letts"
 __maintainer__ = "Mike Letts"
