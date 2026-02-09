@@ -223,7 +223,7 @@ class BRSSession(Session):
 
     Other Parameters
     ----------------
-    kwargs : Any
+    **kwargs : Any, optional
         Optional keyword arguments for initializing boto3.session.Session.
     """
 
@@ -277,9 +277,9 @@ class BRSSession(Session):
 
         Parameters
         ----------
-        *args : Any
+        *args : Any, optional
             Positional arguments for :meth:`boto3.session.Session.client`.
-        **kwargs : Any
+        **kwargs : Any, optional
             Keyword arguments for :meth:`boto3.session.Session.client`.
 
         Returns

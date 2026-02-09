@@ -120,9 +120,9 @@ class ClientCacheKey:
 
     Parameters
     ----------
-    *args : Any
+    *args : Any, optional
         Positional arguments used to create the cache key.
-    **kwargs : Any
+    **kwargs : Any, optional
         Keyword arguments used to create the cache key.
 
     Attributes
@@ -131,6 +131,14 @@ class ClientCacheKey:
         The unique key representing the client's initialization parameters.
     label : str
         A human-readable label for the cache key, useful for debugging.
+
+    Examples
+    --------
+    Creating a cache key for an S3 client initialized with a specific region:
+
+    >>> from boto3_refresh_session import ClientCacheKey
+    ...
+    >>> key = ClientCacheKey("s3", region_name="us-west-2")
     """
 
     def __init__(self, *args, **kwargs) -> None:
@@ -154,9 +162,9 @@ class ClientCacheKey:
 
         Parameters
         ----------
-        *args : Any
+        *args : Any, optional
             Positional arguments used to create the cache key.
-        **kwargs : Any
+        **kwargs : Any, optional
             Keyword arguments used to create the cache key.
         """
 
@@ -245,6 +253,9 @@ class ClientCache:
 
     Raises
     ------
+    BRSCacheError
+        Raised when an error occurs related to cache operations, such as using
+        an invalid key or value type.
     BRSCacheExistsError
         Raised when attempting to add a client which already exists in the
         cache.
@@ -255,6 +266,7 @@ class ClientCache:
     See Also
     --------
     boto3_refresh_session.utils.cache.ClientCacheKey
+    boto3_refresh_session.session.RefreshableSession
     """
 
     def __init__(self, max_size: int | None = None) -> None:
@@ -293,9 +305,9 @@ class ClientCache:
         ----------
         obj : BaseClient
             The client object to cache.
-        *args : Any
+        *args : Any, optional
             Positional arguments used to create the cache key.
-        **kwargs : Any
+        **kwargs : Any, optional
             Keyword arguments used to create the cache key.
 
         Examples

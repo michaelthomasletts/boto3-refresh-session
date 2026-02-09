@@ -34,12 +34,6 @@ class STSRefreshableSession(
     """A :class:`boto3.session.Session` object that automatically refreshes
     temporary AWS credentials using an IAM role that is assumed via STS.
 
-    .. tip::
-
-        For additional details on configuring MFA, refer to the
-        :ref:`MFA usage documentation <mfa>`. For additional details on client
-        caching, refer to the :ref:`client caching documentation <cachedocs>`.
-
     Parameters
     ----------
     assume_role_kwargs : AssumeRoleConfig | Dict[str, Any]
@@ -107,7 +101,7 @@ class STSRefreshableSession(
 
     Other Parameters
     ----------------
-    kwargs : dict
+    **kwargs : Any, optional
         Optional keyword arguments for the :class:`boto3.session.Session`
         object.
 
@@ -133,6 +127,18 @@ class STSRefreshableSession(
     --------
     boto3_refresh_session.utils.config.AssumeRoleConfig
     boto3_refresh_session.utils.config.STSClientConfig
+
+    Notes
+    -----
+    .. note::
+
+        For additional details on configuring MFA, refer to the
+        :ref:`MFA usage documentation <mfa>`.
+
+    .. note::
+
+        For additional details on client caching, refer to the
+        :ref:`client caching documentation <cachedocs>`.
 
     Examples
     --------
@@ -371,7 +377,7 @@ class STSRefreshableSession(
 
         Other Parameters
         ----------------
-        **kwargs : dict, optional
+        **kwargs : Any, optional
             Keyword arguments to pass to :py:func:`subprocess.run`. ``stdout``,
             ``stderr``, ``shell``, ``executable``, and ``preexec_fn`` are
             restricted and will raise an error if provided. ``check``,

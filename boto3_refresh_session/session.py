@@ -96,6 +96,21 @@ class RefreshableSession:
     whoami() -> Identity
         Alias for :meth:`get_identity`.
 
+    Returns
+    -------
+    boto3_refresh_session.methods.sts.STSRefreshableSession
+        If ``method="sts"`` (or not specified) then an instance of
+        :class:`boto3_refresh_session.methods.sts.STSRefreshableSession`
+        is returned.
+    boto3_refresh_session.methods.custom.CustomRefreshableSession
+        If ``method="custom"`` then an instance of
+        :class:`boto3_refresh_session.methods.custom.CustomRefreshableSession`
+        is returned.
+    boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession
+        If ``method="iot"`` then an instance of
+        :class:`boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession`
+        is returned.
+
     See Also
     --------
     boto3_refresh_session.methods.custom.CustomRefreshableSession
@@ -106,57 +121,74 @@ class RefreshableSession:
 
     Notes
     -----
-    For additional details on client caching, refer to the
-    :ref:`usage docs <cachedocs>` or :ref:`API docs <cache>` for technical
-    information.
+    .. note::
 
-    For additional details on configuring MFA, refer to the
-    :ref:`MFA usage docs <mfa>`.
+        For additional details on client caching, refer to the
+        :ref:`usage docs <cachedocs>` or :ref:`API docs <cache>` for technical
+        information.
 
-    ``method="iot"`` requires the installation of the ``iot`` extra via pip:
+    .. note::
 
-    .. code-block:: bash
+        For additional details on configuring MFA, refer to the
+        :ref:`MFA usage docs <mfa>`.
 
-        pip install boto3-refresh-session[iot]
+    .. important::
+
+        ``method="iot"`` requires the installation of the ``iot`` extra via
+        pip:
+
+        .. code-block:: bash
+
+            pip install boto3-refresh-session[iot]
 
     Examples
     --------
 
     Basic initialization using STS AssumeRole (i.e. ``method="sts"``):
 
-    >>> from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
-    >>> session = RefreshableSession(
-    ...     assume_role_kwargs=AssumeRoleConfig(RoleArn="<your-role-arn>")
+    >>> from boto3_refresh_session import (
+    ...     AssumeRoleConfig, RefreshableSession
     ... )
+    >>> session = RefreshableSession(
+    ...     assume_role_kwargs=AssumeRoleConfig(
+    ...         RoleArn="<your-role-arn>"
+    ...     ),
+    ... )
+    >>> s3 = session.client("s3")
+    >>> s3.list_buckets()
 
     Basic initialization using a custom credential callable
     (i.e. ``method="custom"``):
 
-    >>> from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
-    >>> def custom_credential_provider(...):
+    >>> from boto3_refresh_session import RefreshableSession
+    >>> def provider(...):
     ...     ...
     ...     return {"AccessKeyId": "...",
     ...             "SecretAccessKey": "...",
     ...             "SessionToken": "...",
-    ...             "Expiration": datetime.datetime(...)}
+    ...             "Expiration": "..."}
     ...
     >>> session = RefreshableSession(
     ...     method="custom",
-    ...     custom_credentials_method=custom_credential_provider,
+    ...     custom_credentials_method=provider,
     ...     custom_credentials_method_args={...},
     ... )
+    >>> cloudwatch = session.client("logs")
+    >>> cloudwatch.list_logs()
 
     Basic initialization using IoT X.509 (i.e. ``method="iot"``):
 
-    >>> from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
+    >>> from boto3_refresh_session import RefreshableSession
     >>> session = RefreshableSession(
     ...     method="iot",
-    ...     iot_endpoint="your-iot-endpoint",
-    ...     thing_name="your-thing-name",
-    ...     role_alias="your-role-alias",
+    ...     iot_endpoint="<your-iot-endpoint>",
+    ...     thing_name="<your-thing-name>",
+    ...     role_alias="<your-role-alias>",
     ...     certificate_path="path/to/certificate.pem.crt",
     ...     private_key_path="path/to/private.pem.key",
     ... )
+    >>> s3 = session.client("s3")
+    >>> s3.list_buckets()
     """
 
     # actual implementation
