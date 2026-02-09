@@ -3,7 +3,7 @@ boto3-refresh-session
 
 **Version:** |release|
 
-**License:** Mozilla Public License 2.0 (MPL-2.0)
+**License:** `Mozilla Public License 2.0 (MPL-2.0) <https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/LICENSE>`_
 
 **Author:** `Mike Letts <https://michaelthomasletts.com>`_
 
