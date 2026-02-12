@@ -9,7 +9,7 @@ __all__ = ["CustomRefreshableSession"]
 from datetime import datetime
 from typing import Any, Callable, Dict, cast
 
-from ..exceptions import BRSCredentialError, BRSWarning
+from ..exceptions import BRSCredentialError, BRSValidationError, BRSWarning
 from ..utils import (
     BRSSession,
     CredentialProvider,
@@ -88,6 +88,34 @@ class CustomRefreshableSession(
     whoami() -> Identity
         Alias for :meth:`get_identity`.
 
+    Raises
+    ------
+    BRSValidationError
+        If the provided parameters are of incorrect types or if required
+        parameters are missing.
+    BRSCredentialError
+        If the credentials returned by the custom credential getter are missing
+        required key-value pairs or if 'expiry_time' is not a valid ISO 8601
+        string or datetime object.
+
+    Notes
+    -----
+    .. important::
+
+        ``custom_credentials_method`` must be a callable object that returns
+        temporary AWS credentials when called. The returned credentials must
+        be a dictionary (cast as ``TemporaryCredentials``) containing the
+        following key-value pairs: access_key (str), secret_key (str),
+        token (str), and expiry_time (str in ISO 8601 format or datetime
+        object).
+
+    .. tip::
+
+        You can import ``TemporaryCredentials`` from
+        ``boto3_refresh_session.utils.typing.TemporaryCredentials``. To avoid
+        typing warnings in your IDE, you may want to cast the dict returned by
+        your custom credential getter as ``TemporaryCredentials``.
+
     Examples
     --------
     Write (or import) the callable object for obtaining temporary AWS security
@@ -96,10 +124,10 @@ class CustomRefreshableSession(
     >>> def your_custom_credential_getter(your_param, another_param):
     >>>     ...
     >>>     return {
-    >>>         'access_key': ...,
-    >>>         'secret_key': ...,
-    >>>         'token': ...,
-    >>>         'expiry_time': ...,
+    >>>         'access_key': '...',
+    >>>         'secret_key': '...',
+    >>>         'token': '...',
+    >>>         'expiry_time': '...',
     >>>     }
 
     Pass that callable object to ``RefreshableSession``.
@@ -107,7 +135,7 @@ class CustomRefreshableSession(
     >>> sess = RefreshableSession(
     >>>     method='custom',
     >>>     custom_credentials_method=your_custom_credential_getter,
-    >>>     custom_credentials_method_args=...,
+    >>>     custom_credentials_method_args={...},
     >>> )
     """
 
@@ -128,6 +156,21 @@ class CustomRefreshableSession(
 
         # initializing BRSSession
         super().__init__(refresh_method="custom", **kwargs)
+
+        # verifying data types
+        if not callable(custom_credentials_method):
+            raise BRSValidationError(
+                "The 'custom_credentials_method' parameter must be a callable "
+                "object that returns temporary AWS credentials when called."
+            ) from None
+        if (
+            not isinstance(custom_credentials_method_args, dict)
+            and custom_credentials_method_args is not None
+        ):
+            raise BRSValidationError(
+                "The 'custom_credentials_method_args' parameter must be a dict "
+                "of keyword arguments for the custom credentials method."
+            ) from None
 
         # initializing various other attributes
         self._custom_get_credentials = custom_credentials_method
@@ -150,8 +193,7 @@ class CustomRefreshableSession(
                 details={"missing": sorted(missing)},
             )
 
-        expiry_time = credentials.get("expiry_time")
-        if isinstance(expiry_time, datetime):
+        if isinstance(expiry_time := credentials.get("expiry_time"), datetime):
             credentials["expiry_time"] = expiry_time.isoformat()
         elif not isinstance(expiry_time, str):
             raise BRSCredentialError(
