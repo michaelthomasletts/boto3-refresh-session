@@ -123,6 +123,16 @@ class STSRefreshableSession(
     whoami() -> Identity
         Alias for :meth:`get_identity`.
 
+    Raises
+    ------
+    BRSConfigurationError
+        If the provided parameters are in an invalid or inconsistent state
+        (e.g. missing MFA SerialNumber when mfa_token_provider is given, etc.)
+        or if the MFA token command fails to execute properly.
+    BRSValidationError
+        If the provided parameters are of incorrect types or if required
+        parameters are missing.
+
     See Also
     --------
     boto3_refresh_session.utils.config.AssumeRoleConfig
