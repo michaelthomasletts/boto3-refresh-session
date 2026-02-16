@@ -102,7 +102,7 @@ Although there are other open source tools available which address automatic tem
 
 Recognized during AWS Community Day Midwest on June 5th, 2025 (my birthday!).
 
-A testimonial from an engineer at a FAANG company:
+A testimonial from an engineer at Netflix:
 
 > _Most of my work is on tooling related to AWS security, so I'm pretty choosy about boto3 credentials-adjacent code. I often opt to just write this sort of thing myself so I at least know that I can reason about it. But I found boto3-refresh-session to be very clean and intuitive [...] We're using AWS Lambda to perform lots of operations across several regions in hundreds of accounts, over and over again, all day every day. And it turns out that there's a surprising amount of overhead to creating boto3 clients (mostly deserializing service definition json), so we can run MUCH more efficiently if we keep a cache of clients, all equipped with automatically refreshing sessions._
 
