@@ -1,0 +1,879 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" data-theme="dark">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Usage &#8212; boto3-refresh-session</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=212af034" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=f663eb4a"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'usage';</script>
+    <link rel="icon" href="_static/brs.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API" href="api/index.html" />
+    <link rel="prev" title="boto3-refresh-session" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="_static/brs.png" class="logo__image only-dark" alt="boto3-refresh-session - Home"/>
+    <img src="_static/brs.png" class="logo__image only-light pst-js-only" alt="boto3-refresh-session - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Usage
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api/index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="changelog.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/michaelthomasletts/boto3-refresh-session" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/boto3-refresh-session/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-python fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Usage
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api/index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="changelog.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/michaelthomasletts/boto3-refresh-session" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/boto3-refresh-session/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-python fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Usage</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="usage">
+<span id="id1"></span><h1>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h1>
+<p>The purpose of this page is to provide a usage guide for boto3-refresh-session.
+The following sections cover installation, initialization, refresh methods and behavior, MFA support, client and resource caching, IoT Core X.509 support, and some miscellaneous features.
+Use these instructions as a guide to get started with boto3-refresh-session, but refer to the <a class="reference internal" href="api/index.html#api"><span class="std std-ref">API docs</span></a> for comprehensive technical documentation of all features and parameters.
+If you have any questions or run into issues, please open an issue on GitHub or reach out to the maintainer directly.</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
+<p>boto3-refresh-session is available on PyPI.</p>
+<p>You can install extras for IoT support and development dependencies as needed.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># with pip</span>
+pip<span class="w"> </span>install<span class="w"> </span>boto3-refresh-session
+
+<span class="c1"># with pip + iot as an extra</span>
+pip<span class="w"> </span>install<span class="w"> </span>boto3-refresh-session<span class="o">[</span>iot<span class="o">]</span>
+
+<span class="c1"># with pip + dev dependencies</span>
+pip<span class="w"> </span>install<span class="w"> </span>boto3-refresh-session<span class="o">[</span>dev<span class="o">]</span>
+
+<span class="c1"># with pip + all extras</span>
+pip<span class="w"> </span>install<span class="w"> </span>boto3-refresh-session<span class="o">[</span>dev,iot<span class="o">]</span>
+
+<span class="c1"># with pip in editable mode (for contributors)</span>
+uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev,iot]&quot;</span>
+</pre></div>
+</div>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>Versions 7.2.4 through 7.2.14 were deleted from PyPI and GitHub tags due to a critical packaging issue.
+Users with versions in that range should upgrade to v7.2.15+.
+Refer to the <a class="reference internal" href="changelog.html#changelog"><span class="std std-ref">changelog</span></a> for more details.</p>
+</div>
+</section>
+<section id="authorization">
+<h2>Authorization<a class="headerlink" href="#authorization" title="Link to this heading">#</a></h2>
+<p>To use boto3-refresh-session, you must have AWS credentials configured locally.
+Configuring credentials for boto3-refresh-session is the same as for boto3.
+Refer to the <a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html">boto3 documentation</a> for more details.</p>
+</section>
+<section id="initialization">
+<h2>Initialization<a class="headerlink" href="#initialization" title="Link to this heading">#</a></h2>
+<p>Everything in boto3 is ultimately built on the <a class="reference external" href="https://docs.aws.amazon.com/boto3/latest/reference/core/session.html#boto3.session.Session" title="(in Boto3 v1.42.59)"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3.session.Session</span></code></a> object — including <code class="docutils literal notranslate"><span class="pre">Client</span></code> and <code class="docutils literal notranslate"><span class="pre">Resource</span></code> objects.
+boto3-refresh-session extends this interface while adding automatic temporary credential refresh and some additional features.</p>
+<p>Creating a session with <a class="reference internal" href="api/generated/boto3_refresh_session.session.RefreshableSession.html#boto3_refresh_session.session.RefreshableSession" title="boto3_refresh_session.session.RefreshableSession"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3_refresh_session.session.RefreshableSession</span></code></a> is straightforward.
+Below is a basic example of creating a <code class="docutils literal notranslate"><span class="pre">Client</span></code> via STS role assumption.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can leave <code class="docutils literal notranslate"><span class="pre">RoleSessionName</span></code> in <code class="docutils literal notranslate"><span class="pre">assume_role_kwargs</span></code> blank if you like.
+boto3-refresh-session will default to “boto3-refresh-session” for you.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can also provide <code class="docutils literal notranslate"><span class="pre">assume_role_kwargs</span></code> as a simple dictionary instead of an <a class="reference internal" href="api/generated/boto3_refresh_session.utils.config.AssumeRoleConfig.html#boto3_refresh_session.utils.config.AssumeRoleConfig" title="boto3_refresh_session.utils.config.AssumeRoleConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3_refresh_session.utils.config.AssumeRoleConfig</span></code></a> object if you prefer.
+Both approaches are functionally equivalent!</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">boto3_refresh_session</span><span class="w"> </span><span class="kn">import</span> <span class="n">AssumeRoleConfig</span><span class="p">,</span> <span class="n">RefreshableSession</span>
+
+<span class="n">session</span> <span class="o">=</span> <span class="n">RefreshableSession</span><span class="p">(</span>
+    <span class="n">assume_role_kwargs</span><span class="o">=</span><span class="n">AssumeRoleConfig</span><span class="p">(</span>
+        <span class="n">RoleArn</span><span class="o">=</span><span class="s2">&quot;&lt;your-role-arn&gt;&quot;</span><span class="p">,</span>
+        <span class="n">RoleSessionName</span><span class="o">=</span><span class="s2">&quot;&lt;your-role-session-name&gt;&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">s3</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="api/generated/boto3_refresh_session.session.RefreshableSession.html#boto3_refresh_session.session.RefreshableSession" title="boto3_refresh_session.session.RefreshableSession"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3_refresh_session.session.RefreshableSession</span></code></a> can be initialized exactly like a normal <a class="reference external" href="https://docs.aws.amazon.com/boto3/latest/reference/core/session.html#boto3.session.Session" title="(in Boto3 v1.42.59)"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3.session.Session</span></code></a> object.
+It accepts every parameter which <a class="reference external" href="https://docs.aws.amazon.com/boto3/latest/reference/core/session.html#boto3.session.Session" title="(in Boto3 v1.42.59)"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3.session.Session</span></code></a> does, in addition to parameters for STS role assumption, refresh behavior, timeout limits, MFA, and cache behavior.
+To illustrate, below is an example of creating a <code class="docutils literal notranslate"><span class="pre">Client</span></code> via STS role assumption with custom retry configuration and region specification.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p><a class="reference internal" href="api/generated/boto3_refresh_session.session.RefreshableSession.html#boto3_refresh_session.session.RefreshableSession" title="boto3_refresh_session.session.RefreshableSession"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3_refresh_session.session.RefreshableSession</span></code></a> also accepts a <code class="docutils literal notranslate"><span class="pre">sts_client_kwargs</span></code> parameter, which allows you to pass custom parameters to the internal STS client used for role assumption.
+Like <code class="docutils literal notranslate"><span class="pre">assume_role_kwargs</span></code>, <code class="docutils literal notranslate"><span class="pre">sts_client_kwargs</span></code> can be provided as either a dictionary or a <a class="reference internal" href="api/generated/boto3_refresh_session.utils.config.STSClientConfig.html#boto3_refresh_session.utils.config.STSClientConfig" title="boto3_refresh_session.utils.config.STSClientConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3_refresh_session.utils.config.STSClientConfig</span></code></a> object.
+Check the <a class="reference external" href="https://docs.aws.amazon.com/boto3/latest/reference/services/sts.html#STS.Client" title="(in Boto3 v1.42.59)"><code class="xref py py-class docutils literal notranslate"><span class="pre">STS.Client</span></code></a> documentation for available parameters.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">botocore.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">boto3_refresh_session</span><span class="w"> </span><span class="kn">import</span> <span class="n">AssumeRoleConfig</span><span class="p">,</span> <span class="n">RefreshableSession</span>
+
+<span class="n">session</span> <span class="o">=</span> <span class="n">RefreshableSession</span><span class="p">(</span>
+    <span class="n">assume_role_kwargs</span><span class="o">=</span><span class="n">AssumeRoleConfig</span><span class="p">(</span><span class="n">RoleArn</span><span class="o">=</span><span class="s2">&quot;&lt;your-role-arn&gt;&quot;</span><span class="p">),</span>
+    <span class="n">region_name</span><span class="o">=</span><span class="s2">&quot;us-east-1&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">s3</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">Config</span><span class="p">(</span><span class="n">retries</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;max_attempts&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}))</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Attributes in <code class="docutils literal notranslate"><span class="pre">assume_role_kwargs</span></code> and <code class="docutils literal notranslate"><span class="pre">sts_client_kwargs</span></code> can be accessed using dot-notation <em>or</em> dictionary-style access.
+Same goes for <a class="reference internal" href="api/generated/boto3_refresh_session.utils.config.AssumeRoleConfig.html#boto3_refresh_session.utils.config.AssumeRoleConfig" title="boto3_refresh_session.utils.config.AssumeRoleConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3_refresh_session.utils.config.AssumeRoleConfig</span></code></a> and <a class="reference internal" href="api/generated/boto3_refresh_session.utils.config.STSClientConfig.html#boto3_refresh_session.utils.config.STSClientConfig" title="boto3_refresh_session.utils.config.STSClientConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3_refresh_session.utils.config.STSClientConfig</span></code></a> objects.</p>
+</div>
+</section>
+<section id="refresh-methods">
+<h2>Refresh Methods<a class="headerlink" href="#refresh-methods" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="api/generated/boto3_refresh_session.session.RefreshableSession.html#boto3_refresh_session.session.RefreshableSession" title="boto3_refresh_session.session.RefreshableSession"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3_refresh_session.session.RefreshableSession</span></code></a> uses STS by default.
+To be more precise, if <code class="docutils literal notranslate"><span class="pre">method</span></code> is not specified, it defaults to <code class="docutils literal notranslate"><span class="pre">&quot;sts&quot;</span></code>.
+If you want to use <a class="reference internal" href="api/generated/boto3_refresh_session.session.RefreshableSession.html#boto3_refresh_session.session.RefreshableSession" title="boto3_refresh_session.session.RefreshableSession"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3_refresh_session.session.RefreshableSession</span></code></a> with IoT or provide a custom credential provider instead then you must modulate the <code class="docutils literal notranslate"><span class="pre">method</span></code> parameter accordingly to <code class="docutils literal notranslate"><span class="pre">&quot;iot&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;custom&quot;</span></code>.
+Those methods require additional parameters; refer to the <a class="reference internal" href="api/index.html#api"><span class="std std-ref">API docs</span></a> for more details.</p>
+</section>
+<section id="refresh-behavior">
+<h2>Refresh Behavior<a class="headerlink" href="#refresh-behavior" title="Link to this heading">#</a></h2>
+<p>There are two ways to trigger automatic credential refresh in boto3-refresh-session:</p>
+<ol class="arabic simple">
+<li><p><strong>Deferred (default)</strong> — Refresh occurs only when credentials are required</p></li>
+<li><p><strong>Eager</strong> — Credentials are refreshed as soon as they expire</p></li>
+</ol>
+<p>Set <code class="docutils literal notranslate"><span class="pre">defer_refresh</span></code> to False to enable eager refresh:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">boto3_refresh_session</span><span class="w"> </span><span class="kn">import</span> <span class="n">AssumeRoleConfig</span><span class="p">,</span> <span class="n">RefreshableSession</span>
+
+<span class="n">session</span> <span class="o">=</span> <span class="n">RefreshableSession</span><span class="p">(</span>
+    <span class="n">assume_role_kwargs</span><span class="o">=</span><span class="n">AssumeRoleConfig</span><span class="p">(</span><span class="n">RoleArn</span><span class="o">=</span><span class="s2">&quot;&lt;your-role-arn&gt;&quot;</span><span class="p">),</span>
+    <span class="n">defer_refresh</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<section id="eager-refresh-behavior">
+<h3>Eager Refresh Behavior<a class="headerlink" href="#eager-refresh-behavior" title="Link to this heading">#</a></h3>
+<p>With eager refresh enabled (i.e. <code class="docutils literal notranslate"><span class="pre">defer_refresh=False</span></code>), credentials are refreshed according to two settings: advisory and mandatory timeouts.
+The so-called “advisory” and “mandatory” timeouts are concepts created by botocore to manage credential expiration.
+By default in botocore, the advisory timeout is set to 15 minutes before expiration and the mandatory timeout is set to 10 minutes before expiration.
+botocore will attempt to refresh credentials when the advisory timeout is reached, but will force a refresh when the mandatory timeout is reached.
+This behavior is inherited by boto3-refresh-session when eager refresh is enabled, and the <code class="docutils literal notranslate"><span class="pre">advisory_timeout</span></code> and <code class="docutils literal notranslate"><span class="pre">mandatory_timeout</span></code> parameters can be adjusted as needed.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The vast majority of use cases will not require modification of advisory or mandatory timeouts, but they are available for edge cases where precise control over refresh timing is necessary.</p>
+</div>
+</section>
+</section>
+<section id="mfa">
+<span id="id2"></span><h2>MFA<a class="headerlink" href="#mfa" title="Link to this heading">#</a></h2>
+<p>If your role assumption requires MFA, you must provide a token provider via <code class="docutils literal notranslate"><span class="pre">mfa_token_provider</span></code>.
+It accepts a <code class="docutils literal notranslate"><span class="pre">callable</span></code> (recommended), a <code class="docutils literal notranslate"><span class="pre">list[str]</span></code> of command arguments (also recommended), or a command <code class="docutils literal notranslate"><span class="pre">str</span></code> (least recommended).</p>
+<ul class="simple">
+<li><p><strong>Callable</strong>: Called during each refresh.
+Arguments are passed via <code class="docutils literal notranslate"><span class="pre">mfa_token_provider_kwargs</span></code>.
+You are responsible for writing the callable.</p></li>
+<li><p><strong>list[str] | str</strong>: Treated as a CLI command and executed via <a class="reference external" href="https://docs.python.org/3/library/subprocess.html#subprocess.run" title="(in Python v3.14)"><code class="xref py py-func docutils literal notranslate"><span class="pre">subprocess.run</span></code></a>.
+Keyword arguments passed via <code class="docutils literal notranslate"><span class="pre">mfa_token_provider_kwargs</span></code> are forwarded to <a class="reference external" href="https://docs.python.org/3/library/subprocess.html#subprocess.run" title="(in Python v3.14)"><code class="xref py py-func docutils literal notranslate"><span class="pre">subprocess.run</span></code></a>.</p></li>
+</ul>
+<p>Below are examples for a callable and direct CLI invocation.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Be sure to provide <code class="docutils literal notranslate"><span class="pre">SerialNumber</span></code> in <code class="docutils literal notranslate"><span class="pre">assume_role_kwargs</span></code> when using MFA.
+If you provide <code class="docutils literal notranslate"><span class="pre">mfa_token_provider</span></code>, any <code class="docutils literal notranslate"><span class="pre">TokenCode</span></code> you set in <code class="docutils literal notranslate"><span class="pre">assume_role_kwargs</span></code> will be ignored and overwritten on each refresh.
+If you run into latency issues, pass a <code class="xref py py-class docutils literal notranslate"><span class="pre">botocore.config.Config</span></code> with retries to the internal STS client via <code class="docutils literal notranslate"><span class="pre">sts_client_kwargs</span></code>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Token output is parsed to the <strong>last</strong> 6-digit numeric token found in stdout when <code class="docutils literal notranslate"><span class="pre">mfa_token_provider</span></code> is a CLI command.
+The token must be a standalone 6-digit string (adjacent characters cause an error).</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">boto3_refresh_session</span><span class="w"> </span><span class="kn">import</span> <span class="n">AssumeRoleConfig</span><span class="p">,</span> <span class="n">RefreshableSession</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+
+<span class="c1"># example MFA token provider as a callable</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mfa_token_provider</span><span class="p">(</span><span class="n">cmd</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="nb">list</span><span class="p">(</span><span class="n">cmd</span><span class="p">),</span>
+        <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">stdout</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+
+<span class="n">session</span> <span class="o">=</span> <span class="n">RefreshableSession</span><span class="p">(</span>
+    <span class="n">assume_role_kwargs</span><span class="o">=</span><span class="n">AssumeRoleConfig</span><span class="p">(</span>
+        <span class="n">RoleArn</span><span class="o">=</span><span class="s2">&quot;&lt;your-role-arn&gt;&quot;</span><span class="p">,</span>
+        <span class="n">RoleSessionName</span><span class="o">=</span><span class="s2">&quot;&lt;your-role-session-name&gt;&quot;</span><span class="p">,</span>
+        <span class="n">SerialNumber</span><span class="o">=</span><span class="s2">&quot;arn:aws:iam::&lt;account-id&gt;:mfa/&lt;device-name&gt;&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">mfa_token_provider</span><span class="o">=</span><span class="n">mfa_token_provider</span><span class="p">,</span>
+    <span class="n">mfa_token_provider_kwargs</span><span class="o">=</span><span class="p">{</span>
+        <span class="c1"># &quot;ykman oath code --single AWS-prod&quot; is equivalent to the cmd below</span>
+        <span class="s2">&quot;cmd&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ykman&quot;</span><span class="p">,</span> <span class="s2">&quot;oath&quot;</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">,</span> <span class="s2">&quot;--single&quot;</span><span class="p">,</span> <span class="s2">&quot;AWS-prod&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;timeout&quot;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+
+<span class="c1"># or, pass a CLI command directly (list[str] or str)</span>
+<span class="n">session</span> <span class="o">=</span> <span class="n">RefreshableSession</span><span class="p">(</span>
+    <span class="n">assume_role_kwargs</span><span class="o">=</span><span class="n">AssumeRoleConfig</span><span class="p">(</span>
+        <span class="n">RoleArn</span><span class="o">=</span><span class="s2">&quot;&lt;your-role-arn&gt;&quot;</span><span class="p">,</span>
+        <span class="n">RoleSessionName</span><span class="o">=</span><span class="s2">&quot;&lt;your-role-session-name&gt;&quot;</span><span class="p">,</span>
+        <span class="n">SerialNumber</span><span class="o">=</span><span class="s2">&quot;arn:aws:iam::&lt;account-id&gt;:mfa/&lt;device-name&gt;&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">mfa_token_provider</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ykman&quot;</span><span class="p">,</span> <span class="s2">&quot;oath&quot;</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">,</span> <span class="s2">&quot;--single&quot;</span><span class="p">,</span> <span class="s2">&quot;AWS-prod&quot;</span><span class="p">],</span>
+    <span class="n">mfa_token_provider_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;timeout&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It is highly recommended to use <code class="docutils literal notranslate"><span class="pre">mfa_token_provider</span></code> instead of passing <code class="docutils literal notranslate"><span class="pre">TokenCode</span></code> directly.
+Without <code class="docutils literal notranslate"><span class="pre">mfa_token_provider</span></code>, you must refresh <code class="docutils literal notranslate"><span class="pre">TokenCode</span></code> yourself, which will be cumbersome.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Erroneous <code class="docutils literal notranslate"><span class="pre">TokenCode</span></code> values (i.e. non 6-digit numeric strings) will raise errors during construction of <code class="docutils literal notranslate"><span class="pre">assume_role_kwargs</span></code>.
+Ensure your token provider returns valid tokens.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>For security, the <code class="docutils literal notranslate"><span class="pre">stdout</span></code>, <code class="docutils literal notranslate"><span class="pre">stderr</span></code>, <code class="docutils literal notranslate"><span class="pre">shell</span></code>, <code class="docutils literal notranslate"><span class="pre">executable</span></code>, and <code class="docutils literal notranslate"><span class="pre">preexec_fn</span></code> <a class="reference external" href="https://docs.python.org/3/library/subprocess.html#subprocess.run" title="(in Python v3.14)"><code class="xref py py-func docutils literal notranslate"><span class="pre">subprocess.run</span></code></a> parameters are blocked and will raise an error if provided in <code class="docutils literal notranslate"><span class="pre">mfa_token_provider_kwargs</span></code>.</p>
+</div>
+</section>
+<section id="client-and-resource-caching">
+<span id="cachedocs"></span><h2>Client and Resource Caching<a class="headerlink" href="#client-and-resource-caching" title="Link to this heading">#</a></h2>
+<p>boto3-refresh-session uses <a class="reference external" href="https://pypi.org/project/boto3-client-cache/">boto3-client-cache</a>
+for both client and resource caching.
+Calls to <code class="docutils literal notranslate"><span class="pre">session.client(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">session.resource(...)</span></code> are cached by
+default and will return the same object for equivalent parameters.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Caches are available on the <code class="docutils literal notranslate"><span class="pre">cache</span></code> attribute:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">session.cache.client[&quot;LRU&quot;]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">session.cache.client[&quot;LFU&quot;]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">session.cache.resource[&quot;LRU&quot;]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">session.cache.resource[&quot;LFU&quot;]</span></code></p></li>
+</ul>
+<p>Direct lookups use
+<a class="reference external" href="https://61418.io/boto3-client-cache/reference/boto3_client_cache.cache.html#boto3_client_cache.cache.ClientCacheKey" title="(in boto3-client-cache)"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3_client_cache.cache.ClientCacheKey</span></code></a>
+and
+<a class="reference external" href="https://61418.io/boto3-client-cache/reference/boto3_client_cache.cache.html#boto3_client_cache.cache.ResourceCacheKey" title="(in boto3-client-cache)"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3_client_cache.cache.ResourceCacheKey</span></code></a>.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The default eviction policy is <code class="docutils literal notranslate"><span class="pre">&quot;LRU&quot;</span></code>. You can opt into <code class="docutils literal notranslate"><span class="pre">&quot;LFU&quot;</span></code>
+per call by passing <code class="docutils literal notranslate"><span class="pre">eviction_policy=&quot;LFU&quot;</span></code> to <code class="docutils literal notranslate"><span class="pre">client(...)</span></code> or
+<code class="docutils literal notranslate"><span class="pre">resource(...)</span></code>.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can control cache size per policy with <code class="docutils literal notranslate"><span class="pre">max_size</span></code> on
+<code class="docutils literal notranslate"><span class="pre">client(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">resource(...)</span></code>. If omitted, each cache defaults to
+a maximum size of 10.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>For STS operations, <a class="reference external" href="https://docs.aws.amazon.com/boto3/latest/reference/services/sts.html#STS.Client" title="(in Boto3 v1.42.59)"><code class="xref py py-class docutils literal notranslate"><span class="pre">STS.Client</span></code></a> objects are added to the cache automatically.
+Therefore, if you are using STS for credential refresh, be mindful of cache size and eviction policy to avoid unintended evictions of the internal STS client.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">boto3_client_cache</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClientCacheKey</span><span class="p">,</span> <span class="n">ResourceCacheKey</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">boto3_refresh_session</span><span class="w"> </span><span class="kn">import</span> <span class="n">AssumeRoleConfig</span><span class="p">,</span> <span class="n">RefreshableSession</span>
+
+<span class="n">session</span> <span class="o">=</span> <span class="n">RefreshableSession</span><span class="p">(</span>
+    <span class="n">assume_role_kwargs</span><span class="o">=</span><span class="n">AssumeRoleConfig</span><span class="p">(</span><span class="n">RoleArn</span><span class="o">=</span><span class="s2">&quot;&lt;your-role-arn&gt;&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># client caching (default LRU)</span>
+<span class="n">s3_client_1</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s2">&quot;us-east-1&quot;</span><span class="p">)</span>
+<span class="n">s3_client_2</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s2">&quot;us-east-1&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">s3_client_1</span> <span class="ow">is</span> <span class="n">s3_client_2</span>
+
+<span class="c1"># resource caching with LFU policy</span>
+<span class="n">s3_resource_1</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span>
+    <span class="s2">&quot;s3&quot;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s2">&quot;us-east-1&quot;</span><span class="p">,</span> <span class="n">eviction_policy</span><span class="o">=</span><span class="s2">&quot;LFU&quot;</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="mi">25</span>
+<span class="p">)</span>
+<span class="n">s3_resource_2</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span>
+    <span class="s2">&quot;s3&quot;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s2">&quot;us-east-1&quot;</span><span class="p">,</span> <span class="n">eviction_policy</span><span class="o">=</span><span class="s2">&quot;LFU&quot;</span>
+<span class="p">)</span>
+<span class="k">assert</span> <span class="n">s3_resource_1</span> <span class="ow">is</span> <span class="n">s3_resource_2</span>
+
+<span class="c1"># direct cache lookups</span>
+<span class="n">client_key</span> <span class="o">=</span> <span class="n">ClientCacheKey</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s2">&quot;us-east-1&quot;</span><span class="p">)</span>
+<span class="n">cached_client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">client</span><span class="p">[</span><span class="s2">&quot;LRU&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">client_key</span><span class="p">)</span>
+
+<span class="n">resource_key</span> <span class="o">=</span> <span class="n">ResourceCacheKey</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s2">&quot;us-east-1&quot;</span><span class="p">)</span>
+<span class="n">cached_resource</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">resource</span><span class="p">[</span><span class="s2">&quot;LFU&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">resource_key</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">cached_client</span> <span class="ow">is</span> <span class="n">s3_client_1</span>
+<span class="k">assert</span> <span class="n">cached_resource</span> <span class="ow">is</span> <span class="n">s3_resource_1</span>
+</pre></div>
+</div>
+</section>
+<section id="iot-core-x-509">
+<h2>IoT Core X.509<a class="headerlink" href="#iot-core-x-509" title="Link to this heading">#</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This section requires that you have installed boto3-refresh-session with the IoT extra.
+If you have not done so, please reinstall using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>boto3-refresh-session<span class="o">[</span>iot<span class="o">]</span>
+</pre></div>
+</div>
+</div>
+<p>AWS IoT Core can vend temporary AWS credentials through the credentials provider when you connect with an X.509 certificate and a role alias.
+boto3-refresh-session makes this flow seamless by automatically refreshing credentials over mTLS.
+boto3-refresh-session supports both PEM files and PKCS#11 modules for private key storage.
+For additional information on the exact parameters that <a class="reference internal" href="api/generated/boto3_refresh_session.session.RefreshableSession.html#boto3_refresh_session.session.RefreshableSession" title="boto3_refresh_session.session.RefreshableSession"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3_refresh_session.session.RefreshableSession</span></code></a> takes for IoT, check the docs for <a class="reference internal" href="api/generated/boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession.html#boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession" title="boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession</span></code></a>.</p>
+<p>For PEM files:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">boto3_refresh_session</span><span class="w"> </span><span class="kn">import</span> <span class="n">RefreshableSession</span>
+<span class="n">session</span> <span class="o">=</span> <span class="n">RefreshableSession</span><span class="p">(</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;iot&quot;</span><span class="p">,</span>
+    <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;&lt;your-credentials-endpoint&gt;.credentials.iot.&lt;region&gt;.amazonaws.com&quot;</span><span class="p">,</span>
+    <span class="n">role_alias</span><span class="o">=</span><span class="s2">&quot;&lt;your-role-alias&gt;&quot;</span><span class="p">,</span>
+    <span class="n">certificate</span><span class="o">=</span><span class="s2">&quot;/path/to/certificate.pem&quot;</span><span class="p">,</span>
+    <span class="n">private_key</span><span class="o">=</span><span class="s2">&quot;/path/to/private-key.pem&quot;</span><span class="p">,</span>
+    <span class="n">thing_name</span><span class="o">=</span><span class="s2">&quot;&lt;your-thing-name&gt;&quot;</span><span class="p">,</span>       <span class="c1"># optional, if used in policies</span>
+    <span class="n">duration_seconds</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span>                <span class="c1"># optional, capped by role alias</span>
+    <span class="n">region_name</span><span class="o">=</span><span class="s2">&quot;us-east-1&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>For PKCS#11:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">boto3_refresh_session</span><span class="w"> </span><span class="kn">import</span> <span class="n">RefreshableSession</span>
+
+<span class="n">session</span> <span class="o">=</span> <span class="n">brs</span><span class="o">.</span><span class="n">RefreshableSession</span><span class="p">(</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;iot&quot;</span><span class="p">,</span>
+    <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;&lt;your-credentials-endpoint&gt;.credentials.iot.&lt;region&gt;.amazonaws.com&quot;</span><span class="p">,</span>
+    <span class="n">role_alias</span><span class="o">=</span><span class="s2">&quot;&lt;your-role-alias&gt;&quot;</span><span class="p">,</span>
+    <span class="n">certificate</span><span class="o">=</span><span class="s2">&quot;/path/to/certificate.pem&quot;</span><span class="p">,</span>
+    <span class="n">pkcs11</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;pkcs11_lib&quot;</span><span class="p">:</span> <span class="s2">&quot;/usr/local/lib/softhsm/libsofthsm2.so&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;user_pin&quot;</span><span class="p">:</span> <span class="s2">&quot;1234&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;slot_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;token_label&quot;</span><span class="p">:</span> <span class="s2">&quot;MyToken&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;private_key_label&quot;</span><span class="p">:</span> <span class="s2">&quot;MyKey&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">thing_name</span><span class="o">=</span><span class="s2">&quot;&lt;your-thing-name&gt;&quot;</span><span class="p">,</span>
+    <span class="n">region_name</span><span class="o">=</span><span class="s2">&quot;us-east-1&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>For MQTT operations:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">awscrt.mqtt.QoS</span><span class="w"> </span><span class="kn">import</span> <span class="n">AT_LEAST_ONCE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">boto3_refresh_session</span><span class="w"> </span><span class="kn">import</span> <span class="n">RefreshableSession</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">mqtt</span><span class="p">(</span>
+<span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;&lt;your endpoint&gt;-ats.iot.&lt;region&gt;.amazonaws.com&quot;</span><span class="p">,</span>
+<span class="n">client_id</span><span class="o">=</span><span class="s2">&quot;&lt;your thing name or client ID&gt;&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">topic</span><span class="o">=</span><span class="s2">&quot;foo/bar&quot;</span><span class="p">,</span> <span class="n">payload</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="n">qos</span><span class="o">=</span><span class="n">AT_LEAST_ONCE</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="miscellaneous">
+<h2>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Link to this heading">#</a></h2>
+<p>To see which identity the session is currently using, call the <code class="docutils literal notranslate"><span class="pre">whoami</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">whoami</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The value returned by <code class="docutils literal notranslate"><span class="pre">whoami</span></code> when <code class="docutils literal notranslate"><span class="pre">method=&quot;custom&quot;</span></code> is not especially informative.
+This is because custom credential providers vary widely, which this library cannot infer or anticipate in advance.
+Users employing <code class="docutils literal notranslate"><span class="pre">method=&quot;custom&quot;</span></code> should implement their own identity verification logic as needed.</p>
+</div>
+<p>To return the currently active temporary security credentials, call the <code class="docutils literal notranslate"><span class="pre">refreshable_credentials</span></code> method or <code class="docutils literal notranslate"><span class="pre">credentials</span></code> attribute.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># refreshable_credentials method</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">refreshable_credentials</span><span class="p">())</span>
+
+<span class="c1"># credentials property</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">credentials</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you wish to make <a class="reference internal" href="api/generated/boto3_refresh_session.session.RefreshableSession.html#boto3_refresh_session.session.RefreshableSession" title="boto3_refresh_session.session.RefreshableSession"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3_refresh_session.session.RefreshableSession</span></code></a> globally available in your application without needing to pass it around explicitly, cleverly update the default session in boto3 like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">boto3</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_SESSION</span><span class="p">,</span> <span class="n">client</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">boto3_refresh_session</span><span class="w"> </span><span class="kn">import</span> <span class="n">RefreshableSession</span>
+
+<span class="n">DEFAULT_SESSION</span> <span class="o">=</span> <span class="n">RefreshableSession</span><span class="p">(</span>
+    <span class="n">assume_role_kwargs</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;RoleArn&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;your-role-arn&gt;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;RoleSessionName&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;your-role-session-name&gt;&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="o">...</span>
+<span class="p">)</span>
+<span class="n">s3</span> <span class="o">=</span> <span class="n">client</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">)</span>  <span class="c1"># uses DEFAULT_SESSION under the hood</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">boto3-refresh-session</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="api/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">API</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#authorization">Authorization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initialization">Initialization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#refresh-methods">Refresh Methods</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#refresh-behavior">Refresh Behavior</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eager-refresh-behavior">Eager Refresh Behavior</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mfa">MFA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#client-and-resource-caching">Client and Resource Caching</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iot-core-x-509">IoT Core X.509</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#miscellaneous">Miscellaneous</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/usage.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Michael Letts.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

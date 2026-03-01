@@ -1,0 +1,1003 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" data-theme="dark">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>CustomRefreshableSession &#8212; boto3-refresh-session</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=212af034" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=f663eb4a"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/generated/boto3_refresh_session.methods.custom.CustomRefreshableSession';</script>
+    <link rel="icon" href="../../_static/brs.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="IOT Refresh Methods" href="../iot.html" />
+    <link rel="prev" title="Custom Refresh Methods" href="../custom.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../../_static/brs.png" class="logo__image only-dark" alt="boto3-refresh-session - Home"/>
+    <img src="../../_static/brs.png" class="logo__image only-light pst-js-only" alt="boto3-refresh-session - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../usage.html">
+    Usage
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../changelog.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/michaelthomasletts/boto3-refresh-session" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/boto3-refresh-session/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-python fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../usage.html">
+    Usage
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../changelog.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/michaelthomasletts/boto3-refresh-session" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/boto3-refresh-session/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-python fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../session.html">Core Interface</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../custom.html">Custom Refresh Methods</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">CustomRefreshableSession</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../iot.html">IOT Refresh Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sts.html">STS Refresh Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config.html">Configs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../exceptions.html">Exceptions</a></li>
+</ul>
+</div>
+</nav></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../custom.html" class="nav-link">Custom Refresh Methods</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">CustomRefreshableSession</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="customrefreshablesession">
+<h1>CustomRefreshableSession<a class="headerlink" href="#customrefreshablesession" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="boto3_refresh_session.methods.custom.CustomRefreshableSession">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boto3_refresh_session.methods.custom.</span></span><span class="sig-name descname"><span class="pre">CustomRefreshableSession</span></span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/custom.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession" title="Link to this definition">#</a></dt>
+<dd><p>A <a class="reference external" href="https://docs.aws.amazon.com/boto3/latest/reference/core/session.html#boto3.session.Session" title="(in Boto3 v1.42.59)"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3.session.Session</span></code></a> object that automatically refreshes
+temporary credentials returned by a custom credential getter provided
+by the user. Useful for users with highly sophisticated or idiosyncratic
+authentication flows.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>custom_credentials_method</strong><span class="classifier">Callable[…, TemporaryCredentials | Dict[str, str]]</span></dt><dd><p>Required. Accepts a callable object that returns temporary AWS
+security credentials. That object must return a dictionary containing
+‘access_key’, ‘secret_key’, ‘token’, and ‘expiry_time’ when called.</p>
+</dd>
+<dt><strong>custom_credentials_method_args</strong><span class="classifier">Dict[str, Any], optional</span></dt><dd><p>Optional keyword arguments for the function passed to the
+<code class="docutils literal notranslate"><span class="pre">custom_credentials_method</span></code> parameter.</p>
+</dd>
+<dt><strong>defer_refresh</strong><span class="classifier">bool = True, optional</span></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">True</span></code> then temporary credentials are not automatically refreshed
+until they are explicitly needed. If <code class="docutils literal notranslate"><span class="pre">False</span></code> then temporary
+credentials refresh immediately upon expiration. It is highly
+recommended that you use <code class="docutils literal notranslate"><span class="pre">True</span></code>. Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd>
+<dt><strong>advisory_timeout</strong><span class="classifier">int = 900, optional</span></dt><dd><p>USE THIS ARGUMENT WITH CAUTION!!!</p>
+<p>Botocore will attempt to refresh credentials early according to
+this value (in seconds), but will continue using the existing
+credentials if refresh fails. Default is 15 minutes (900 seconds).</p>
+</dd>
+<dt><strong>mandatory_timeout</strong><span class="classifier">int = 600, optional</span></dt><dd><p>USE THIS ARGUMENT WITH CAUTION!!!</p>
+<p>Botocore requires a successful refresh before continuing. If
+refresh fails in this window (in seconds), API calls may fail.
+Default is 10 minutes (600 seconds).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Attributes</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.credentials" title="boto3_refresh_session.methods.custom.CustomRefreshableSession.credentials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">credentials</span></code></a></p></td>
+<td><p>The current temporary AWS security credentials.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p><strong>cache</strong></p></td>
+<td><p>(SessionCache) The client and resource cache used to store and retrieve cached clients.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p><strong>client(*args, eviction_policy: EvictionPolicy, max_size: int, **kwargs) -&gt; BaseClient</strong></p></td>
+<td><p>Creates a low-level service client by name.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>get_identity() -&gt; Identity</strong></p></td>
+<td><p>Returns metadata about the current caller identity.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>refreshable_credentials() -&gt; TemporaryCredentials</strong></p></td>
+<td><p>Returns the current temporary AWS security credentials.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>resource(*args, eviction_policy: EvictionPolicy, max_size: int, **kwargs) -&gt; ServiceResource</strong></p></td>
+<td><p>Creates a low-level service resource by name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>whoami() -&gt; Identity</strong></p></td>
+<td><p>Alias for <a class="reference internal" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.get_identity" title="boto3_refresh_session.methods.custom.CustomRefreshableSession.get_identity"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_identity</span></code></a>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Other Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>**kwargs</strong><span class="classifier">Any, optional</span></dt><dd><p>Optional keyword arguments for the <a class="reference external" href="https://docs.aws.amazon.com/boto3/latest/reference/core/session.html#boto3.session.Session" title="(in Boto3 v1.42.59)"><code class="xref py py-class docutils literal notranslate"><span class="pre">boto3.session.Session</span></code></a>
+object.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>BRSValidationError</dt><dd><p>If the provided parameters are of incorrect types or if required
+parameters are missing.</p>
+</dd>
+<dt>BRSCredentialError</dt><dd><p>If the credentials returned by the custom credential getter are missing
+required key-value pairs or if ‘expiry_time’ is not a valid ISO 8601
+string or datetime object.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><code class="docutils literal notranslate"><span class="pre">custom_credentials_method</span></code> must be a callable object that returns
+temporary AWS credentials when called. The returned credentials must
+be a dictionary (cast as <code class="docutils literal notranslate"><span class="pre">TemporaryCredentials</span></code>) containing the
+following key-value pairs: access_key (str), secret_key (str),
+token (str), and expiry_time (str in ISO 8601 format or datetime
+object).</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can import <code class="docutils literal notranslate"><span class="pre">TemporaryCredentials</span></code> from
+<code class="docutils literal notranslate"><span class="pre">boto3_refresh_session.utils.typing.TemporaryCredentials</span></code>. To avoid
+typing warnings in your IDE, you may want to cast the dict returned by
+your custom credential getter as <code class="docutils literal notranslate"><span class="pre">TemporaryCredentials</span></code>.</p>
+</div>
+<p class="rubric">Examples</p>
+<p>Write (or import) the callable object for obtaining temporary AWS security
+credentials.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">your_custom_credential_getter</span><span class="p">(</span><span class="n">your_param</span><span class="p">,</span> <span class="n">another_param</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="o">...</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">return</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s1">&#39;access_key&#39;</span><span class="p">:</span> <span class="s1">&#39;...&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s1">&#39;secret_key&#39;</span><span class="p">:</span> <span class="s1">&#39;...&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s1">&#39;token&#39;</span><span class="p">:</span> <span class="s1">&#39;...&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s1">&#39;expiry_time&#39;</span><span class="p">:</span> <span class="s1">&#39;...&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">}</span>
+</pre></div>
+</div>
+<p>Pass that callable object to <code class="docutils literal notranslate"><span class="pre">RefreshableSession</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sess</span> <span class="o">=</span> <span class="n">RefreshableSession</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">method</span><span class="o">=</span><span class="s1">&#39;custom&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">custom_credentials_method</span><span class="o">=</span><span class="n">your_custom_credential_getter</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">custom_credentials_method_args</span><span class="o">=</span><span class="p">{</span><span class="o">...</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.methods.custom.CustomRefreshableSession.get_identity">
+<span class="sig-name descname"><span class="pre">get_identity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Identity</span></span></span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/custom.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.get_identity" title="Link to this definition">#</a></dt>
+<dd><p>Returns metadata about the custom credential getter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>Identity</dt><dd><p>Dict containing information about the custom credential getter.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="boto3_refresh_session.methods.custom.CustomRefreshableSession.available_profiles">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">available_profiles</span></span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/custom.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.available_profiles" title="Link to this definition">#</a></dt>
+<dd><p>The profiles available to the session credentials</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.methods.custom.CustomRefreshableSession.client">
+<span class="sig-name descname"><span class="pre">client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eviction_policy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'LRU'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'LFU'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">BaseClient</span></span></span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/custom.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.client" title="Link to this definition">#</a></dt>
+<dd><p>Returns a cached client from the default session if it exists,
+otherwise creates a new client and caches it.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.1.0.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>eviction_policy</strong><span class="classifier">EvictionPolicy, optional</span></dt><dd><p>The type of cache to create. Case sensitive. Options are “LRU” and
+“LFU”. Defaults to “LRU”.</p>
+</dd>
+<dt><strong>max_size</strong><span class="classifier">int | None, optional</span></dt><dd><p>The maximum size of the client cache. If None, the cache size is
+unlimited. Beware that modifying this value after the cache has
+already been initialized may evict existing clients. Default is
+None.</p>
+</dd>
+<dt><strong>*args</strong></dt><dd><p>Positional arguments to be passed to the default session’s client
+method. Check <a class="reference external" href="https://docs.aws.amazon.com/boto3/latest/reference/core/session.html#boto3.session.Session.client" title="(in Boto3 v1.42.59)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">boto3.session.Session.client</span></code></a> for more details
+on accepted arguments.</p>
+</dd>
+<dt><strong>**kwargs</strong></dt><dd><p>Keyword arguments to be passed to the default session’s client
+method. Check <a class="reference external" href="https://docs.aws.amazon.com/boto3/latest/reference/core/session.html#boto3.session.Session.client" title="(in Boto3 v1.42.59)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">boto3.session.Session.client</span></code></a> for more details
+on accepted arguments.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>BaseClient</dt><dd><p>A cached client if it exists, otherwise a new client that has been
+cached.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>ClientCacheError</dt><dd><p>Raised when an error occurs related to cache operations, such as
+using an invalid key, eviction policy, or value type.</p>
+</dd>
+<dt>ClientCacheExistsError</dt><dd><p>Raised when attempting to add a client which already exists in
+the cache.</p>
+</dd>
+<dt>ClientCacheNotFoundError</dt><dd><p>Raised when attempting to retrieve or delete a client which does
+not exist in the cache.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">boto3_client_cache</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s3_client</span> <span class="o">=</span> <span class="n">client</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s2">&quot;us-east-1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s3_client_again</span> <span class="o">=</span> <span class="n">client</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s2">&quot;us-east-1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s3_client</span> <span class="ow">is</span> <span class="n">s3_client_again</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="boto3_refresh_session.methods.custom.CustomRefreshableSession.credentials">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">credentials</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">TemporaryCredentials</span></em><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/custom.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.credentials" title="Link to this definition">#</a></dt>
+<dd><p>The current temporary AWS security credentials.</p>
+<p>Alias for <a class="reference internal" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.refreshable_credentials" title="boto3_refresh_session.methods.custom.CustomRefreshableSession.refreshable_credentials"><code class="xref py py-meth docutils literal notranslate"><span class="pre">refreshable_credentials</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="boto3_refresh_session.methods.custom.CustomRefreshableSession.events">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">events</span></span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/custom.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.events" title="Link to this definition">#</a></dt>
+<dd><p>The event emitter for a session</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.methods.custom.CustomRefreshableSession.get_available_partitions">
+<span class="sig-name descname"><span class="pre">get_available_partitions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/custom.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.get_available_partitions" title="Link to this definition">#</a></dt>
+<dd><p>Lists the available partitions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Returns a list of partition names (e.g., [“aws”, “aws-cn”])</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.methods.custom.CustomRefreshableSession.get_available_regions">
+<span class="sig-name descname"><span class="pre">get_available_regions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partition_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'aws'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_non_regional</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/custom.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.get_available_regions" title="Link to this definition">#</a></dt>
+<dd><p>Lists the region and endpoint names of a particular partition.</p>
+<p>The list of regions returned by this method are regions that are
+explicitly known by the client to exist and is not comprehensive. A
+region not returned in this list may still be available for the
+provided service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>service_name</strong> (<em>string</em>) – Name of a service to list endpoint for (e.g., s3).</p></li>
+<li><p><strong>partition_name</strong> (<em>string</em>) – Name of the partition to limit endpoints to.
+(e.g., aws for the public AWS endpoints, aws-cn for AWS China
+endpoints, aws-us-gov for AWS GovCloud (US) Endpoints, etc.)</p></li>
+<li><p><strong>allow_non_regional</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Set to True to include endpoints that are
+not regional endpoints (e.g., s3-external-1,
+fips-us-gov-west-1, etc).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Returns a list of endpoint names (e.g., [“us-east-1”]).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.methods.custom.CustomRefreshableSession.get_available_resources">
+<span class="sig-name descname"><span class="pre">get_available_resources</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/custom.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.get_available_resources" title="Link to this definition">#</a></dt>
+<dd><p>Get a list of available services that can be loaded as resource
+clients via <code class="xref py py-meth docutils literal notranslate"><span class="pre">Session.resource</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of service names</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.methods.custom.CustomRefreshableSession.get_available_services">
+<span class="sig-name descname"><span class="pre">get_available_services</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/custom.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.get_available_services" title="Link to this definition">#</a></dt>
+<dd><p>Get a list of available services that can be loaded as low-level
+clients via <code class="xref py py-meth docutils literal notranslate"><span class="pre">Session.client</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of service names</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.methods.custom.CustomRefreshableSession.get_credentials">
+<span class="sig-name descname"><span class="pre">get_credentials</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/custom.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.get_credentials" title="Link to this definition">#</a></dt>
+<dd><p>Return the <code class="xref py py-class docutils literal notranslate"><span class="pre">botocore.credentials.Credentials</span></code> object
+associated with this session.  If the credentials have not
+yet been loaded, this will attempt to load them.  If they
+have already been loaded, this will return the cached
+credentials.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.methods.custom.CustomRefreshableSession.get_partition_for_region">
+<span class="sig-name descname"><span class="pre">get_partition_for_region</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region_name</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/custom.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.get_partition_for_region" title="Link to this definition">#</a></dt>
+<dd><p>Lists the partition name of a particular region.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>region_name</strong> (<em>string</em>) – Name of the region to list partition for (e.g.,
+us-east-1).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>string</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Returns the respective partition name (e.g., aws).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="boto3_refresh_session.methods.custom.CustomRefreshableSession.profile_name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">profile_name</span></span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/custom.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.profile_name" title="Link to this definition">#</a></dt>
+<dd><p>The <strong>read-only</strong> profile name.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.methods.custom.CustomRefreshableSession.refreshable_credentials">
+<span class="sig-name descname"><span class="pre">refreshable_credentials</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">TemporaryCredentials</span></span></span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/custom.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.refreshable_credentials" title="Link to this definition">#</a></dt>
+<dd><p>Returns the current temporary AWS security credentials.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>TemporaryCredentials</dt><dd><dl class="simple">
+<dt>Temporary AWS security credentials containing:</dt><dd><dl class="simple">
+<dt>access_key<span class="classifier">str</span></dt><dd><p>AWS access key identifier.</p>
+</dd>
+<dt>secret_key<span class="classifier">str</span></dt><dd><p>AWS secret access key.</p>
+</dd>
+<dt>token<span class="classifier">str</span></dt><dd><p>AWS session token.</p>
+</dd>
+<dt>expiry_time<span class="classifier">str</span></dt><dd><p>Expiration timestamp in ISO 8601 format.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="boto3_refresh_session.methods.custom.CustomRefreshableSession.region_name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">region_name</span></span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/custom.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.region_name" title="Link to this definition">#</a></dt>
+<dd><p>The <strong>read-only</strong> region name.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.methods.custom.CustomRefreshableSession.resource">
+<span class="sig-name descname"><span class="pre">resource</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eviction_policy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'LRU'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'LFU'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.aws.amazon.com/boto3/latest/reference/core/resources.html#boto3.resources.base.ServiceResource" title="(in Boto3 v1.42.59)"><span class="pre">ServiceResource</span></a></span></span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/custom.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.resource" title="Link to this definition">#</a></dt>
+<dd><p>Returns a cached resource from the default session if it exists,
+otherwise creates a new resource and caches it.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.1.0.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>eviction_policy</strong><span class="classifier">EvictionPolicy, optional</span></dt><dd><p>The type of cache to create. Case sensitive. Options are “LRU” and
+“LFU”. Defaults to “LRU”.</p>
+</dd>
+<dt><strong>max_size</strong><span class="classifier">int | None, optional</span></dt><dd><p>The maximum size of the resource cache. If None, the cache size is
+unlimited. Beware that modifying this value after the cache has
+already been initialized may evict existing resources. Default is
+None.</p>
+</dd>
+<dt><strong>*args</strong></dt><dd><p>Positional arguments to be passed to the default session’s resource
+method. Check <a class="reference external" href="https://docs.aws.amazon.com/boto3/latest/reference/core/session.html#boto3.session.Session.resource" title="(in Boto3 v1.42.59)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">boto3.session.Session.resource</span></code></a> for more
+details on accepted arguments.</p>
+</dd>
+<dt><strong>**kwargs</strong></dt><dd><p>Keyword arguments to be passed to the default session’s resource
+method. Check <a class="reference external" href="https://docs.aws.amazon.com/boto3/latest/reference/core/session.html#boto3.session.Session.resource" title="(in Boto3 v1.42.59)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">boto3.session.Session.resource</span></code></a> for more
+details on accepted arguments.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>ServiceResource</dt><dd><p>A cached resource if it exists, otherwise a new resource that has
+been cached.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>ResourceCacheError</dt><dd><p>Raised when an error occurs related to cache operations, such as
+using an invalid key, eviction policy, or value type.</p>
+</dd>
+<dt>ResourceCacheExistsError</dt><dd><p>Raised when attempting to add a resource which already exists in
+the cache.</p>
+</dd>
+<dt>ResourceCacheNotFoundError</dt><dd><p>Raised when attempting to retrieve or delete a resource which does
+not exist in the cache.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For correct typing, you may want to import mypy-boto3-* and use the
+generated type annotations for casting clients, which will be
+compatible with this method.</p>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">boto3_client_cache</span><span class="w"> </span><span class="kn">import</span> <span class="n">resource</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s3_resource</span> <span class="o">=</span> <span class="n">resource</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s2">&quot;us-east-1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s3_resource_again</span> <span class="o">=</span> <span class="n">resource</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s2">&quot;us-east-1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s3_resource</span> <span class="ow">is</span> <span class="n">s3_resource_again</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.methods.custom.CustomRefreshableSession.whoami">
+<span class="sig-name descname"><span class="pre">whoami</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Identity</span></span></span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/methods/custom.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.whoami" title="Link to this definition">#</a></dt>
+<dd><p>Returns metadata about the current caller identity.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.2.15.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is an alternative to <code class="docutils literal notranslate"><span class="pre">get_identity()</span></code>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>Identity</dt><dd><p>Dict containing current caller identity metadata.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../custom.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Custom Refresh Methods</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../iot.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">IOT Refresh Methods</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession"><code class="docutils literal notranslate"><span class="pre">CustomRefreshableSession</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.get_identity"><code class="docutils literal notranslate"><span class="pre">CustomRefreshableSession.get_identity</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.available_profiles"><code class="docutils literal notranslate"><span class="pre">CustomRefreshableSession.available_profiles</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.client"><code class="docutils literal notranslate"><span class="pre">CustomRefreshableSession.client</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.credentials"><code class="docutils literal notranslate"><span class="pre">CustomRefreshableSession.credentials</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.events"><code class="docutils literal notranslate"><span class="pre">CustomRefreshableSession.events</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.get_available_partitions"><code class="docutils literal notranslate"><span class="pre">CustomRefreshableSession.get_available_partitions</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.get_available_regions"><code class="docutils literal notranslate"><span class="pre">CustomRefreshableSession.get_available_regions</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.get_available_resources"><code class="docutils literal notranslate"><span class="pre">CustomRefreshableSession.get_available_resources</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.get_available_services"><code class="docutils literal notranslate"><span class="pre">CustomRefreshableSession.get_available_services</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.get_credentials"><code class="docutils literal notranslate"><span class="pre">CustomRefreshableSession.get_credentials</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.get_partition_for_region"><code class="docutils literal notranslate"><span class="pre">CustomRefreshableSession.get_partition_for_region</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.profile_name"><code class="docutils literal notranslate"><span class="pre">CustomRefreshableSession.profile_name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.refreshable_credentials"><code class="docutils literal notranslate"><span class="pre">CustomRefreshableSession.refreshable_credentials</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.region_name"><code class="docutils literal notranslate"><span class="pre">CustomRefreshableSession.region_name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.resource"><code class="docutils literal notranslate"><span class="pre">CustomRefreshableSession.resource</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.methods.custom.CustomRefreshableSession.whoami"><code class="docutils literal notranslate"><span class="pre">CustomRefreshableSession.whoami</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/api/generated/boto3_refresh_session.methods.custom.CustomRefreshableSession.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Michael Letts.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,670 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" data-theme="dark">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>STSClientConfig &#8212; boto3-refresh-session</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=212af034" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=f663eb4a"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/generated/boto3_refresh_session.utils.config.STSClientConfig';</script>
+    <link rel="icon" href="../../_static/brs.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Exceptions" href="../exceptions.html" />
+    <link rel="prev" title="AssumeRoleConfig" href="boto3_refresh_session.utils.config.AssumeRoleConfig.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../../_static/brs.png" class="logo__image only-dark" alt="boto3-refresh-session - Home"/>
+    <img src="../../_static/brs.png" class="logo__image only-light pst-js-only" alt="boto3-refresh-session - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../usage.html">
+    Usage
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../changelog.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/michaelthomasletts/boto3-refresh-session" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/boto3-refresh-session/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-python fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../usage.html">
+    Usage
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../changelog.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/michaelthomasletts/boto3-refresh-session" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/boto3-refresh-session/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-python fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../session.html">Core Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../custom.html">Custom Refresh Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../iot.html">IOT Refresh Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sts.html">STS Refresh Methods</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../config.html">Configs</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="boto3_refresh_session.utils.config.AssumeRoleConfig.html">AssumeRoleConfig</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">STSClientConfig</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../exceptions.html">Exceptions</a></li>
+</ul>
+</div>
+</nav></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../config.html" class="nav-link">Configs</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">STSClientConfig</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="stsclientconfig">
+<h1>STSClientConfig<a class="headerlink" href="#stsclientconfig" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="boto3_refresh_session.utils.config.STSClientConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boto3_refresh_session.utils.config.</span></span><span class="sig-name descname"><span class="pre">STSClientConfig</span></span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/utils/config.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.utils.config.STSClientConfig" title="Link to this definition">#</a></dt>
+<dd><p>Configuration for boto3 STS Client.</p>
+<p class="rubric">Attributes</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p><strong>service_name</strong></p></td>
+<td><p>(str, optional) The name of the AWS service. Defaults to ‘sts’.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>region_name</strong></p></td>
+<td><p>(str, optional) The AWS region name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>api_version</strong></p></td>
+<td><p>(str, optional) The API version to use.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>use_ssl</strong></p></td>
+<td><p>(bool, optional) Whether to use SSL.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>verify</strong></p></td>
+<td><p>(bool or str, optional) Whether to verify SSL certificates or a path to a CA bundle.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>endpoint_url</strong></p></td>
+<td><p>(str, optional) The complete URL to use for the constructed client.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>aws_access_key_id</strong></p></td>
+<td><p>(str, optional) The AWS access key ID.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>aws_secret_access_key</strong></p></td>
+<td><p>(str, optional) The AWS secret access key.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>aws_session_token</strong></p></td>
+<td><p>(str, optional) The AWS session token.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>config</strong></p></td>
+<td><p>(botocore.config.Config, optional) Advanced client configuration options.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>aws_account_id</strong></p></td>
+<td><p>(str, optional) The AWS account ID associated with the credentials.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Notes</p>
+<p>Values can be accessed via dot-notation (e.g., <code class="docutils literal notranslate"><span class="pre">config.RoleArn</span></code>)
+or dictionary-style access (e.g., <code class="docutils literal notranslate"><span class="pre">config['RoleArn']</span></code>).</p>
+<p>Accessing a valid but unset attribute (e.g., <code class="docutils literal notranslate"><span class="pre">SerialNumber</span></code>) via
+dot-notation returns <code class="docutils literal notranslate"><span class="pre">None</span></code> instead of raising an error. While this
+behavior is convenient, it may surprise users accustomed to seeing
+<code class="docutils literal notranslate"><span class="pre">AttributeError</span></code> exceptions in similar contexts.</p>
+<p><code class="docutils literal notranslate"><span class="pre">service_name</span></code> is enforced to be ‘sts’. If a different value is
+provided, it will be overridden to ‘sts’ with a warning.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.utils.config.STSClientConfig.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None.</span>&#160; <span class="pre">Remove</span> <span class="pre">all</span> <span class="pre">items</span> <span class="pre">from</span> <span class="pre">D.</span></span></span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/utils/config.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.utils.config.STSClientConfig.clear" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.utils.config.STSClientConfig.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">a</span> <span class="pre">shallow</span> <span class="pre">copy</span> <span class="pre">of</span> <span class="pre">D</span></span></span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/utils/config.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.utils.config.STSClientConfig.copy" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.utils.config.STSClientConfig.fromkeys">
+<span class="sig-name descname"><span class="pre">fromkeys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/utils/config.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.utils.config.STSClientConfig.fromkeys" title="Link to this definition">#</a></dt>
+<dd><p>Create a new dictionary with keys from iterable and values set to value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.utils.config.STSClientConfig.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/utils/config.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.utils.config.STSClientConfig.get" title="Link to this definition">#</a></dt>
+<dd><p>Return the value for key if key is in the dictionary, else default.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.utils.config.STSClientConfig.items">
+<span class="sig-name descname"><span class="pre">items</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">a</span> <span class="pre">set-like</span> <span class="pre">object</span> <span class="pre">providing</span> <span class="pre">a</span> <span class="pre">view</span> <span class="pre">on</span> <span class="pre">D's</span> <span class="pre">items</span></span></span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/utils/config.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.utils.config.STSClientConfig.items" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.utils.config.STSClientConfig.keys">
+<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">a</span> <span class="pre">set-like</span> <span class="pre">object</span> <span class="pre">providing</span> <span class="pre">a</span> <span class="pre">view</span> <span class="pre">on</span> <span class="pre">D's</span> <span class="pre">keys</span></span></span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/utils/config.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.utils.config.STSClientConfig.keys" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.utils.config.STSClientConfig.pop">
+<span class="sig-name descname"><span class="pre">pop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default=&lt;unrepresentable&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/utils/config.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.utils.config.STSClientConfig.pop" title="Link to this definition">#</a></dt>
+<dd><p>If the key is not found, return the default if given; otherwise,
+raise a KeyError.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.utils.config.STSClientConfig.popitem">
+<span class="sig-name descname"><span class="pre">popitem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/utils/config.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.utils.config.STSClientConfig.popitem" title="Link to this definition">#</a></dt>
+<dd><p>Remove and return a (key, value) pair as a 2-tuple.</p>
+<p>Pairs are returned in LIFO (last-in, first-out) order.
+Raises KeyError if the dict is empty.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.utils.config.STSClientConfig.setdefault">
+<span class="sig-name descname"><span class="pre">setdefault</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/utils/config.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.utils.config.STSClientConfig.setdefault" title="Link to this definition">#</a></dt>
+<dd><p>Insert key with a value of default if key is not in the dictionary.</p>
+<p>Return the value for key if key is in the dictionary, else default.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.utils.config.STSClientConfig.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="n"><span class="pre">E</span></span></em>, <span class="optional">]</span><em class="sig-param"><span class="n"><span class="pre">**F</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None.</span>&#160; <span class="pre">Update</span> <span class="pre">D</span> <span class="pre">from</span> <span class="pre">dict/iterable</span> <span class="pre">E</span> <span class="pre">and</span> <span class="pre">F.</span></span></span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/utils/config.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.utils.config.STSClientConfig.update" title="Link to this definition">#</a></dt>
+<dd><p>If E is present and has a .keys() method, then does:  for k in E: D[k] = E[k]
+If E is present and lacks a .keys() method, then does:  for k, v in E: D[k] = v
+In either case, this is followed by: for k in F:  D[k] = F[k]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boto3_refresh_session.utils.config.STSClientConfig.values">
+<span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">an</span> <span class="pre">object</span> <span class="pre">providing</span> <span class="pre">a</span> <span class="pre">view</span> <span class="pre">on</span> <span class="pre">D's</span> <span class="pre">values</span></span></span><a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/boto3_refresh_session/utils/config.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boto3_refresh_session.utils.config.STSClientConfig.values" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="boto3_refresh_session.utils.config.AssumeRoleConfig.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">AssumeRoleConfig</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../exceptions.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Exceptions</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.utils.config.STSClientConfig"><code class="docutils literal notranslate"><span class="pre">STSClientConfig</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.utils.config.STSClientConfig.clear"><code class="docutils literal notranslate"><span class="pre">STSClientConfig.clear</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.utils.config.STSClientConfig.copy"><code class="docutils literal notranslate"><span class="pre">STSClientConfig.copy</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.utils.config.STSClientConfig.fromkeys"><code class="docutils literal notranslate"><span class="pre">STSClientConfig.fromkeys</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.utils.config.STSClientConfig.get"><code class="docutils literal notranslate"><span class="pre">STSClientConfig.get</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.utils.config.STSClientConfig.items"><code class="docutils literal notranslate"><span class="pre">STSClientConfig.items</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.utils.config.STSClientConfig.keys"><code class="docutils literal notranslate"><span class="pre">STSClientConfig.keys</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.utils.config.STSClientConfig.pop"><code class="docutils literal notranslate"><span class="pre">STSClientConfig.pop</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.utils.config.STSClientConfig.popitem"><code class="docutils literal notranslate"><span class="pre">STSClientConfig.popitem</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.utils.config.STSClientConfig.setdefault"><code class="docutils literal notranslate"><span class="pre">STSClientConfig.setdefault</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.utils.config.STSClientConfig.update"><code class="docutils literal notranslate"><span class="pre">STSClientConfig.update</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boto3_refresh_session.utils.config.STSClientConfig.values"><code class="docutils literal notranslate"><span class="pre">STSClientConfig.values</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/api/generated/boto3_refresh_session.utils.config.STSClientConfig.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Michael Letts.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
