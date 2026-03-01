@@ -12,14 +12,12 @@ from . import exceptions, session
 from .exceptions import *
 from .methods import *
 from .session import *
-from .utils import cache, config, extras, typing
-from .utils.cache import *
+from .utils import config, extras, typing
 from .utils.config import *
 from .utils.extras import *
 from .utils.typing import *
 
 # controlling star imports
-__all__ += cache.__all__
 __all__ += config.__all__
 __all__ += session.__all__
 __all__ += exceptions.__all__

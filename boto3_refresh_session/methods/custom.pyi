@@ -6,34 +6,48 @@
 
 from typing import Any, Callable, Dict
 
-from boto3.session import Session
+from boto3.resources.base import ServiceResource
+from boto3_client_cache import Session, SessionCache
+from boto3_client_cache import EvictionPolicy
 from botocore.client import BaseClient
 
-from ..utils.cache import ClientCache
 from ..utils.typing import Identity, TemporaryCredentials
 
 __all__ = ["CustomRefreshableSession"]
 
 class CustomRefreshableSession(Session):
-    client_cache: ClientCache
+    cache: SessionCache
 
     def __init__(
         self,
-        custom_credentials_method: Callable[..., TemporaryCredentials],
+        custom_credentials_method: Callable[
+            ..., TemporaryCredentials | Dict[str, str]
+        ],
         custom_credentials_method_args: Dict[str, Any] | None = None,
         defer_refresh: bool = True,
         advisory_timeout: int = 900,
         mandatory_timeout: int = 600,
-        cache_clients: bool = True,
-        client_cache_max_size: int = 10,
         **kwargs: Any,
     ) -> None: ...
-    def client(self, *args: Any, **kwargs: Any) -> BaseClient: ...
+    def client(
+        self,
+        *args: Any,
+        eviction_policy: EvictionPolicy | None = None,
+        max_size: int | None = None,
+        **kwargs: Any,
+    ) -> BaseClient: ...
+    def resource(
+        self,
+        *args: Any,
+        eviction_policy: EvictionPolicy | None = None,
+        max_size: int | None = None,
+        **kwargs: Any,
+    ) -> ServiceResource: ...
     def refreshable_credentials(
         self,
-    ) -> TemporaryCredentials | Dict[str, str]: ...
-    def get_identity(self) -> Identity | Dict[str, Any]: ...
-    def whoami(self) -> Identity | Dict[str, Any]: ...
+    ) -> TemporaryCredentials: ...
+    def get_identity(self) -> Identity: ...
+    def whoami(self) -> Identity: ...
     @property
-    def credentials(self) -> TemporaryCredentials | Dict[str, str]: ...
-    def _get_credentials(self) -> TemporaryCredentials | Dict[str, str]: ...
+    def credentials(self) -> TemporaryCredentials: ...
+    def _get_credentials(self) -> TemporaryCredentials: ...

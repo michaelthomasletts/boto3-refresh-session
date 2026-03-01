@@ -4,7 +4,7 @@ Usage
 *****
 
 The purpose of this page is to provide a usage guide for boto3-refresh-session.
-The following sections cover installation, initialization, refresh methods and behavior, MFA support, client caching, IoT Core X.509 support, and some miscellaneous features.
+The following sections cover installation, initialization, refresh methods and behavior, MFA support, client and resource caching, IoT Core X.509 support, and some miscellaneous features.
 Use these instructions as a guide to get started with boto3-refresh-session, but refer to the :ref:`API docs <api>` for comprehensive technical documentation of all features and parameters.
 If you have any questions or run into issues, please open an issue on GitHub or reach out to the maintainer directly.
 
@@ -78,7 +78,7 @@ Below is a basic example of creating a ``Client`` via STS role assumption.
     s3 = session.client('s3')
 
 :class:`boto3_refresh_session.session.RefreshableSession` can be initialized exactly like a normal :class:`boto3.session.Session` object. 
-It accepts every parameter which :class:`boto3.session.Session` does, in addition to parameters for STS role assumption, refresh behavior, timeout limits, MFA, and client caching.
+It accepts every parameter which :class:`boto3.session.Session` does, in addition to parameters for STS role assumption, refresh behavior, timeout limits, MFA, and cache behavior.
 To illustrate, below is an example of creating a ``Client`` via STS role assumption with custom retry configuration and region specification.
 
 .. tip::
@@ -230,47 +230,77 @@ Below are examples for a callable and direct CLI invocation.
 
 .. _cachedocs:
 
-Client Caching
---------------
+Client and Resource Caching
+---------------------------
 
-boto3-refresh-session supports ``Client`` caching using an LRU eviction strategy.
-The purpose of this feature is to minimize the massive memory footprint of multiple ``Client`` objects created with identical parameters.
-To do this, when ``cache_clients`` is enabled, ``Client`` objects created via the refreshable session's ``client`` method are cached and reused for subsequent calls with the same parameters.
-
-.. tip::
-    
-    **boto3-refresh-session caches clients by default**; to disable client caching, set ``cache_clients=False`` when initializing :class:`boto3_refresh_session.session.RefreshableSession`.
-
-.. tip:: 
-    
-    To interact with the client cache directly, reference the ``client_cache`` attribute.
+boto3-refresh-session uses `boto3-client-cache <https://pypi.org/project/boto3-client-cache/>`_
+for both client and resource caching.
+Calls to ``session.client(...)`` and ``session.resource(...)`` are cached by
+default and will return the same object for equivalent parameters.
 
 .. note::
-    
-    In order to retrieve clients from the cache, you must use the :class:`boto3_refresh_session.utils.cache.ClientCacheKey` object.
+
+    Caches are available on the ``cache`` attribute:
+
+    - ``session.cache.client["LRU"]``
+    - ``session.cache.client["LFU"]``
+    - ``session.cache.resource["LRU"]``
+    - ``session.cache.resource["LFU"]``
+
+    Direct lookups use
+    :external+boto3_client_cache:py:class:`boto3_client_cache.cache.ClientCacheKey`
+    and
+    :external+boto3_client_cache:py:class:`boto3_client_cache.cache.ResourceCacheKey`.
+
+.. tip::
+
+    The default eviction policy is ``"LRU"``. You can opt into ``"LFU"``
+    per call by passing ``eviction_policy="LFU"`` to ``client(...)`` or
+    ``resource(...)``.
+
+.. tip::
+
+    You can control cache size per policy with ``max_size`` on
+    ``client(...)`` and ``resource(...)``. If omitted, each cache defaults to
+    a maximum size of 10.
+
+.. warning::
+
+    For STS operations, :class:`STS.Client` objects are added to the cache automatically. 
+    Therefore, if you are using STS for credential refresh, be mindful of cache size and eviction policy to avoid unintended evictions of the internal STS client.
 
 .. code-block:: python
-    
-    from boto3_refresh_session import AssumeRoleConfig, ClientCacheKey, RefreshableSession
+
+    from boto3_client_cache import ClientCacheKey, ResourceCacheKey
+    from boto3_refresh_session import AssumeRoleConfig, RefreshableSession
 
     session = RefreshableSession(
         assume_role_kwargs=AssumeRoleConfig(RoleArn="<your-role-arn>")
     )
-    
-    # deliberately creating two clients with the same parameters
+
+    # client caching (default LRU)
     s3_client_1 = session.client("s3", region_name="us-east-1")
     s3_client_2 = session.client("s3", region_name="us-east-1")
-
-    # but s3_client_1 and s3_client_2 are the same object since client caching is enabled
     assert s3_client_1 is s3_client_2
 
-    # accessing the client cache directly via client_cache
-    # and retrieving the cached client using ClientCacheKey
-    cache_key = ClientCacheKey("s3", region_name="us-east-1")
-    cached_s3_client = session.client_cache.get(cache_key)
+    # resource caching with LFU policy
+    s3_resource_1 = session.resource(
+        "s3", region_name="us-east-1", eviction_policy="LFU", max_size=25
+    )
+    s3_resource_2 = session.resource(
+        "s3", region_name="us-east-1", eviction_policy="LFU"
+    )
+    assert s3_resource_1 is s3_resource_2
 
-    # and ensuring equality again
-    assert s3_client_1 is cached_s3_client
+    # direct cache lookups
+    client_key = ClientCacheKey("s3", region_name="us-east-1")
+    cached_client = session.cache.client["LRU"].get(client_key)
+
+    resource_key = ResourceCacheKey("s3", region_name="us-east-1")
+    cached_resource = session.cache.resource["LFU"].get(resource_key)
+
+    assert cached_client is s3_client_1
+    assert cached_resource is s3_resource_1
 
 IoT Core X.509
 --------------

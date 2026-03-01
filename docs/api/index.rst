@@ -9,7 +9,6 @@ boto3-refresh-session includes multiple modules, grouped into several broad cate
 
 - The core interface (session)
 - Individual modules for each supported refresh strategy (e.g., STS)
-- The LRU cache
 - Configuration objects
 - Exceptions and warnings
 
@@ -23,7 +22,6 @@ Learn more about each of these categories below.
    custom
    iot
    sts
-   cache
    config
    exceptions   
 
@@ -57,14 +55,6 @@ Each strategy supported by boto3-refresh-session is encapsulated in its own modu
 - :ref:`custom` - Refresh strategy using a custom credential refresh strategy
 - :ref:`iot` - Refresh strategies for IoT Core
 - :ref:`sts` — Refresh strategy using :class:`STS.Client`
-
-Cache
------
-
-boto3-refresh-session caches boto clients to avoid redundant client creation. 
-Learn more about the caching mechanism below.
-
-- :ref:`cache` - LRU cache for boto3-refresh-session
 
 Configs
 -------

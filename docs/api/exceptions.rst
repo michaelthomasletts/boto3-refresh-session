@@ -29,18 +29,6 @@ Exceptions
    :exclude-members: __init__
    :inherited-members:
 
-.. autoclass:: BRSCacheError
-   :exclude-members: __init__
-   :inherited-members:
-
-.. autoclass:: BRSCacheNotFoundError
-   :exclude-members: __init__
-   :inherited-members:
-
-.. autoclass:: BRSCacheExistsError
-   :exclude-members: __init__
-   :inherited-members:
-
 .. autoclass:: BRSWarning
    :exclude-members: __init__
    :inherited-members:

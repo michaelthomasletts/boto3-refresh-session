@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 2
 requires-python = ">=3.10"
 resolution-markers = [
     "python_full_version >= '3.12'",
@@ -106,11 +106,25 @@ wheels = [
 ]
 
 [[package]]
+name = "boto3-client-cache"
+version = "2.1.5"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "boto3" },
+    { name = "botocore" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/7c/84/a9fd2cc871845a55c408cf802b96926218f83f87f2d0be8c293fb3c29387/boto3_client_cache-2.1.5.tar.gz", hash = "sha256:d1936ac4b4e668fd37b57ba0b0689c75b1ac41409be19a9029f310e2fbf5276a", size = 21964, upload-time = "2026-02-23T19:18:52.708Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/65/15/cdab7e6bce442a2bc905da07949f3b17abfe7e50f6075f83b6085ac8dea8/boto3_client_cache-2.1.5-py3-none-any.whl", hash = "sha256:a1ed883200fa829d009610237a62816b1e9ed990b19f7a9c1fca9cd2ba51e9f7", size = 28347, upload-time = "2026-02-23T19:18:51.853Z" },
+]
+
+[[package]]
 name = "boto3-refresh-session"
 version = "7.3.18"
 source = { editable = "." }
 dependencies = [
     { name = "boto3" },
+    { name = "boto3-client-cache" },
     { name = "botocore" },
     { name = "typing-extensions" },
 ]
@@ -137,6 +151,7 @@ requires-dist = [
     { name = "awscrt", marker = "extra == 'iot'" },
     { name = "awsiotsdk", marker = "extra == 'iot'" },
     { name = "boto3" },
+    { name = "boto3-client-cache" },
     { name = "botocore" },
     { name = "numpydoc", marker = "extra == 'dev'" },
     { name = "pre-commit", marker = "extra == 'dev'" },

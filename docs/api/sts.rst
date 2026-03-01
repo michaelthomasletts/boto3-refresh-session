@@ -17,7 +17,7 @@ in the background.
 .. tip::
 
     For additional details on configuring MFA, refer to the `MFA usage documentation <../usage.html#mfa>`_.
-    For additional details on client caching, refer to the `client caching documentation <../usage.html#cache>`_.
+    For additional details on client and resource caching, refer to the `caching documentation <../usage.html#cachedocs>`_.
 
 Examples
 --------

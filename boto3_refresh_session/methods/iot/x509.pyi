@@ -8,16 +8,16 @@ from typing import Any, Dict
 
 from awscrt.io import LogLevel
 from awscrt.mqtt import Connection
-from boto3.session import Session
+from boto3.resources.base import ServiceResource
+from boto3_client_cache import EvictionPolicy, Session, SessionCache
 from botocore.client import BaseClient
 
-from ...utils.cache import ClientCache
-from ...utils.typing import Identity, TemporaryCredentials, PKCS11
+from ...utils.typing import Identity, PKCS11, TemporaryCredentials
 
 __all__ = ["IOTX509RefreshableSession"]
 
 class IOTX509RefreshableSession(Session):
-    client_cache: ClientCache
+    cache: SessionCache
 
     def __init__(
         self,
@@ -35,11 +35,22 @@ class IOTX509RefreshableSession(Session):
         defer_refresh: bool = True,
         advisory_timeout: int = 900,
         mandatory_timeout: int = 600,
-        cache_clients: bool = True,
-        client_cache_max_size: int = 10,
         **kwargs: Any,
     ) -> None: ...
-    def client(self, *args: Any, **kwargs: Any) -> BaseClient: ...
+    def client(
+        self,
+        *args: Any,
+        eviction_policy: EvictionPolicy | None = None,
+        max_size: int | None = None,
+        **kwargs: Any,
+    ) -> BaseClient: ...
+    def resource(
+        self,
+        *args: Any,
+        eviction_policy: EvictionPolicy | None = None,
+        max_size: int | None = None,
+        **kwargs: Any,
+    ) -> ServiceResource: ...
     def refreshable_credentials(
         self,
     ) -> TemporaryCredentials: ...
