@@ -31,7 +31,7 @@ class CustomRefreshableSession(
 
     Parameters
     ----------
-    custom_credentials_method: Callable[..., TemporaryCredentials | Dict[str, str]]
+    custom_credentials_method : Callable[..., TemporaryCredentials | Dict[str, str]]
         Required. Accepts a callable object that returns temporary AWS
         security credentials. That object must return a dictionary containing
         'access_key', 'secret_key', 'token', and 'expiry_time' when called.
@@ -55,36 +55,31 @@ class CustomRefreshableSession(
         Botocore requires a successful refresh before continuing. If
         refresh fails in this window (in seconds), API calls may fail.
         Default is 10 minutes (600 seconds).
-    cache_clients : bool = True, optional
-        If ``True`` then clients created by this session will be cached and
-        reused for subsequent calls to :meth:`client()` with the same
-        parameter signatures. Due to the memory overhead of clients, the
-        default is ``True`` in order to protect system resources.
-    client_cache_max_size : int = 10, optional
-        The maximum number of clients to store in the client cache. Only
-        applicable if ``cache_clients`` is ``True``. Defaults to 10.
 
     Other Parameters
     ----------------
-    kwargs : Any, optional
+    **kwargs : Any, optional
         Optional keyword arguments for the :class:`boto3.session.Session`
         object.
 
     Attributes
     ----------
-    client_cache : ClientCache
-        The client cache used to store and retrieve cached clients.
+    cache : SessionCache
+        The client and resource cache used to store and retrieve cached
+        clients.
     credentials : TemporaryCredentials
         The temporary AWS security credentials.
 
     Methods
     -------
-    client(*args, **kwargs) -> boto3.client
-        Creates a Boto3 client for the specified service.
+    client(*args, eviction_policy: EvictionPolicy, max_size: int, **kwargs) -> BaseClient
+        Creates a low-level service client by name.
     get_identity() -> Identity
         Returns metadata about the current caller identity.
     refreshable_credentials() -> TemporaryCredentials
-        Returns the current temporary AWS credentials.
+        Returns the current temporary AWS security credentials.
+    resource(*args, eviction_policy: EvictionPolicy, max_size: int, **kwargs) -> ServiceResource
+        Creates a low-level service resource by name.
     whoami() -> Identity
         Alias for :meth:`get_identity`.
 
@@ -137,7 +132,7 @@ class CustomRefreshableSession(
     >>>     custom_credentials_method=your_custom_credential_getter,
     >>>     custom_credentials_method_args={...},
     >>> )
-    """
+    """  # noqa: E501
 
     def __init__(
         self,

@@ -3,15 +3,15 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 import pytest
+from boto3_client_cache import (
+    ClientCache,
+    ClientCacheError,
+    ClientCacheExistsError,
+    ClientCacheKey,
+    ClientCacheNotFoundError,
+)
 from botocore.client import BaseClient
 from botocore.config import Config
-
-from boto3_refresh_session import ClientCache, ClientCacheKey
-from boto3_refresh_session.exceptions import (
-    BRSCacheError,
-    BRSCacheExistsError,
-    BRSCacheNotFoundError,
-)
 
 
 def _client() -> BaseClient:
@@ -52,24 +52,33 @@ def test_client_cache_evicts_lru() -> None:
     assert key_c in cache
 
 
-def test_client_cache_call_inserts() -> None:
-    """Inserts an entry when invoking the cache as a callable."""
-    cache = ClientCache(max_size=10)
-    args = ("s3",)
-    kwargs = {"region_name": "us-west-2"}
+def test_client_cache_key_normalizes_service_name() -> None:
+    """Normalizes equivalent service_name argument styles for cache keys."""
+    key_a = ClientCacheKey("s3", region_name="us-west-2")
+    key_b = ClientCacheKey(service_name="s3", region_name="us-west-2")
 
-    client = _client()
-    cache(client, *args, **kwargs)
-    key = ClientCacheKey(*args, **kwargs)
+    assert key_a == key_b
+    assert hash(key_a) == hash(key_b)
 
-    assert key in cache
-    assert cache[key] is client
+
+def test_client_cache_key_ignores_cache_control_kwargs() -> None:
+    """Ignores cache control kwargs that should not affect client identity."""
+    key_a = ClientCacheKey(
+        "s3",
+        region_name="us-west-2",
+        eviction_policy="LFU",
+        max_size=1,
+    )
+    key_b = ClientCacheKey("s3", region_name="us-west-2")
+
+    assert key_a == key_b
+    assert hash(key_a) == hash(key_b)
 
 
 def test_client_cache_str_includes_entries() -> None:
     """Includes cached client entries in the string representation."""
     cache = ClientCache(max_size=10)
-    cache(_client(), "s3")
+    cache[ClientCacheKey("s3")] = _client()
 
     output = str(cache)
     assert output.startswith("ClientCache:")
@@ -82,11 +91,13 @@ def test_client_cache_rejects_non_client_value() -> None:
     cache = ClientCache(max_size=10)
     key = ClientCacheKey("s3")
 
-    with pytest.raises(BRSCacheError, match="Cache value must be a boto3"):
+    with pytest.raises(ClientCacheError, match="Cache value must be a boto3"):
         cache[key] = object()  # type: ignore[assignment]
 
-    with pytest.raises(BRSCacheError, match="Cache value must be a boto3"):
-        cache(object(), "s3")  # type: ignore[arg-type]
+    with pytest.raises(
+        ClientCacheError, match="Cache key must be a cache key object"
+    ):
+        cache["not-a-cache-key"] = _client()  # type: ignore[index]
 
 
 def test_client_cache_set_existing_key_raises() -> None:
@@ -96,7 +107,7 @@ def test_client_cache_set_existing_key_raises() -> None:
 
     cache[key] = _client()
 
-    with pytest.raises(BRSCacheExistsError, match="already exists"):
+    with pytest.raises(ClientCacheExistsError, match="already exists"):
         cache[key] = _client()
 
 
@@ -135,7 +146,7 @@ def test_client_cache_popitem_pops_lru() -> None:
 def test_client_cache_popitem_empty_raises() -> None:
     """popitem raises when the cache is empty."""
     cache = ClientCache(max_size=10)
-    with pytest.raises(BRSCacheNotFoundError, match="No clients found"):
+    with pytest.raises(ClientCacheNotFoundError, match="No clients found"):
         cache.popitem()
 
 

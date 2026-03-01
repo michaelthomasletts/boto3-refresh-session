@@ -4,15 +4,13 @@
 
 __all__ = []
 
-from . import cache, config, constants, extras, internal, typing
-from .cache import *
+from . import config, constants, extras, internal, typing
 from .config import *
 from .constants import *
 from .extras import *
 from .internal import *
 from .typing import *
 
-__all__ += cache.__all__
 __all__ += config.__all__
 __all__ += constants.__all__
 __all__ += extras.__all__

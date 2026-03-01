@@ -25,8 +25,8 @@ methods (STS, IoT, custom) only need to satisfy this interface.
 
 `BRSSession` is the concrete wrapper over `boto3.Session`. It owns refreshable
 credential construction, wiring the botocore session to those credentials, and
-client caching with normalized cache keys. It acts as the base implementation
-for session mechanics.
+client and resource caching with normalized cache keys. It acts as the base
+implementation for session mechanics.
 
 Method-specific classes (STS, custom, IoT X.509) inherit directly from
 `Registry`, `CredentialProvider`, and `BRSSession`, which keeps the hierarchy
@@ -44,15 +44,15 @@ from abc import ABC, abstractmethod
 from functools import wraps
 from typing import Any, ClassVar, Generic, TypeVar
 
-from boto3.session import Session
-from botocore.client import BaseClient
+from boto3_client_cache import (
+    Session,
+)
 from botocore.credentials import (
     DeferredRefreshableCredentials,
     RefreshableCredentials,
 )
 
-from ..exceptions import BRSCacheError, BRSWarning
-from .cache import ClientCache, ClientCacheKey
+from ..exceptions import BRSWarning
 from .extras import IOT_EXTRA_INSTALLED
 from .typing import Identity, RefreshMethod, RegistryKey, TemporaryCredentials
 
@@ -194,30 +194,25 @@ class BRSSession(Session):
         Botocore requires a successful refresh before continuing. If
         refresh fails in this window (in seconds), API calls may fail.
         Default is 10 minutes (600 seconds).
-    cache_clients : bool = True, optional
-        If ``True`` then clients created by this session will be cached and
-        reused for subsequent calls to :meth:`client()` with the same
-        parameter signatures. Due to the memory overhead of clients, the
-        default is ``True`` in order to protect system resources.
-    client_cache_max_size : int = 10, optional
-        The maximum number of clients to store in the client cache. Only
-        applicable if ``cache_clients`` is ``True``. Defaults to 10.
 
     Attributes
     ----------
-    client_cache : ClientCache
-        The client cache used to store and retrieve cached clients.
+    cache : SessionCache
+        The client and resource cache used to store and retrieve cached
+        clients.
     credentials : TemporaryCredentials
         The current temporary AWS security credentials.
 
     Methods
     -------
-    client(*args, **kwargs) -> BaseClient
+    client(*args, eviction_policy: EvictionPolicy, max_size: int, **kwargs) -> BaseClient
         Creates a low-level service client by name.
     get_identity() -> Identity
-        Returns metadata about the identity assumed.
+        Returns metadata about the current caller identity.
+    resource(*args, eviction_policy: EvictionPolicy, max_size: int, **kwargs) -> ServiceResource
+        Creates a low-level service resource by name.
     refreshable_credentials() -> TemporaryCredentials
-        The current temporary AWS security credentials.
+        Returns the current temporary AWS security credentials.
     whoami() -> Identity
         Alias for :meth:`get_identity`.
 
@@ -225,7 +220,7 @@ class BRSSession(Session):
     ----------------
     **kwargs : Any, optional
         Optional keyword arguments for initializing boto3.session.Session.
-    """
+    """  # noqa: E501
 
     def __init__(
         self,
@@ -233,8 +228,6 @@ class BRSSession(Session):
         defer_refresh: bool | None = None,
         advisory_timeout: int | None = None,
         mandatory_timeout: int | None = None,
-        cache_clients: bool | None = None,
-        client_cache_max_size: int | None = None,
         **kwargs,
     ) -> None:
         # initializing parameters
@@ -242,16 +235,9 @@ class BRSSession(Session):
         self.defer_refresh: bool = defer_refresh is not False
         self.advisory_timeout: int | None = advisory_timeout
         self.mandatory_timeout: int | None = mandatory_timeout
-        self.cache_clients: bool | None = cache_clients is not False
-        self.client_cache_max_size: int | None = client_cache_max_size
 
         # initializing Session
         super().__init__(**kwargs)
-
-        # initializing client cache
-        self.client_cache: ClientCache = ClientCache(
-            max_size=self.client_cache_max_size
-        )
 
     def __post_init__(self) -> None:
         if not self.defer_refresh:
@@ -272,69 +258,10 @@ class BRSSession(Session):
         # clients and resources, depending on how they were created
         self._session._credentials = self._credentials
 
-    def client(self, *args, **kwargs) -> BaseClient:
-        """Creates a low-level service client by name.
-
-        Parameters
-        ----------
-        *args : Any, optional
-            Positional arguments for :meth:`boto3.session.Session.client`.
-        **kwargs : Any, optional
-            Keyword arguments for :meth:`boto3.session.Session.client`.
-
-        Returns
-        -------
-        BaseClient
-            A low-level service client.
-
-        Notes
-        -----
-        This method overrides the default
-        :meth:`boto3.session.Session.client` method. If client caching is
-        enabled, it will return a cached client instance for the given
-        service and parameters. Else, it will create and return a new client
-        instance.
-        """
-
-        # check if caching is enabled
-        if self.cache_clients:
-            # moving "service_name" to args if present in kwargs
-            # helps normalize cache keys . . . very important!!!
-            if "service_name" in kwargs:
-                args = (kwargs.pop("service_name"),) + args
-
-            # if client exists in cache, return it
-            if (
-                _cached_client := self.client_cache.get(
-                    key := ClientCacheKey(*args, **kwargs)
-                )
-            ) is not None:
-                return _cached_client
-
-            # else initialize it
-            client = super().client(*args, **kwargs)
-
-            # attempting to cache and return the client
-            try:
-                self.client_cache[key] = client
-                return client
-
-            # if caching fails, return cached client if possible
-            except BRSCacheError:
-                return (
-                    cached
-                    if (cached := self.client_cache.get(key)) is not None
-                    else client
-                )
-
-        # return a new client if caching is disabled
-        else:
-            return super().client(*args, **kwargs)
-
     def refreshable_credentials(
         self,
     ) -> TemporaryCredentials:
-        """The current temporary AWS security credentials.
+        """Returns the current temporary AWS security credentials.
 
         Returns
         -------
@@ -372,7 +299,7 @@ class BRSSession(Session):
         return self.refreshable_credentials()
 
     def whoami(self) -> Identity:
-        """Returns metadata about the identity assumed.
+        """Returns metadata about the current caller identity.
 
         .. versionadded:: 7.2.15
 
@@ -383,7 +310,7 @@ class BRSSession(Session):
         Returns
         -------
         Identity
-            Dict containing caller identity according to AWS STS.
+            Dict containing current caller identity metadata.
         """
 
         return self.get_identity()  # type: ignore[arg-type]

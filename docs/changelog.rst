@@ -117,3 +117,31 @@ Specifically, v7.2.15 updates ``include`` in ``pyproject.toml`` to ensure that l
 Users who installed versions 7.2.4 through 7.2.14 will observe ``ModuleNotFoundError`` when attempting to use the library.
 Upgrading to v7.2.15 or later will resolve this issue.
 v7.2.4 through v7.2.14 were yanked from PyPI and GitHub tags within that range were deleted.
+
+v8.0.0
+------
+
+This release migrates caching from the internal ``utils.cache`` module to
+`boto3-client-cache <https://pypi.org/project/boto3-client-cache/>`_.
+
+Breaking changes
+~~~~~~~~~~~~~~~~
+
+- ``boto3_refresh_session.utils.cache`` has been removed.
+- ``cache_clients`` and ``client_cache_max_size`` constructor parameters have
+  been removed from refreshable session classes and stubs.
+- ``BRSCacheError``, ``BRSCacheNotFoundError``, and ``BRSCacheExistsError``
+  have been removed from ``boto3_refresh_session.exceptions``.
+- Direct cache interaction now uses ``session.cache`` (provided by
+  ``boto3-client-cache``) instead of ``session.client_cache``.
+
+Behavioral and API updates
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- ``boto3-client-cache`` is now a core dependency.
+- Session objects now support both client and resource caching through the
+  external cache implementation and its key types.
+- Type stubs and docstrings were updated to reflect the new cache attribute
+  and ``client/resource(..., eviction_policy=..., max_size=...)`` signatures.
+- Tests were updated to validate cache behavior against
+  ``boto3-client-cache`` primitives and exceptions.

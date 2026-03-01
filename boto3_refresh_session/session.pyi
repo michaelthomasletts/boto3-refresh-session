@@ -25,12 +25,13 @@ class RefreshableSession:
         *,
         assume_role_kwargs: AssumeRoleConfig | Dict[str, Any],
         sts_client_kwargs: STSClientConfig | Dict[str, Any] | None = None,
-        mfa_token_provider: Callable[[], str] | None = None,
+        mfa_token_provider: (
+            Callable[..., str] | List[str] | str | None
+        ) = None,
+        mfa_token_provider_kwargs: Dict[str, Any] | None = None,
         defer_refresh: bool = True,
         advisory_timeout: int = 900,
         mandatory_timeout: int = 600,
-        cache_clients: bool = True,
-        client_cache_max_size: int = 10,
         **kwargs: Any,
     ) -> STSRefreshableSession: ...
 
@@ -47,8 +48,6 @@ class RefreshableSession:
         defer_refresh: bool = True,
         advisory_timeout: int = 900,
         mandatory_timeout: int = 600,
-        cache_clients: bool = True,
-        client_cache_max_size: int = 10,
         **kwargs: Any,
     ) -> CustomRefreshableSession: ...
 
@@ -72,8 +71,6 @@ class RefreshableSession:
         defer_refresh: bool = True,
         advisory_timeout: int = 900,
         mandatory_timeout: int = 600,
-        cache_clients: bool = True,
-        client_cache_max_size: int = 10,
         **kwargs: Any,
     ) -> IOTX509RefreshableSession: ...
     @classmethod

@@ -8,7 +8,12 @@ authors = [
 license = { text = "MPL-2.0" }
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["boto3", "botocore", "typing-extensions"]
+dependencies = [
+  "boto3",
+  "boto3-client-cache",
+  "botocore",
+  "typing-extensions",
+]
 keywords = ["boto3", "botocore", "boto", "aws", "sts", "credentials", "token", "refresh", "iot", "x509", "mqtt", "AssumeRole", "mfa", "cache", "client cache", "client"]
 maintainers = [
   {name="Michael Letts", email="lettsmt@gmail.com"},

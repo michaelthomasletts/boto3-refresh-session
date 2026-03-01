@@ -57,14 +57,6 @@ class RefreshableSession:
         Botocore requires a successful refresh before continuing. If
         refresh fails in this window (in seconds), API calls may fail.
         Default is 10 minutes (600 seconds).
-    cache_clients : bool = True, optional
-        If ``True`` then clients created by this session will be cached and
-        reused for subsequent calls to :meth:`client()` with the same
-        parameter signatures. Due to the memory overhead of clients, the
-        default is ``True`` in order to protect system resources.
-    client_cache_max_size : int = 10, optional
-        The maximum number of clients to store in the client cache. Only
-        applicable if ``cache_clients`` is ``True``. Defaults to 10.
 
     Other Parameters
     ----------------
@@ -80,19 +72,22 @@ class RefreshableSession:
 
     Attributes
     ----------
-    client_cache : ClientCache
-        The client cache used to store and retrieve cached clients.
+    cache : SessionCache
+        The client and resource cache used to store and retrieve cached
+        clients.
     credentials : TemporaryCredentials
         The temporary AWS security credentials.
 
     Methods
     -------
-    client(*args, **kwargs) -> boto3.client
-        Creates a Boto3 client for the specified service.
+    client(*args, eviction_policy: EvictionPolicy, max_size: int, **kwargs) -> BaseClient
+        Creates a low-level service client by name.
     get_identity() -> Identity
         Returns metadata about the current caller identity.
     refreshable_credentials() -> TemporaryCredentials
-        Returns the current temporary AWS credentials.
+        Returns the current temporary AWS security credentials.
+    resource(*args, eviction_policy: EvictionPolicy, max_size: int, **kwargs) -> ServiceResource
+        Creates a low-level service resource by name.
     whoami() -> Identity
         Alias for :meth:`get_identity`.
 
@@ -123,9 +118,8 @@ class RefreshableSession:
     -----
     .. note::
 
-        For additional details on client caching, refer to the
-        :ref:`usage docs <cachedocs>` or :ref:`API docs <cache>` for technical
-        information.
+        For additional details on client and resource caching, refer to the
+        :ref:`usage docs <cachedocs>`.
 
     .. note::
 
@@ -163,10 +157,10 @@ class RefreshableSession:
     >>> from boto3_refresh_session import RefreshableSession
     >>> def provider(...):
     ...     ...
-    ...     return {"AccessKeyId": "...",
-    ...             "SecretAccessKey": "...",
-    ...             "SessionToken": "...",
-    ...             "Expiration": "..."}
+    ...     return {"access_key": "...",
+    ...             "secret_key": "...",
+    ...             "token": "...",
+    ...             "expiry_time": "..."}
     ...
     >>> session = RefreshableSession(
     ...     method="custom",
@@ -181,15 +175,15 @@ class RefreshableSession:
     >>> from boto3_refresh_session import RefreshableSession
     >>> session = RefreshableSession(
     ...     method="iot",
-    ...     iot_endpoint="<your-iot-endpoint>",
+    ...     endpoint="<your-iot-endpoint>",
     ...     thing_name="<your-thing-name>",
     ...     role_alias="<your-role-alias>",
-    ...     certificate_path="path/to/certificate.pem.crt",
-    ...     private_key_path="path/to/private.pem.key",
+    ...     certificate="path/to/certificate.pem.crt",
+    ...     private_key="path/to/private.pem.key",
     ... )
     >>> s3 = session.client("s3")
     >>> s3.list_buckets()
-    """
+    """  # noqa: E501
 
     # actual implementation
     def __new__(

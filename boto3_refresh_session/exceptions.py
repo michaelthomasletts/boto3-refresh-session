@@ -5,9 +5,6 @@
 """Custom exception and warning types for boto3-refresh-session."""
 
 __all__ = [
-    "BRSCacheError",
-    "BRSCacheExistsError",
-    "BRSCacheNotFoundError",
     "BRSConfigurationError",
     "BRSConnectionError",
     "BRSCredentialError",
@@ -110,18 +107,6 @@ class BRSConnectionError(BRSError):
 
 class BRSRequestError(BRSError):
     """Raised when a remote request fails."""
-
-
-class BRSCacheError(BRSError):
-    """Raised when cache operations violate the cache contract."""
-
-
-class BRSCacheNotFoundError(BRSCacheError):
-    """Raised when a cached item is not found."""
-
-
-class BRSCacheExistsError(BRSCacheError):
-    """Raised when attempting to insert an existing cached item."""
 
 
 class BRSWarning(UserWarning):

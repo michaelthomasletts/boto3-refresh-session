@@ -24,10 +24,10 @@ extensions = [
     "sphinx.ext.extlinks",
 ]
 language = "en"
-project = str(pyproject["project"]["name"])
+project = str(pyproject["project"]["name"])  # type: ignore[assignment]
 author = "Michael Letts"
 copyright = f"{date.today().year}, {author}"
-release = str(pyproject["project"]["version"])
+release = str(pyproject["project"]["version"])  # type: ignore[assignment]
 source_encoding = "utf-8"
 source_suffix = ".rst"
 pygments_style = "sphinx"
@@ -48,7 +48,7 @@ html_sidebars = {
 }
 html_context = {
     "default_mode": "dark",
-    "license": str(pyproject["project"]["license"]["text"]),
+    "license": str(pyproject["project"]["license"]["text"]),  # type: ignore[index]
 }
 htmlhelp_basename = project
 html_css_files = ["custom.css"]
@@ -104,6 +104,13 @@ intersphinx_mapping = {
         "https://boto3.amazonaws.com/v1/documentation/api/latest/",
         None,
     ),
+    "boto3_client_cache": (
+        "https://61418.io/boto3-client-cache/",
+        (
+            "https://61418.io/boto3-client-cache/objects.inv",
+            "https://61418.io/boto3-client-cache/reference/objects.inv",
+        ),
+    ),
     "python": ("https://docs.python.org/3", None),
 }
 extlinks = {
@@ -127,4 +134,4 @@ def linkcode_resolve(domain, info) -> None:
         f"https://github.com/michaelthomasletts/{project}/blob/main/"
         f"{filename}.py"
     )
-    return result
+    return result  # type: ignore[return-value]

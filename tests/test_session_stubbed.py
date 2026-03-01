@@ -510,7 +510,7 @@ def test_client_cache_thread_safe(monkeypatch):
         thread.join()
 
     assert len({id(client) for client in results}) == 1
-    assert len(session.client_cache) == 1
+    assert len(session.cache.client["LRU"]) == 1
 
 
 def test_custom_refreshes_expired_credentials(monkeypatch):
