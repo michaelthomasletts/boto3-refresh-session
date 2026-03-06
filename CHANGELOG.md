@@ -1,5 +1,12 @@
 # Changelog
 
+## [10.0.1](https://github.com/61418/boto3-refresh-session/compare/v10.0.0...v10.0.1) (2026-03-06)
+
+
+### Documentation
+
+* updated README with 61418 logo ([#138](https://github.com/61418/boto3-refresh-session/issues/138)) ([70c2b87](https://github.com/61418/boto3-refresh-session/commit/70c2b87c57c3ea22a85779845e48df0ea519e889))
+
 ## [10.0.0](https://github.com/61418/boto3-refresh-session/compare/v9.0.1...v10.0.0) (2026-03-06)
 
 
