@@ -3,9 +3,11 @@ boto3-refresh-session
 
 **Version:** |release|
 
-**License:** `Mozilla Public License 2.0 (MPL-2.0) <https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/LICENSE>`_
+**License:** `Mozilla Public License 2.0 <https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/LICENSE>`_
 
 **Author:** `Mike Letts <https://michaelthomasletts.com>`_
+
+**Maintainers:** `61418 <https://61418.io>`_
 
 What is boto3-refresh-session?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -14,8 +16,8 @@ boto3-refresh-session is a simple Python package with a drop-in replacement for 
 It automatically refreshes temporary AWS credentials, caches clients and resources, and natively supports MFA providers. 
 It also supports automatic temporary AWS security credential refresh for STS, IOT Core, and custom credential callables.
 
-Raison d'Être
-~~~~~~~~~~~~~
+Why this exists
+~~~~~~~~~~~~~~~
 
 Although boto3 already supports automatic temporary credential refresh via role assumption as configured in ``~/.aws/config``, there are 
 scenarios and edge cases where that is insufficient. Below are just a *few* examples:
@@ -31,7 +33,9 @@ More, the available alternatives to boto3-refresh-session do not support the bre
 Even if you don't need automatic temporary AWS credential refresh, boto3-refresh-session's caching feature may still be useful to you.
 
 For more information about using boto3-refresh-session, see the :ref:`Usage Guide <usage>`.
+
 For technical documentation of all features and parameters, see the :ref:`API docs <api>`.
+
 For a detailed list of changes, see the :ref:`Changelog <changelog>`.
 
 .. toctree::

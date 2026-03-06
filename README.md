@@ -4,42 +4,42 @@
 
   <a href="https://pypi.org/project/boto3-refresh-session/">
     <img 
-      src="https://img.shields.io/pypi/v/boto3-refresh-session?color=%23FF0000FF&logo=python&label=Latest%20Version"
+      src="https://img.shields.io/pypi/v/boto3-refresh-session?color=%237d8450&logo=python&label=Latest%20Version&labelColor=6d747e"
       alt="pypi_version"
     />
   </a>
 
   <a href="https://pypi.org/project/boto3-refresh-session/">
     <img 
-      src="https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi&color=%23FF0000FF&logo=python&label=Compatible%20Python%20Versions" 
+      src="https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi&color=%237d8450&logo=python&label=Compatible%20Python%20Versions&labelColor=6d747e" 
       alt="py_version"
     />
   </a>
 
   <a href="https://github.com/michaelthomasletts/boto3-refresh-session/actions/workflows/push.yml">
     <img 
-      src="https://img.shields.io/github/actions/workflow/status/michaelthomasletts/boto3-refresh-session/push.yml?logo=github&color=%23FF0000FF&label=Build" 
+      src="https://img.shields.io/github/actions/workflow/status/michaelthomasletts/boto3-refresh-session/push.yml?logo=github&color=%237d8450&label=Build&labelColor=6d747e" 
       alt="workflow"
     />
   </a>
 
   <a href="https://github.com/michaelthomasletts/boto3-refresh-session/commits/main">
     <img 
-      src="https://img.shields.io/github/last-commit/michaelthomasletts/boto3-refresh-session?logo=github&color=%23FF0000FF&label=Last%20Commit" 
+      src="https://img.shields.io/github/last-commit/michaelthomasletts/boto3-refresh-session?logo=github&color=%237d8450&label=Last%20Commit&labelColor=6d747e" 
       alt="last_commit"
     />
   </a>
 
   <a href="https://github.com/michaelthomasletts/boto3-refresh-session/stargazers">
     <img 
-      src="https://img.shields.io/github/stars/michaelthomasletts/boto3-refresh-session?style=flat&logo=github&labelColor=555&color=FF0000&label=Stars" 
+      src="https://img.shields.io/github/stars/michaelthomasletts/boto3-refresh-session?style=flat&logo=github&labelColor=6d747e&color=7d8450&label=Stars" 
       alt="stars"
     />
   </a>
 
 <a href="https://pepy.tech/projects/boto3-refresh-session">
   <img
-    src="https://img.shields.io/endpoint?url=https%3A%2F%2Fmichaelthomasletts.github.io%2Fpepy-stats%2Fboto3-refresh-session.json&style=flat&logo=python&labelColor=555&color=FF0000"
+    src="https://img.shields.io/endpoint?url=https%3A%2F%2Fmichaelthomasletts.github.io%2Fpepy-stats%2Fboto3-refresh-session.json&style=flat&logo=python&labelColor=6d747e&color=7d8450"
     alt="downloads"
   />
 </a>
@@ -47,28 +47,28 @@
 
   <a href="https://michaelthomasletts.github.io/boto3-refresh-session/index.html">
     <img 
-      src="https://img.shields.io/badge/Official%20Documentation-📘-FF0000?style=flat&labelColor=555&logo=readthedocs" 
+      src="https://img.shields.io/badge/Official%20Documentation-📘-7d8450?style=flat&labelColor=6d747e&logo=readthedocs" 
       alt="documentation"
     />
   </a>
 
   <a href="https://github.com/michaelthomasletts/boto3-refresh-session">
     <img 
-      src="https://img.shields.io/badge/Source%20Code-💻-FF0000?style=flat&labelColor=555&logo=github" 
+      src="https://img.shields.io/badge/Source%20Code-💻-7d8450?style=flat&labelColor=6d747e&logo=github" 
       alt="github"
     />
   </a>
 
   <a href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/LICENSE">
     <img 
-      src="https://img.shields.io/static/v1?label=License&message=MPL-2.0&color=FF0000&labelColor=555&logo=github&style=flat"
+      src="https://img.shields.io/static/v1?label=License&message=MPL-2.0&color=7d8450&labelColor=6d747e&logo=github&style=flat"
       alt="license"
     />
   </a>
 
 <a href="https://github.com/sponsors/michaelthomasletts">
   <img 
-    src="https://img.shields.io/badge/Sponsor%20this%20Project-💙-FF0000?style=flat&labelColor=555&logo=githubsponsors" 
+    src="https://img.shields.io/badge/Sponsor%20this%20Project-💙-7d8450?style=flat&labelColor=6d747e&logo=githubsponsors" 
     alt="sponsorship"
   />
 </a>
@@ -81,7 +81,7 @@
 
 boto3-refresh-session is a simple Python package with a drop-in replacement for [boto3.Session](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html#boto3.session.Session) named [RefreshableSession](https://michaelthomasletts.com/boto3-refresh-session/api/generated/boto3_refresh_session.session.RefreshableSession.html#boto3_refresh_session.session.RefreshableSession). It automatically refreshes temporary AWS credentials, [caches clients](https://michaelthomasletts.com/boto3-refresh-session/usage.html#client-caching), and [supports MFA token providers](https://michaelthomasletts.com/boto3-refresh-session/usage.html#mfa). It supports automatic temporary AWS security credential refresh for STS, IOT Core, and custom credential callables. And it is [thoroughly tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [regularly updated](https://github.com/michaelthomasletts/boto3-refresh-session/commits/main/), [comprehensively documentated](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/).
 
-## Raison d'Être
+## Why this exists
 
 Although boto3 already supports automatic temporary credential refresh via role assumption as configured in ``~/.aws/config``, there are 
 scenarios and edge cases where that is insufficient. Below are just a *few* examples:
@@ -94,7 +94,7 @@ boto3-refresh-session exists to fill those gaps (and others not listed) while ma
 
 Although there are other open source tools available which address automatic temporary AWS credential refresh, boto3-refresh-session is ergonomically designed to feel like an _extension_ of boto3 (with a few extra parameters) rather than a separate library with a completely unfamiliar API. Using boto3-refresh-session, you can initialize service clients, resources, collections, etc. from `RefreshableSession` exactly like you would in boto3. More, the available alternatives to boto3-refresh-session do not support the _breadth_ of features that boto3-refresh-session does, such as client caching, MFA token provider support, or IoT Core X.509 credential refresh, among others. Even if you don't need boto3-refresh-session's core feature (automatic temporary AWS credential refresh), the client caching feature may still be useful to you.
 
-## Recognition and Testimonials
+## Recognition and testimonials
 
 [Featured in TL;DR Sec.](https://tldrsec.com/p/tldr-sec-282)
 

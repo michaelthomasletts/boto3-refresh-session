@@ -1,3 +1,5 @@
+import importlib
+import inspect
 import os
 import sys
 from datetime import date
@@ -11,77 +13,63 @@ path = Path("../pyproject.toml")
 with path.open("r", encoding="utf-8") as f:
     pyproject = tomlkit.parse(f.read())
 
-# sphinx config
+# adding project root and docs source to path
 sys.path.insert(0, os.path.abspath("."))
 sys.path.insert(0, os.path.abspath(".."))
-extensions = [
-    "sphinx.ext.autodoc",
-    "numpydoc",
-    "sphinx.ext.intersphinx",
-    "sphinx.ext.napoleon",
-    "sphinx.ext.autosummary",
-    "sphinx.ext.linkcode",
-    "sphinx.ext.extlinks",
-]
+
+# sphinx config
 language = "en"
-project = str(pyproject["project"]["name"])  # type: ignore[assignment]
-author = "Michael Letts"
+project = str(pyproject["project"]["name"])  # type: ignore
+author = str(pyproject["project"]["maintainers"][0]["name"])  # type: ignore
 copyright = f"{date.today().year}, {author}"
-release = str(pyproject["project"]["version"])  # type: ignore[assignment]
+release = str(pyproject["project"]["version"])  # type: ignore
 source_encoding = "utf-8"
 source_suffix = ".rst"
-pygments_style = "sphinx"
-add_function_parentheses = False
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.linkcode",
+    "numpydoc",
+    "sphinx_copybutton",
+    "sphinxext.opengraph",
+]
 templates_path = ["_templates"]
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "tests/"]
-html_logo = "brs.png"
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+
+# html config
+html_logo = "_static/favicon.ico"
 html_favicon = html_logo
-html_title = project
-html_theme = "pydata_sphinx_theme"
+html_theme = "furo"
 html_static_path = ["_static"]
 html_file_suffix = ".html"
-html_sidebars = {
-    "index": [],
-    "usage": [],
-    "api/**": ["sidebar-nav-bs.html", "search-field.html"],
-    "changelog": [],
-}
-html_context = {
-    "default_mode": "dark",
-    "license": str(pyproject["project"]["license"]["text"]),  # type: ignore[index]
-}
 htmlhelp_basename = project
-html_css_files = ["custom.css"]
+html_baseurl = str(pyproject["project"]["urls"]["Documentation"]).rstrip("/")  # type: ignore
+repository_url = str(pyproject["project"]["urls"]["Repository"]).rstrip("/")  # type: ignore
+repository_branch = "main"
+repository_root = Path(__file__).resolve().parent.parent
+html_favicon = "_static/favicon.ico"
 html_theme_options = {
-    "collapse_navigation": True,
-    "navbar_end": [
-        "search-button",
-        "navbar-icon-links.html",
-    ],
-    "icon_links": [
-        {
-            "name": "GitHub",
-            "url": f"https://github.com/michaelthomasletts/{project}",
-            "icon": "fab fa-github-square",
-            "type": "fontawesome",
-        },
-        {
-            "name": "PyPI",
-            "url": f"https://pypi.org/project/{project}/",
-            "icon": "fab fa-python",
-            "type": "fontawesome",
-        },
-    ],
+    "top_of_page_buttons": ["view"],
+    "source_view_link": repository_url,
 }
+
+# opengraph config
+ogp_site_url = html_baseurl
+ogp_image = "_static/og.png"
+ogp_description_length = 100
+ogp_description = str(pyproject["project"]["description"]).rstrip("/")  # type: ignore
+
+# autosummary config
+autosummary_generate = True
 
 # autodoc config
 autodoc_default_options = {
     "members": True,
-    "member-order": "bysource",
+    "member-order": "alphabetical",
     "exclude-members": "__init__,__new__",
     "inherited-members": True,
 }
-# autodoc_typehints = "signature"
 autodoc_class_signature = "separated"
 autodoc_inherit_docstrings = True
 
@@ -94,9 +82,6 @@ numpydoc_class_members_toctree = False
 # napoleon config
 napoleon_numpy_docstring = True
 napoleon_include_init_with_doc = False
-
-# autosummary
-autosummary_generate = False
 
 # intersphinx
 intersphinx_mapping = {
@@ -121,17 +106,59 @@ extlinks = {
 }
 
 
-def linkcode_resolve(domain, info) -> None:
+def linkcode_resolve(domain, info) -> str | None:
     """Resolves 'source' link in documentation."""
 
     if domain != "py":
         return None
-    if not info["module"]:
+    module_name = info.get("module")
+    if not module_name:
         return None
 
-    filename = info["module"].replace(".", "/")
-    result = (
-        f"https://github.com/michaelthomasletts/{project}/blob/main/"
-        f"{filename}.py"
+    try:
+        module = importlib.import_module(module_name)
+    except ImportError:
+        return None
+
+    obj = module
+    fullname = info.get("fullname")
+    if fullname:
+        for part in fullname.split("."):
+            obj = getattr(obj, part, None)
+            if obj is None:
+                break
+
+    try:
+        if obj is not None:
+            obj = inspect.unwrap(obj)  # type: ignore
+            source_file = inspect.getsourcefile(obj)
+            source_lines, start_line = inspect.getsourcelines(obj)
+            end_line = start_line + len(source_lines) - 1
+        else:
+            source_file = None
+            start_line = None
+            end_line = None
+    except (OSError, TypeError):
+        source_file = None
+        start_line = None
+        end_line = None
+
+    if source_file is None:
+        source_file = inspect.getsourcefile(module)
+        if source_file is None:
+            return None
+
+    try:
+        relative_path = (
+            Path(source_file).resolve().relative_to(repository_root)
+        )
+    except ValueError:
+        relative_path = Path(*module_name.split(".")).with_suffix(".py")
+
+    url = (
+        f"{repository_url}/blob/{repository_branch}/{relative_path.as_posix()}"
     )
-    return result  # type: ignore[return-value]
+    if start_line is not None and end_line is not None:
+        return f"{url}#L{start_line}-L{end_line}"
+
+    return url
