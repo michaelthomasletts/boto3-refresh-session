@@ -1,6 +1,9 @@
-# boto3-refresh-session
+<p align="center">
+  <img src="docs/_static/transparent_header.png" alt="boto3-refresh-session" />
+</p>
 
-<div align="left">
+
+<div align="center">
 
   <a href="https://pypi.org/project/boto3-refresh-session/">
     <img 
@@ -70,13 +73,13 @@
 
 </br>
 
-## Description
+## What is boto3-refresh-session?
 
 boto3-refresh-session is a simple Python package with a drop-in replacement for [boto3.Session](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html#boto3.session.Session) named [RefreshableSession](https://61418.io/boto3-refresh-session/api/generated/boto3_refresh_session.session.RefreshableSession.html#boto3_refresh_session.session.RefreshableSession). It automatically refreshes temporary AWS credentials, [caches clients](https://61418.io/boto3-refresh-session/usage.html#client-caching), and [supports MFA token providers](https://61418.io/boto3-refresh-session/usage.html#mfa). It supports automatic temporary AWS security credential refresh for STS, IOT Core, and custom credential callables. And it is [thoroughly tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [regularly updated](https://github.com/michaelthomasletts/boto3-refresh-session/commits/main/), [comprehensively documentated](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/).
 
 boto3-refresh-session was authored by [Mike Letts](https://github.com/michaelthomasletts) and is maintained by [61418](https://github.com/61418).
 
-## Why this exists
+## Why it exists
 
 Although boto3 already supports automatic temporary credential refresh via role assumption as configured in ``~/.aws/config``, there are 
 scenarios and edge cases where that is insufficient. Below are just a *few* examples:
@@ -93,7 +96,7 @@ Although there are other open source tools available which address automatic tem
 
 [Featured in TL;DR Sec.](https://tldrsec.com/p/tldr-sec-282)
 
-[Featured in CloudSecList.](https://cloudseclist.com/issues/issue-290).
+[Featured in CloudSecList.](https://cloudseclist.com/issues/issue-290)
 
 A testimonial from an engineer at Netflix:
 
