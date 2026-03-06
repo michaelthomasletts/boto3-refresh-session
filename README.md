@@ -1,5 +1,8 @@
 <p align="center">
-  <img src="docs/_static/transparent_header.png" alt="boto3-refresh-session" />
+  <img 
+    src="https://raw.githubusercontent.com/61418/boto3-refresh-session/refs/heads/main/docs/_static/transparent_header.png" 
+    alt="boto3-refresh-session" 
+  />
 </p>
 
 
