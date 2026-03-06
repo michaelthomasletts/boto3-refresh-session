@@ -2,9 +2,7 @@ name: Pull Request
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review, review_requested]
-    branches:
-      - '*'
+    types: [opened, synchronize, reopened, ready_for_review, review_requested, edited]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -12,18 +10,8 @@ concurrency:
 
 jobs:
   test:
-    name: Unit Tests, Linting, and Formatting (${{ matrix.extras_label }})
+    name: Unit Tests, Linting, and Formatting
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - extras: "dev"
-            extras_label: "no-iot"
-            cache_suffix: "dev"
-          - extras: "dev iot"
-            extras_label: "with-iot"
-            cache_suffix: "dev-iot"
     steps:
       - name: Check-Out Repository
         uses: actions/checkout@v4
@@ -36,40 +24,24 @@ jobs:
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
-
-      - name: Check uv lockfile
-        run: uv lock --check
+        with:
+          cache-dependency-glob: "**/pyproject.toml"
 
       - name: Cache uv Dependencies
         id: cached-uv-dependencies
         uses: actions/cache@v4
         with:
           path: .venv
-          key: uv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ matrix.cache_suffix }}-${{ hashFiles('**/uv.lock', '**/pyproject.toml') }}
+          key: uv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/pyproject.toml') }}
 
       - name: Install Dependencies
         if: steps.cached-uv-dependencies.outputs.cache-hit != 'true'
-        run: |
-          EXTRAS_ARGS=""
-          for extra in ${{ matrix.extras }}; do
-            EXTRAS_ARGS="$EXTRAS_ARGS --extra $extra"
-          done
-          uv sync --frozen --no-install-project $EXTRAS_ARGS
-
-      - name: Install Project
-        run: |
-          EXTRAS_ARGS=""
-          for extra in ${{ matrix.extras }}; do
-            EXTRAS_ARGS="$EXTRAS_ARGS --extra $extra"
-          done
-          uv sync --frozen $EXTRAS_ARGS
+        run: uv sync --all-groups --extra iot
 
       - name: Check Formatting with Ruff
-        if: matrix.extras_label == 'no-iot'
         run: uv run ruff format --check .
 
       - name: Lint with Ruff
-        if: matrix.extras_label == 'no-iot'
         run: uv run ruff check .
 
       - name: Run Unit Tests

@@ -118,7 +118,7 @@ pip install boto3-refresh-session
 pip install boto3-refresh-session[iot]
 
 # installation for contributors
-pip install boto3-refresh-session[iot,dev]
+uv sync --all-groups --extra iot
 ```
 
 ## Usage
@@ -129,7 +129,7 @@ Refer to the [official API documentation](https://michaelthomasletts.com/boto3-r
 
 ## Versions
 
-Refer to the [changelog](https://michaelthomasletts.com/boto3-refresh-session/changelog.html) for additional information on specific versions and releases.
+Refer to the [changelog](https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/CHANGELOG.md) for additional information on specific versions and releases.
 
 ## License
 

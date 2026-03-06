@@ -13,7 +13,7 @@ Installation
 
 boto3-refresh-session is available on PyPI.
 
-You can install extras for IoT support and development dependencies as needed.
+You can install extras for IoT support as needed.
 
 .. code-block:: bash
 
@@ -23,14 +23,11 @@ You can install extras for IoT support and development dependencies as needed.
     # with pip + iot as an extra
     pip install boto3-refresh-session[iot]
 
-    # with pip + dev dependencies
-    pip install boto3-refresh-session[dev]
+    # contributor setup (project + dev dependency group)
+    uv sync --all-groups
 
-    # with pip + all extras
-    pip install boto3-refresh-session[dev,iot]
-
-    # with pip in editable mode (for contributors)
-    uv pip install -e ".[dev,iot]"
+    # contributor setup with iot extra support
+    uv sync --all-groups --extra iot
 
 .. attention:: 
 
