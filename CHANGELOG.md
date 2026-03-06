@@ -1,5 +1,12 @@
 # Changelog
 
+## [10.0.2](https://github.com/61418/boto3-refresh-session/compare/v10.0.1...v10.0.2) (2026-03-06)
+
+
+### Documentation
+
+* Adding hard URL to README header logo. ([#140](https://github.com/61418/boto3-refresh-session/issues/140)) ([c5a64b4](https://github.com/61418/boto3-refresh-session/commit/c5a64b43dd405fe69a3656bc426f589394865c1a))
+
 ## [10.0.1](https://github.com/61418/boto3-refresh-session/compare/v10.0.0...v10.0.1) (2026-03-06)
 
 
