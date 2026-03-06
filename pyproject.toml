@@ -6,7 +6,7 @@ authors = [
   { name = "Mike Letts", email = "lettsmt@gmail.com" }
 ]
 maintainers = [
-  { name="Mike Letts", email="lettsmt@gmail.com" }
+  { name = "61418", email = "general@61418.io" }
 ]
 license = { text = "MPL-2.0" }
 readme = "README.md"
@@ -37,11 +37,11 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://michaelthomasletts.com/boto3-refresh-session"
-Repository = "https://github.com/michaelthomasletts/boto3-refresh-session"
-Documentation = "https://michaelthomasletts.com/boto3-refresh-session"
-Changelog = "https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/CHANGELOG.md"
-Issues = "https://github.com/michaelthomasletts/boto3-refresh-session/issues"
+Homepage = "https://61418.io/boto3-refresh-session"
+Repository = "https://github.com/61418/boto3-refresh-session"
+Documentation = "https://61418.io/boto3-refresh-session"
+Changelog = "https://github.com/61418/boto3-refresh-session/blob/main/CHANGELOG.md"
+Issues = "https://github.com/61418/boto3-refresh-session/issues"
 
 [build-system]
 requires = ["hatchling>=1.27.0"]
