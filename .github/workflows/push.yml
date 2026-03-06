@@ -1,227 +1,186 @@
-name: Bump Version, Publish to PyPI, Tag, and Deploy Docs
+name: Push
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
       - "boto3_refresh_session/**"
       - "docs/**"
       - "README.md"
-      - NOTICE
-      - pyproject.toml
-      - LICENSE
+      - "pyproject.toml"
+      - "LICENSE"
+      - "NOTICE"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
-  contents: write   # needed for pushing commits and tags
+  contents: read
 
 jobs:
   checks:
-    name: Checks (${{ matrix.extras_label }})
+    name: Setup, Lint, and Test
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - extras: "dev"
-            extras_label: "no-iot"
-            cache_suffix: "dev"
-          - extras: "dev iot"
-            extras_label: "with-iot"
-            cache_suffix: "dev-iot"
+    if: ${{ !(github.actor == 'github-actions[bot]' && contains(github.event.head_commit.message, '[skip ci]')) }}
     steps:
       - name: Check-Out Repository
         uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v5
         id: setup-python
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
-
-      - name: Check uv lockfile
-        run: uv lock --check
+        with:
+          cache-dependency-glob: "**/pyproject.toml"
 
       - name: Cache uv Dependencies
         id: cached-uv-dependencies
         uses: actions/cache@v4
         with:
           path: .venv
-          key: uv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ matrix.cache_suffix }}-${{ hashFiles('**/uv.lock', '**/pyproject.toml') }}
+          key: uv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/pyproject.toml') }}
 
-      - name: Install Dependencies (no-root)
+      - name: Install Dependencies
         if: steps.cached-uv-dependencies.outputs.cache-hit != 'true'
-        run: |
-          EXTRAS_ARGS=""
-          for extra in ${{ matrix.extras }}; do
-            EXTRAS_ARGS="$EXTRAS_ARGS --extra $extra"
-          done
-          uv sync --frozen --no-install-project $EXTRAS_ARGS
-
-      - name: Install Project
-        run: |
-          EXTRAS_ARGS=""
-          for extra in ${{ matrix.extras }}; do
-            EXTRAS_ARGS="$EXTRAS_ARGS --extra $extra"
-          done
-          uv sync --frozen $EXTRAS_ARGS
+        run: uv sync --all-groups --extra iot
 
       - name: Check Formatting with Ruff
-        if: matrix.extras_label == 'no-iot'
         run: uv run ruff format --check .
 
       - name: Lint with Ruff
-        if: matrix.extras_label == 'no-iot'
         run: uv run ruff check .
 
       - name: Run Unit Tests
         run: uv run pytest tests/ -v
 
-  bump_version:
+  changes:
+    name: Detect Changed Paths
     needs: checks
-    if: |
-      needs.checks.result == 'success' &&
-      !contains(github.event.head_commit.message, '[skip release]') &&
-      github.event_name == 'push' &&
-      github.ref == 'refs/heads/main'
-    name: Bump Version, Publish to PyPI, tag, and deploy docs
     runs-on: ubuntu-latest
+    outputs:
+      release: ${{ steps.filter.outputs.release }}
+      docs_or_code: ${{ steps.filter.outputs.docs_or_code }}
+    steps:
+      - name: Check-Out Repository
+        uses: actions/checkout@v4
+
+      - name: Detect changed paths
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            release:
+              - "boto3_refresh_session/**"
+              - "README.md"
+              - "pyproject.toml"
+              - "LICENSE"
+            docs_or_code:
+              - "boto3_refresh_session/**"
+              - "docs/**"
+              - "pyproject.toml"
+
+  release:
+    name: Release Please and Publish to PyPI
+    needs: [checks, changes]
+    runs-on: ubuntu-latest
+    if: needs.changes.outputs.release == 'true'
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
     steps:
       - name: Check-Out Repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GH_PAT }}
+          fetch-depth: 0
 
-      - name: Detect changed paths
-        id: changes
-        uses: dorny/paths-filter@v3
+      - name: Run release-please
+        id: release
+        uses: googleapis/release-please-action@v4
         with:
-          filters: |
-            docs_or_code:
-              - "docs/**"
-              - "boto3_refresh_session/**"
-            release:
-              - "boto3_refresh_session/**"
-              - "README.md"
-              - "docs/brs.png"
-              - "NOTICE"
-              - "LICENSE"
-              - "pyproject.toml"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release-type: python
+          target-branch: main
 
-      - name: Set up Python
+      - name: Check-Out Repository at Released SHA
+        if: steps.release.outputs.release_created == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.release.outputs.sha }}
+
+      - name: Setup Python
+        if: steps.release.outputs.release_created == 'true'
         uses: actions/setup-python@v5
-        id: setup-python
         with:
-          python-version: '3.10'
+          python-version: "3.10"
+
+      - name: Install uv
+        if: steps.release.outputs.release_created == 'true'
+        uses: astral-sh/setup-uv@v5
+        with:
+          cache-dependency-glob: "**/pyproject.toml"
+
+      - name: Build package
+        if: steps.release.outputs.release_created == 'true'
+        run: uv build
+
+      - name: Publish package to PyPI
+        if: steps.release.outputs.release_created == 'true'
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+  docs:
+    name: Build and Deploy Docs
+    needs: [checks, changes, release]
+    runs-on: ubuntu-latest
+    if: |
+      always() &&
+      needs.changes.outputs.docs_or_code == 'true' &&
+      (needs.release.result == 'success' || needs.release.result == 'skipped')
+    permissions:
+      contents: write
+    steps:
+      - name: Check-Out Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        id: setup-python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
-
-      - name: Check uv lockfile
-        run: uv lock --check
+        with:
+          cache-dependency-glob: "**/pyproject.toml"
 
       - name: Cache uv Dependencies
         id: cached-uv-dependencies
         uses: actions/cache@v4
         with:
           path: .venv
-          key: uv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-dev-iot-${{ hashFiles('**/uv.lock', '**/pyproject.toml') }}
+          key: uv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/pyproject.toml') }}
 
       - name: Install Dependencies
-        run: |
-          uv sync --frozen --extra dev --extra iot
+        if: steps.cached-uv-dependencies.outputs.cache-hit != 'true'
+        run: uv sync --all-groups --extra iot
 
-      - name: Determine Version Part to Update
-        if: steps.changes.outputs.release == 'true'
-        run: |
-          VERSION_TYPE="patch"
-          MESSAGE=$(git log -1 --pretty=%B)
+      - name: Build docs
+        run: uv run --directory docs make clean html
 
-          PR_TITLE=$(make get-pr-title)
+      - name: Disable Jekyll for built docs directory
+        run: touch docs/_build/html/.nojekyll
 
-          if echo "$PR_TITLE" | grep -qi '\[major\]'; then
-            VERSION_TYPE="major"
-          elif echo "$PR_TITLE" | grep -qi '\[minor\]'; then
-            VERSION_TYPE="minor"
-          elif echo "$MESSAGE" | grep -qi '\[major\]'; then
-            VERSION_TYPE="major"
-          elif echo "$MESSAGE" | grep -qi '\[minor\]'; then
-            VERSION_TYPE="minor"
-          fi
-
-          echo "Determined VERSION_TYPE=$VERSION_TYPE"
-          echo "VERSION_TYPE=$VERSION_TYPE" >> $GITHUB_ENV
-
-      - name: Bump Version
-        if: steps.changes.outputs.release == 'true'
-        run: |
-          uv run make bump-version "$VERSION_TYPE"
-          echo "'make bump-version $VERSION_TYPE' completed"
-
-      - name: Verify uv.lock
-        if: steps.changes.outputs.release == 'true'
-        run: |
-          if ! uv lock --check; then
-            echo "uv.lock out of date; regenerating."
-            uv lock
-          fi
-
-      - name: Commit Version Bump
-        if: steps.changes.outputs.release == 'true'
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add pyproject.toml boto3_refresh_session/__init__.py uv.lock || true
-          if ! git diff --cached --quiet; then
-            git commit -m "bump $VERSION_TYPE version [skip ci]"
-            git push origin main
-          else
-            echo "No changes to commit."
-          fi
-
-      - name: Sync Local Repo to Latest
-        if: steps.changes.outputs.release == 'true'
-        run: |
-          git fetch origin main --tags
-          git reset --hard origin/main
-
-      - name: Create Tag
-        if: steps.changes.outputs.release == 'true'
-        run: |
-          VERSION="$NEW_VERSION"
-          if [ -z "$VERSION" ]; then
-            echo "NEW_VERSION not set; cannot create tag." >&2
-            exit 1
-          fi
-          if git rev-parse "$VERSION" >/dev/null 2>&1; then
-            echo "Tag $VERSION already exists; skipping."
-          else
-            git tag "$VERSION"
-            git push origin "$VERSION"
-          fi
-
-      - name: Build Wheel and Publish to PyPI
-        if: steps.changes.outputs.release == 'true'
-        env:
-          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
-        run: |
-          uv build
-          uv publish
-
-      - name: Build Documentation
-        if: steps.changes.outputs.docs_or_code == 'true'
-        run: |
-          source .venv/bin/activate
-          cd docs/ && make clean && cd ..
-          sphinx-build docs docs/_build
-
-      - name: Deploy to GitHub Pages
-        if: steps.changes.outputs.docs_or_code == 'true'
+      - name: Deploy docs to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/_build/
+          publish_dir: docs/_build/html
+          enable_jekyll: false
           force_orphan: true

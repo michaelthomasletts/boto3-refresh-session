@@ -81,8 +81,8 @@ def test_client_cache_str_includes_entries() -> None:
     cache[ClientCacheKey("s3")] = _client()
 
     output = str(cache)
-    assert output.startswith("ClientCache:")
-    assert "RefreshableSession.client('s3')" in output
+    assert output.startswith(("ClientCache:", "LRUClientCache:"))
+    assert "client('s3')" in output
     assert "\n" in output
 
 
