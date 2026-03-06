@@ -1,9 +1,12 @@
 [project]
 name = "boto3-refresh-session"
 version = "9.0.0"
-description = "boto3-refresh-session is a simple Python package with a drop-in replacement for boto3.Session named RefreshableSession. It automatically refreshes temporary AWS credentials, caches clients, and natively supports MFA providers. It also supports automatic temporary AWS security credential refresh for STS, IOT Core, and custom credential callables."
+description = "A drop-in replacement for boto3.Session named RefreshableSession. It automatically refreshes temporary AWS credentials, caches clients, and natively supports MFA providers. It also supports automatic temporary AWS security credential refresh for STS, IOT Core, and custom credential callables."
 authors = [
-    {name = "Mike Letts",email = "lettsmt@gmail.com"}
+  { name = "Mike Letts", email = "lettsmt@gmail.com" }
+]
+maintainers = [
+  { name="Mike Letts", email="lettsmt@gmail.com" }
 ]
 license = { text = "MPL-2.0" }
 readme = "README.md"
@@ -15,9 +18,6 @@ dependencies = [
   "typing-extensions",
 ]
 keywords = ["boto3", "botocore", "boto", "aws", "sts", "credentials", "token", "refresh", "iot", "x509", "mqtt", "AssumeRole", "mfa", "cache", "client cache", "client"]
-maintainers = [
-  {name="Michael Letts", email="lettsmt@gmail.com"},
-]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
@@ -55,14 +55,17 @@ iot = ["awscrt", "awsiotsdk"]
 
 [dependency-groups]
 dev = [
-  "pytest", 
-  "ruff", 
-  "pre-commit", 
-  "sphinx", 
-  "pydata-sphinx-theme", 
-  "numpydoc", 
-  "tomlkit"
+  "furo",
+  "numpydoc",
+  "pre-commit",
+  "pytest",
+  "ruff",
+  "sphinx",
+  "sphinx-copybutton",
+  "sphinxext-opengraph[social-cards]",
+  "tomlkit",
 ]
+iot = ["awscrt", "awsiotsdk"]
 
 [tool.ruff]
 line-length = 79

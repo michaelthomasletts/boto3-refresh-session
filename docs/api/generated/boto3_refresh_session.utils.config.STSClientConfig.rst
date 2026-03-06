@@ -1,8 +1,39 @@
-STSClientConfig
-===============
+boto3\_refresh\_session.utils.config.STSClientConfig
+====================================================
 
 .. currentmodule:: boto3_refresh_session.utils.config
 
 .. autoclass:: STSClientConfig
-   :exclude-members: __init__, __new__, __setitem__, __getattr__, __setattr__
-   :inherited-members:
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+
+      
+      ~STSClientConfig.clear
+      
+      ~STSClientConfig.copy
+      
+      ~STSClientConfig.fromkeys
+      
+      ~STSClientConfig.get
+      
+      ~STSClientConfig.items
+      
+      ~STSClientConfig.keys
+      
+      ~STSClientConfig.pop
+      
+      ~STSClientConfig.popitem
+      
+      ~STSClientConfig.setdefault
+      
+      ~STSClientConfig.update
+      
+      ~STSClientConfig.values
+      
+   
+
+   

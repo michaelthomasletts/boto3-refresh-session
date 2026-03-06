@@ -3,13 +3,15 @@
 Changelog
 *********
 
-.. note::
+.. attention::
 
-   Starting with the Release Please migration in March 2026, the canonical
-   release notes are managed automatically in ``CHANGELOG.md`` at the
-   repository root:
-   https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/CHANGELOG.md
-   The content below is legacy historical context.
+  The content below is legacy historical context!
+
+  Starting with the Release Please migration in March 2026, the canonical
+  release notes are managed automatically in ``CHANGELOG.md`` at the
+  repository root: https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/CHANGELOG.md.
+
+  This file will no longer be updated, but it remains available for historical reference.
 
 v3.0.0
 ------
