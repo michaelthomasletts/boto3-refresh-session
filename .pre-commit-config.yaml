@@ -8,13 +8,13 @@ repos:
     name: ruff
     alias: ruff
     types: [python]
-    entry: uv run ruff check .
+    entry: uv run ruff check
     language: system
   - id: ruff-format
     name: ruff-format
     alias: ruff-format
     types: [python]
-    entry: uv run ruff format --check .
+    entry: uv run ruff format --check
     language: system
   - id: pytest
     name: pytest
