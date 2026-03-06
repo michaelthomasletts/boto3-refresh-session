@@ -27,6 +27,6 @@ __all__ += extras.__all__
 # package metadata
 __title__ = "boto3-refresh-session"
 __author__ = "Mike Letts"
-__maintainer__ = "Mike Letts"
+__maintainer__ = "61418"
 __license__ = "MPL-2.0"
-__email__ = "lettsmt@gmail.com"
+__email__ = "61418@61418.io"

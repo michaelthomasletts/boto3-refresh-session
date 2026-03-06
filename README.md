@@ -4,74 +4,67 @@
 
   <a href="https://pypi.org/project/boto3-refresh-session/">
     <img 
-      src="https://img.shields.io/pypi/v/boto3-refresh-session?color=%237d8450&logo=python&label=Latest%20Version&labelColor=6d747e"
+      src="https://img.shields.io/pypi/v/boto3-refresh-session?color=%237d8450&logo=python&label=Latest%20Version&labelColor=%236d747e"
       alt="pypi_version"
     />
   </a>
 
   <a href="https://pypi.org/project/boto3-refresh-session/">
     <img 
-      src="https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi&color=%237d8450&logo=python&label=Compatible%20Python%20Versions&labelColor=6d747e" 
+      src="https://img.shields.io/pypi/pyversions/boto3-refresh-session?style=pypi&color=%237d8450&logo=python&label=Compatible%20Python%20Versions&labelColor=%236d747e" 
       alt="py_version"
     />
   </a>
 
-  <a href="https://github.com/michaelthomasletts/boto3-refresh-session/actions/workflows/push.yml">
+  <a href="https://github.com/61418/boto3-refresh-session/actions/workflows/push.yml">
     <img 
-      src="https://img.shields.io/github/actions/workflow/status/michaelthomasletts/boto3-refresh-session/push.yml?logo=github&color=%237d8450&label=Build&labelColor=6d747e" 
+      src="https://img.shields.io/github/actions/workflow/status/61418/boto3-refresh-session/push.yml?logo=github&color=%237d8450&label=Build&labelColor=%236d747e" 
       alt="workflow"
     />
   </a>
 
-  <a href="https://github.com/michaelthomasletts/boto3-refresh-session/commits/main">
+  <a href="https://github.com/61418/boto3-refresh-session/commits/main">
     <img 
-      src="https://img.shields.io/github/last-commit/michaelthomasletts/boto3-refresh-session?logo=github&color=%237d8450&label=Last%20Commit&labelColor=6d747e" 
+      src="https://img.shields.io/github/last-commit/61418/boto3-refresh-session?logo=github&color=%237d8450&label=Last%20Commit&labelColor=%236d747e" 
       alt="last_commit"
     />
   </a>
 
-  <a href="https://github.com/michaelthomasletts/boto3-refresh-session/stargazers">
+  <a href="https://github.com/61418/boto3-refresh-session/stargazers">
     <img 
-      src="https://img.shields.io/github/stars/michaelthomasletts/boto3-refresh-session?style=flat&logo=github&labelColor=6d747e&color=7d8450&label=Stars" 
+      src="https://img.shields.io/github/stars/61418/boto3-refresh-session?style=flat&logo=github&labelColor=%236d747e&color=%237d8450&label=Stars" 
       alt="stars"
     />
   </a>
 
 <a href="https://pepy.tech/projects/boto3-refresh-session">
   <img
-    src="https://img.shields.io/endpoint?url=https%3A%2F%2Fmichaelthomasletts.github.io%2Fpepy-stats%2Fboto3-refresh-session.json&style=flat&logo=python&labelColor=6d747e&color=7d8450"
+    src="https://img.shields.io/endpoint?url=https%3A%2F%2Fmichaelthomasletts.github.io%2Fpepy-stats%2Fboto3-refresh-session.json&style=flat&logo=python&labelColor=%236d747e&color=%237d8450"
     alt="downloads"
   />
 </a>
 
 
-  <a href="https://michaelthomasletts.github.io/boto3-refresh-session/index.html">
+  <a href="https://61418.io/boto3-refresh-session/index.html">
     <img 
-      src="https://img.shields.io/badge/Official%20Documentation-📘-7d8450?style=flat&labelColor=6d747e&logo=readthedocs" 
+      src="https://img.shields.io/badge/Official%20Documentation-📘-7d8450?style=flat&labelColor=%236d747e&logo=readthedocs" 
       alt="documentation"
     />
   </a>
 
-  <a href="https://github.com/michaelthomasletts/boto3-refresh-session">
+  <a href="https://github.com/61418/boto3-refresh-session">
     <img 
-      src="https://img.shields.io/badge/Source%20Code-💻-7d8450?style=flat&labelColor=6d747e&logo=github" 
+      src="https://img.shields.io/badge/Source%20Code-💻-7d8450?style=flat&labelColor=%236d747e&logo=github" 
       alt="github"
     />
   </a>
 
-  <a href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/LICENSE">
+  <a href="https://github.com/61418/boto3-refresh-session/blob/main/LICENSE">
     <img 
-      src="https://img.shields.io/static/v1?label=License&message=MPL-2.0&color=7d8450&labelColor=6d747e&logo=github&style=flat"
+      src="https://img.shields.io/static/v1?label=License&message=MPL-2.0&color=%237d8450&labelColor=%236d747e&logo=github&style=flat"
       alt="license"
     />
   </a>
-
-<a href="https://github.com/sponsors/michaelthomasletts">
-  <img 
-    src="https://img.shields.io/badge/Sponsor%20this%20Project-💙-7d8450?style=flat&labelColor=6d747e&logo=githubsponsors" 
-    alt="sponsorship"
-  />
-</a>
 
 </div>
 
@@ -79,7 +72,9 @@
 
 ## Description
 
-boto3-refresh-session is a simple Python package with a drop-in replacement for [boto3.Session](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html#boto3.session.Session) named [RefreshableSession](https://michaelthomasletts.com/boto3-refresh-session/api/generated/boto3_refresh_session.session.RefreshableSession.html#boto3_refresh_session.session.RefreshableSession). It automatically refreshes temporary AWS credentials, [caches clients](https://michaelthomasletts.com/boto3-refresh-session/usage.html#client-caching), and [supports MFA token providers](https://michaelthomasletts.com/boto3-refresh-session/usage.html#mfa). It supports automatic temporary AWS security credential refresh for STS, IOT Core, and custom credential callables. And it is [thoroughly tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [regularly updated](https://github.com/michaelthomasletts/boto3-refresh-session/commits/main/), [comprehensively documentated](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/).
+boto3-refresh-session is a simple Python package with a drop-in replacement for [boto3.Session](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html#boto3.session.Session) named [RefreshableSession](https://61418.io/boto3-refresh-session/api/generated/boto3_refresh_session.session.RefreshableSession.html#boto3_refresh_session.session.RefreshableSession). It automatically refreshes temporary AWS credentials, [caches clients](https://61418.io/boto3-refresh-session/usage.html#client-caching), and [supports MFA token providers](https://61418.io/boto3-refresh-session/usage.html#mfa). It supports automatic temporary AWS security credential refresh for STS, IOT Core, and custom credential callables. And it is [thoroughly tested](https://github.com/michaelthomasletts/boto3-refresh-session/tree/main/tests), [regularly updated](https://github.com/michaelthomasletts/boto3-refresh-session/commits/main/), [comprehensively documentated](https://michaelthomasletts.github.io/boto3-refresh-session/index.html), and [published to PyPI](https://pypi.org/project/boto3-refresh-session/).
+
+boto3-refresh-session was authored by [Mike Letts](https://github.com/michaelthomasletts) and is maintained by [61418](https://github.com/61418).
 
 ## Why this exists
 
@@ -98,9 +93,7 @@ Although there are other open source tools available which address automatic tem
 
 [Featured in TL;DR Sec.](https://tldrsec.com/p/tldr-sec-282)
 
-[Featured in CloudSecList.](https://cloudseclist.com/issues/issue-290)
-
-Recognized during AWS Community Day Midwest on June 5th, 2025 (my birthday!).
+[Featured in CloudSecList.](https://cloudseclist.com/issues/issue-290).
 
 A testimonial from an engineer at Netflix:
 
@@ -123,9 +116,9 @@ uv sync --all-groups --extra iot
 
 ## Usage
 
-Refer to the [official usage documentation](https://michaelthomasletts.com/boto3-refresh-session/usage.html) for detailed guidance on how to use boto3-refresh-session.
+Refer to the [official usage documentation](https://61418.io/boto3-refresh-session/usage.html) for detailed guidance on how to use boto3-refresh-session.
 
-Refer to the [official API documentation](https://michaelthomasletts.com/boto3-refresh-session/api/index.html) for technical information about boto3-refresh-session.
+Refer to the [official API documentation](https://61418.io/boto3-refresh-session/api/index.html) for technical information about boto3-refresh-session.
 
 ## Versions
 
