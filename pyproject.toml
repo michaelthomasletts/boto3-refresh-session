@@ -1,6 +1,6 @@
 [project]
 name = "boto3-refresh-session"
-version = "9.0.1"
+version = "10.0.0"
 description = "A drop-in replacement for boto3.Session named RefreshableSession. It automatically refreshes temporary AWS credentials, caches clients, and natively supports MFA providers. It also supports automatic temporary AWS security credential refresh for STS, IOT Core, and custom credential callables."
 authors = [
   { name = "Mike Letts", email = "lettsmt@gmail.com" }

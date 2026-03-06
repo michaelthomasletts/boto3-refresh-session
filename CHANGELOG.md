@@ -1,5 +1,16 @@
 # Changelog
 
+## [10.0.0](https://github.com/61418/boto3-refresh-session/compare/v9.0.1...v10.0.0) (2026-03-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* Ownership transferred to 61418 from michaelthomasletts ([#136](https://github.com/61418/boto3-refresh-session/issues/136))
+
+### Code Refactoring
+
+* Ownership transferred to 61418 from michaelthomasletts ([#136](https://github.com/61418/boto3-refresh-session/issues/136)) ([f607690](https://github.com/61418/boto3-refresh-session/commit/f6076900c37516638ac01543c7b87787ee3eba9d))
+
 ## [9.0.1](https://github.com/michaelthomasletts/boto3-refresh-session/compare/v9.0.0...v9.0.1) (2026-03-06)
 
 
