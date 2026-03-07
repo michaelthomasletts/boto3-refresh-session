@@ -1,5 +1,12 @@
 # Changelog
 
+## [10.0.3](https://github.com/61418/boto3-refresh-session/compare/v10.0.2...v10.0.3) (2026-03-07)
+
+
+### Documentation
+
+* Adding break beneath header image in README. ([32fff15](https://github.com/61418/boto3-refresh-session/commit/32fff1583b44a1cdf9768cbdcbbdaed833599a1b))
+
 ## [10.0.2](https://github.com/61418/boto3-refresh-session/compare/v10.0.1...v10.0.2) (2026-03-06)
 
 
