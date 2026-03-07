@@ -1,0 +1,507 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="Changelog" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://61418.io/changelog.html" />
+<meta property="og:site_name" content="boto3-refresh-session" />
+<meta property="og:description" content="v3.0.0: The changes introduced by v3.0.0 will not impact ~99% of users who generally interact wit..." />
+<meta property="og:image" content="https://61418.io/_static/og.png" />
+<meta property="og:image:alt" content="boto3-refresh-session" />
+<meta name="description" content="v3.0.0: The changes introduced by v3.0.0 will not impact ~99% of users who generally interact wit..." />
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="prev" title="Exceptions" href="api/exceptions.html">
+        <link rel="canonical" href="https://61418.io/boto3-refresh-session/changelog.html">
+        <link rel="prefetch" href="_static/favicon.ico" as="image">
+
+    <link rel="shortcut icon" href="_static/favicon.ico"><!-- Generated with Sphinx 8.1.3 and Furo 2025.12.19 -->
+        <title>Changelog - boto3-refresh-session 10.0.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">boto3-refresh-session 10.0.3 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="_static/favicon.ico" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">boto3-refresh-session 10.0.3 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Sitemap</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">API</a><input aria-label="Toggle navigation of API" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="api/session.html">Core Interface</a><input aria-label="Toggle navigation of Core Interface" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/generated/boto3_refresh_session.session.RefreshableSession.html">boto3_refresh_session.session.RefreshableSession</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="api/custom.html">Custom Refresh Methods</a><input aria-label="Toggle navigation of Custom Refresh Methods" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/generated/boto3_refresh_session.methods.custom.CustomRefreshableSession.html">boto3_refresh_session.methods.custom.CustomRefreshableSession</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="api/iot.html">IOT Refresh Methods</a><input aria-label="Toggle navigation of IOT Refresh Methods" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/generated/boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession.html">boto3_refresh_session.methods.iot.x509.IOTX509RefreshableSession</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="api/sts.html">STS Refresh Methods</a><input aria-label="Toggle navigation of STS Refresh Methods" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/generated/boto3_refresh_session.methods.sts.STSRefreshableSession.html">boto3_refresh_session.methods.sts.STSRefreshableSession</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="api/config.html">Configs</a><input aria-label="Toggle navigation of Configs" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/generated/boto3_refresh_session.utils.config.AssumeRoleConfig.html">boto3_refresh_session.utils.config.AssumeRoleConfig</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/generated/boto3_refresh_session.utils.config.STSClientConfig.html">boto3_refresh_session.utils.config.STSClientConfig</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/exceptions.html">Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Changelog</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+    <a class="muted-link" href="https://github.com/61418/boto3-refresh-session" title=" Source code on GitHub" aria-label=" Source code on
+        GitHub">
+        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z">
+            </path>
+        </svg>
+        <span class="visually-hidden">Source code on GitHub</span>
+    </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="changelog">
+<span id="id1"></span><h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">¶</a></h1>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>The content below is legacy historical context!</p>
+<p>Starting with the Release Please migration in March 2026, the canonical
+release notes are managed automatically in <code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code> at the
+repository root: <a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/CHANGELOG.md">https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/CHANGELOG.md</a>.</p>
+<p>This file will no longer be updated, but it remains available for historical reference.</p>
+</div>
+<section id="v3-0-0">
+<h2>v3.0.0<a class="headerlink" href="#v3-0-0" title="Link to this heading">¶</a></h2>
+<p><strong>The changes introduced by v3.0.0 will not impact ~99% of users</strong> who generally interact with <code class="docutils literal notranslate"><span class="pre">boto3-refresh-session</span></code> by only <code class="docutils literal notranslate"><span class="pre">RefreshableSession</span></code>, <em>which is the intended usage for this package after all.</em></p>
+<p>Advanced users, however, particularly those using low-level objects such as <code class="docutils literal notranslate"><span class="pre">BaseRefreshableSession</span> <span class="pre">|</span> <span class="pre">refreshable_session</span> <span class="pre">|</span> <span class="pre">BRSSession</span> <span class="pre">|</span> <span class="pre">utils.py</span></code>, may experience breaking changes.</p>
+<p>Please review <a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/pull/75">this PR</a> for additional details.</p>
+</section>
+<section id="v4-0-0">
+<h2>v4.0.0<a class="headerlink" href="#v4-0-0" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">ecs</span></code> module has been dropped. For additional details and rationale, please review <a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/pull/78">this PR</a>.</p>
+</section>
+<section id="v5-0-0">
+<h2>v5.0.0<a class="headerlink" href="#v5-0-0" title="Link to this heading">¶</a></h2>
+<p>Support for IoT Core via X.509 certificate-based authentication (over HTTPS) is now available!</p>
+</section>
+<section id="v5-1-0">
+<h2>v5.1.0<a class="headerlink" href="#v5-1-0" title="Link to this heading">¶</a></h2>
+<p>MQTT support added for IoT Core via X.509 certificate-based authentication.</p>
+</section>
+<section id="v6-0-0">
+<h2>v6.0.0<a class="headerlink" href="#v6-0-0" title="Link to this heading">¶</a></h2>
+<p>MFA support for STS added!</p>
+</section>
+<section id="v6-2-0">
+<h2>v6.2.0<a class="headerlink" href="#v6-2-0" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Client caching introduced to <code class="docutils literal notranslate"><span class="pre">RefreshableSession</span></code> in order to minimize memory footprint! Available via <code class="docutils literal notranslate"><span class="pre">cache_clients</span></code> parameter.</p></li>
+<li><p>Testing suite expanded to include IOT, MFA, caching, and much more!</p></li>
+<li><p>A subtle bug was uncovered where <code class="docutils literal notranslate"><span class="pre">RefreshableSession</span></code> created refreshable credentials but boto3’s underlying session continued to resolve credentials via the default provider chain (i.e. env vars, shared config, etc) unless explicitly wired. <code class="docutils literal notranslate"><span class="pre">get_credentials()</span></code> and clients could, in certain setups, use base session credentials instead of the refreshable STS/IoT/custom credentials via assumed role. To fix this, I updated the implementation in <code class="docutils literal notranslate"><span class="pre">BRSSession.__post_init__</span></code> to set <code class="docutils literal notranslate"><span class="pre">self._session._credentials</span> <span class="pre">=</span> <span class="pre">self._credentials</span></code>, ensuring all boto3 clients created from <code class="docutils literal notranslate"><span class="pre">RefreshableSession</span></code> use the refreshable credentials source of truth provided to <code class="docutils literal notranslate"><span class="pre">RefreshableCredentials</span> <span class="pre">|</span> <span class="pre">DeferredRefreshableCredentials</span></code>. After this change, refreshable credentials are used consistently everywhere, irrespective of setup.</p></li>
+</ul>
+</section>
+<section id="v6-2-3">
+<h2>v6.2.3<a class="headerlink" href="#v6-2-3" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">RefreshableTemporaryCredentials</span></code> type hint was deprecated in favor of <code class="docutils literal notranslate"><span class="pre">TemporaryCredentials</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">expiry_time</span></code> was added as a parameter returned by the <code class="docutils literal notranslate"><span class="pre">refreshable_credentials</span></code> method and <code class="docutils literal notranslate"><span class="pre">credentials</span></code> attribute.</p></li>
+</ul>
+</section>
+<section id="v6-3-0">
+<h2>v6.3.0<a class="headerlink" href="#v6-3-0" title="Link to this heading">¶</a></h2>
+<p>The exception suite was expanded to include new exceptions which are more precise than <code class="docutils literal notranslate"><span class="pre">BRSError</span></code>. Additionally, new parameters were added to <code class="docutils literal notranslate"><span class="pre">BRSError</span></code> in order to make error handling more robust. Since these new exceptions inherit from <code class="docutils literal notranslate"><span class="pre">BRSError</span></code>, developers catching exceptions raised by <code class="docutils literal notranslate"><span class="pre">BRSError</span></code> will not experience breaking changes; however, code that checks <code class="docutils literal notranslate"><span class="pre">type(err)</span> <span class="pre">is</span> <span class="pre">BRSError</span></code> (instead of <code class="docutils literal notranslate"><span class="pre">isinstance</span></code>), exact <code class="docutils literal notranslate"><span class="pre">str(err)</span> <span class="pre">/</span> <span class="pre">repr(err)</span></code> comparisons, and parsing messages instead of using the new attributes (e.g. <code class="docutils literal notranslate"><span class="pre">details|code|status_code|param|value</span></code>, etc.) may experience breaking changes.</p>
+</section>
+<section id="v7-0-0">
+<h2>v7.0.0<a class="headerlink" href="#v7-0-0" title="Link to this heading">¶</a></h2>
+<p>Beginning v7.0.0, boto3-refresh-session is licensed under <a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/blob/main/LICENSE">Mozilla Public License 2.0 (MPL-2.0)</a>.
+Earlier versions remain licensed under the MIT License.</p>
+</section>
+<section id="v7-1-0">
+<h2>v7.1.0<a class="headerlink" href="#v7-1-0" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">AssumeRoleConfig</span></code> and <code class="docutils literal notranslate"><span class="pre">STSClientConfig</span></code> objects were added to <code class="docutils literal notranslate"><span class="pre">boto3_refresh_session.utils</span></code>.
+These objects encapsulate configuration parameters for assuming roles via STS, enhancing code readability and maintainability.
+Users should find it easier to manage and pass around STS-related configurations using these.
+Dictionaries are still supported for backward compatibility on <code class="docutils literal notranslate"><span class="pre">sts_client_kwargs</span></code> and <code class="docutils literal notranslate"><span class="pre">assume_role_kwargs</span></code>.
+However, using these new objects is now the recommended approach.
+Refer to the <a class="reference external" href="https://github.com/michaelthomasletts/boto3-refresh-session/pull/102">PR</a> for more details.</p>
+</section>
+<section id="v7-1-12">
+<h2>v7.1.12<a class="headerlink" href="#v7-1-12" title="Link to this heading">¶</a></h2>
+<p>LRU caching has been added to <code class="docutils literal notranslate"><span class="pre">ClientCache</span></code> which previously did not have an eviction strategy.
+To disable client caching altogether, set <code class="docutils literal notranslate"><span class="pre">cache_clients=False</span></code> when initializing <code class="docutils literal notranslate"><span class="pre">RefreshableSession</span></code> (it’s set to True by default).
+To adjust the default maximum size of the client cache (which is 10), set the <code class="docutils literal notranslate"><span class="pre">client_cache_max_size</span></code> parameter when initializing <code class="docutils literal notranslate"><span class="pre">RefreshableSession</span></code>.
+When caching is enabled, the least recently used client will be evicted when the cache exceeds its maximum size.
+The <code class="docutils literal notranslate"><span class="pre">_client_cache</span></code> private attribute in <code class="docutils literal notranslate"><span class="pre">RefreshableSession</span></code> has been replaced with <code class="docutils literal notranslate"><span class="pre">client_cache</span></code>, which invites direct interaction with the <code class="docutils literal notranslate"><span class="pre">ClientCache</span></code> instance for advanced use cases.
+Lastly, the hashing (keying) strategy for <code class="docutils literal notranslate"><span class="pre">ClientCache</span></code> has been adjusted to require <code class="docutils literal notranslate"><span class="pre">ClientCacheKey</span></code>.
+Simply pass <code class="docutils literal notranslate"><span class="pre">*args</span></code> and <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> (the same parameters passed to <code class="docutils literal notranslate"><span class="pre">RefreshableSession.client</span></code>) to <code class="docutils literal notranslate"><span class="pre">ClientCache</span></code> when calling it to store or retrieve clients, and it will internally create a <code class="docutils literal notranslate"><span class="pre">ClientCacheKey</span></code> for you.</p>
+</section>
+<section id="v7-2-0">
+<h2>v7.2.0<a class="headerlink" href="#v7-2-0" title="Link to this heading">¶</a></h2>
+<p>As of v7.2.0, <code class="docutils literal notranslate"><span class="pre">boto3-refresh-session</span></code> requires explicitly installing “iot” as an extra dependency in order to use IoT features, i.e. <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">boto3-refresh-session[iot]</span></code>.
+This change was made to reduce the number of dependencies for users who do not require IoT functionality.</p>
+</section>
+<section id="v7-2-12">
+<h2>v7.2.12<a class="headerlink" href="#v7-2-12" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">mfa_token_provider</span></code> now supports CLI commands as a way to retrieve MFA tokens, in addition to callables.
+A <code class="docutils literal notranslate"><span class="pre">whoami()</span></code> method was also added to <code class="docutils literal notranslate"><span class="pre">RefreshableSession</span></code> to retrieve the AWS identity of the current session as an alternative to <code class="docutils literal notranslate"><span class="pre">get_identity()</span></code>.</p>
+<p>The first feature allows users to specify a command (as a string or list of strings) that will be executed to obtain the MFA token.
+The command is run using <a class="reference external" href="https://docs.python.org/3/library/subprocess.html#subprocess.run" title="(in Python v3.14)"><code class="xref py py-func docutils literal notranslate"><span class="pre">subprocess.run()</span></code></a>, and any keyword arguments provided via <code class="docutils literal notranslate"><span class="pre">mfa_token_provider_kwargs</span></code> are forwarded to <a class="reference external" href="https://docs.python.org/3/library/subprocess.html#subprocess.run" title="(in Python v3.14)"><code class="xref py py-func docutils literal notranslate"><span class="pre">subprocess.run()</span></code></a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Versions v7.2.4 through v7.2.14 contained a bug where library code was not included during installation due to an issue with the <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> configuration.
+Users of these versions may encounter <code class="docutils literal notranslate"><span class="pre">ModuleNotFoundError</span></code> when attempting to use the library.
+It is strongly recommended to upgrade to v7.2.15 or later to resolve this issue.</p>
+</div>
+</section>
+<section id="v7-2-13">
+<h2>v7.2.13<a class="headerlink" href="#v7-2-13" title="Link to this heading">¶</a></h2>
+<p>Typing hints and aliases significantly improved to enhance code clarity and developer experience.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Versions v7.2.4 through v7.2.14 contained a bug where library code was not included during installation due to an issue with the <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> configuration.
+Users of these versions may encounter <code class="docutils literal notranslate"><span class="pre">ModuleNotFoundError</span></code> when attempting to use the library.
+It is strongly recommended to upgrade to v7.2.15 or later to resolve this issue.</p>
+</div>
+</section>
+<section id="v7-2-15">
+<h2>v7.2.15<a class="headerlink" href="#v7-2-15" title="Link to this heading">¶</a></h2>
+<p>This version resolved a bug which appeared beginning v7.2.4 and ending v7.2.14.
+This bug appeared when boto3-refresh-session transitioned from <code class="docutils literal notranslate"><span class="pre">poetry</span></code> to <code class="docutils literal notranslate"><span class="pre">uv</span></code>.
+Specifically, v7.2.15 updates <code class="docutils literal notranslate"><span class="pre">include</span></code> in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> to ensure that library code appears during installation.
+Users who installed versions 7.2.4 through 7.2.14 will observe <code class="docutils literal notranslate"><span class="pre">ModuleNotFoundError</span></code> when attempting to use the library.
+Upgrading to v7.2.15 or later will resolve this issue.
+v7.2.4 through v7.2.14 were yanked from PyPI and GitHub tags within that range were deleted.</p>
+</section>
+<section id="v8-0-0">
+<h2>v8.0.0<a class="headerlink" href="#v8-0-0" title="Link to this heading">¶</a></h2>
+<p>This release migrates caching from the internal <code class="docutils literal notranslate"><span class="pre">utils.cache</span></code> module to
+<a class="reference external" href="https://pypi.org/project/boto3-client-cache/">boto3-client-cache</a>.</p>
+<section id="breaking-changes">
+<h3>Breaking changes<a class="headerlink" href="#breaking-changes" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">boto3_refresh_session.utils.cache</span></code> has been removed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cache_clients</span></code> and <code class="docutils literal notranslate"><span class="pre">client_cache_max_size</span></code> constructor parameters have
+been removed from refreshable session classes and stubs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BRSCacheError</span></code>, <code class="docutils literal notranslate"><span class="pre">BRSCacheNotFoundError</span></code>, and <code class="docutils literal notranslate"><span class="pre">BRSCacheExistsError</span></code>
+have been removed from <code class="docutils literal notranslate"><span class="pre">boto3_refresh_session.exceptions</span></code>.</p></li>
+<li><p>Direct cache interaction now uses <code class="docutils literal notranslate"><span class="pre">session.cache</span></code> (provided by
+<code class="docutils literal notranslate"><span class="pre">boto3-client-cache</span></code>) instead of <code class="docutils literal notranslate"><span class="pre">session.client_cache</span></code>.</p></li>
+</ul>
+</section>
+<section id="behavioral-and-api-updates">
+<h3>Behavioral and API updates<a class="headerlink" href="#behavioral-and-api-updates" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">boto3-client-cache</span></code> is now a core dependency.</p></li>
+<li><p>Session objects now support both client and resource caching through the
+external cache implementation and its key types.</p></li>
+<li><p>Type stubs and docstrings were updated to reflect the new cache attribute
+and <code class="docutils literal notranslate"><span class="pre">client/resource(...,</span> <span class="pre">eviction_policy=...,</span> <span class="pre">max_size=...)</span></code> signatures.</p></li>
+<li><p>Tests were updated to validate cache behavior against
+<code class="docutils literal notranslate"><span class="pre">boto3-client-cache</span></code> primitives and exceptions.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          <a class="prev-page" href="api/exceptions.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Exceptions</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, 61418
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Changelog</a><ul>
+<li><a class="reference internal" href="#v3-0-0">v3.0.0</a></li>
+<li><a class="reference internal" href="#v4-0-0">v4.0.0</a></li>
+<li><a class="reference internal" href="#v5-0-0">v5.0.0</a></li>
+<li><a class="reference internal" href="#v5-1-0">v5.1.0</a></li>
+<li><a class="reference internal" href="#v6-0-0">v6.0.0</a></li>
+<li><a class="reference internal" href="#v6-2-0">v6.2.0</a></li>
+<li><a class="reference internal" href="#v6-2-3">v6.2.3</a></li>
+<li><a class="reference internal" href="#v6-3-0">v6.3.0</a></li>
+<li><a class="reference internal" href="#v7-0-0">v7.0.0</a></li>
+<li><a class="reference internal" href="#v7-1-0">v7.1.0</a></li>
+<li><a class="reference internal" href="#v7-1-12">v7.1.12</a></li>
+<li><a class="reference internal" href="#v7-2-0">v7.2.0</a></li>
+<li><a class="reference internal" href="#v7-2-12">v7.2.12</a></li>
+<li><a class="reference internal" href="#v7-2-13">v7.2.13</a></li>
+<li><a class="reference internal" href="#v7-2-15">v7.2.15</a></li>
+<li><a class="reference internal" href="#v8-0-0">v8.0.0</a><ul>
+<li><a class="reference internal" href="#breaking-changes">Breaking changes</a></li>
+<li><a class="reference internal" href="#behavioral-and-api-updates">Behavioral and API updates</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=04a1028e"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    </body>
+</html>
